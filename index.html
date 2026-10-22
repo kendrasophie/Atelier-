@@ -427,9 +427,57 @@ body.noscroll{overflow:hidden}
 .cap-title{position:absolute;top:16px;left:12px;right:12px;text-align:center;font-size:22px;color:#3b0764;animation:tin .5s 2s both}
 .cap-sub{position:absolute;top:70px;left:12px;right:12px;text-align:center;font-weight:800;color:#831843;margin:0;animation:tin .5s 2.3s both}
 
+/* ===== v5: profundidad ===== */
+:root{--depth:color-mix(in srgb,var(--brand) 22%,#1e1b4b 10%);--lift:0 14px 28px -12px rgba(76,29,149,.38),0 4px 10px -4px rgba(76,29,149,.18)}
+body{background:radial-gradient(1200px 600px at 10% -10%,#ddd6fe 0%,transparent 60%),radial-gradient(900px 500px at 110% 10%,#fbcfe8 0%,transparent 55%),radial-gradient(900px 600px at 50% 120%,#bbf7d0 0%,transparent 60%),var(--bg);background-attachment:fixed}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body{background:radial-gradient(1200px 600px at 10% -10%,#3b2a7a 0%,transparent 60%),radial-gradient(900px 500px at 110% 10%,#5b1d43 0%,transparent 55%),radial-gradient(900px 600px at 50% 120%,#0f4a37 0%,transparent 60%),var(--bg);background-attachment:fixed}}
+.orbs{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.orbs i{position:absolute;border-radius:50%;filter:blur(40px);opacity:.45;animation:orb 22s ease-in-out infinite alternate}
+.orbs i:nth-child(1){width:260px;height:260px;background:#a78bfa;left:-60px;top:20%}
+.orbs i:nth-child(2){width:220px;height:220px;background:#f472b6;right:-50px;top:45%;animation-duration:28s}
+.orbs i:nth-child(3){width:240px;height:240px;background:#34d399;left:30%;bottom:-90px;animation-duration:25s}
+@keyframes orb{to{transform:translate(60px,-40px) scale(1.15)}}
+.view{perspective:900px}
+.gamecard,.subj,.hero,.camino,.daily,.health,.det .detcity,.witness,.rbody,.shelf,.friend{box-shadow:var(--lift);transform-style:preserve-3d;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s}
+.gamecard,.subj{box-shadow:0 6px 0 color-mix(in srgb,var(--c,var(--brand)) 45%,transparent),var(--lift)}
+.gamecard:hover,.subj:hover,.daily:hover,.camino:hover{transform:translateY(-4px);box-shadow:0 10px 0 color-mix(in srgb,var(--c,var(--brand)) 45%,transparent),0 22px 34px -14px rgba(76,29,149,.45)}
+.gamecard:active,.subj:active,.daily:active{transform:translateY(3px);box-shadow:0 2px 0 color-mix(in srgb,var(--c,var(--brand)) 45%,transparent),var(--lift)}
+.gico,.sico{display:inline-block;filter:drop-shadow(0 6px 4px rgba(0,0,0,.25));transform:translateZ(30px)}
+.qopt{box-shadow:0 4px 0 var(--line);transition:transform .12s,box-shadow .12s}
+.qopt:not(:disabled):active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.qopt.right{box-shadow:0 4px 0 color-mix(in srgb,var(--ok) 60%,transparent)}.qopt.wrong{box-shadow:0 4px 0 color-mix(in srgb,var(--bad) 60%,transparent)}
+.modal{backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);perspective:1000px}
+.modal-box{box-shadow:0 30px 60px -20px rgba(30,27,75,.6),0 10px 0 color-mix(in srgb,var(--brand) 35%,transparent);animation:pop3d .35s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes pop3d{from{opacity:0;transform:rotateX(16deg) translateY(30px) scale(.94)}}
+.heroav,.avprev,.lav,.missav,.cap-det,.cap-thief,.wanted{position:relative}
+.heroav::after,.avprev::after{content:"";position:absolute;left:22%;right:22%;bottom:6px;height:12px;border-radius:50%;background:radial-gradient(rgba(30,27,75,.35),transparent 70%);z-index:0}
+.heroav svg,.avprev svg.avatar{position:relative;z-index:1;filter:drop-shadow(4px 6px 3px rgba(30,27,75,.18))}
+.missav svg.avatar,.health .hav svg.avatar,.cap-det svg.avatar,.cap-thief svg.avatar{filter:drop-shadow(3px 5px 2px rgba(30,27,75,.25))}
+.monkey-svg{filter:drop-shadow(3px 6px 3px rgba(0,0,0,.25))}
+.appbar{position:relative;z-index:21}
+.btn.primary{background:linear-gradient(180deg,color-mix(in srgb,var(--brand) 80%,#fff),var(--brand))}
+.hchip.money{cursor:pointer;font:inherit;font-weight:800;font-size:14px;color:var(--ink)}
+.hchip .mon{width:20px;height:20px}
+/* billetera */
+.wallet-list{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}
+.wd{display:inline-flex;align-items:center;gap:2px;filter:drop-shadow(0 3px 2px rgba(0,0,0,.2))}.wd b{font-size:13px}
+.walletbig{display:flex;justify-content:center;padding:6px}.wempty{color:var(--muted)}
+.plusm{display:inline-flex;align-items:center;gap:3px;font-weight:900;color:#047857}
+.cost .mon{vertical-align:middle}
+/* viaje del detective */
+.trip{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px;border-radius:24px;background:radial-gradient(circle at 50% 40%,#312e81,#0f0c29);color:#fff;box-shadow:var(--lift)}
+.trip canvas{max-width:100%}
+.tripline{text-align:center;margin:0}.tripline small{color:#fbcfe8;font-weight:700}
+/* lección del ábaco */
+.lesson{display:flex;flex-direction:column;align-items:center;gap:6px}.lesson p{margin:0;text-align:center}
+.lsrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}.larrow{font-weight:900;font-size:20px;color:#10b981}
+.pairs{background:var(--green-soft);border-radius:12px;padding:6px 10px}
+@media (prefers-reduced-motion:reduce){.orbs i{animation:none}.gamecard:hover,.subj:hover{transform:none}}
+
 </style>
 </head>
 <body>
+<div class="orbs" aria-hidden="true"><i></i><i></i><i></i></div>
 <canvas id="fx" aria-hidden="true"></canvas>
 <div id="toasts" aria-live="polite"></div>
 
@@ -737,7 +785,7 @@ const TRANSP=[["avión",850],["barco de carga",35],["tren de alta velocidad",300
 const GEN=[
  {id:"g.suma",s:"mate",l:1,f:()=>{const a=rnd(120,899),b=rnd(15,99);return mk(`Cálculo mental: ${a} + ${b}`,a+b,near(a+b,10),`Descomponé: ${a} + ${b-b%10} = ${a+b-b%10}, y + ${b%10} = ${a+b}`)}},
  {id:"g.resta",s:"mate",l:1,f:()=>{const a=rnd(200,999),b=rnd(15,190);return mk(`Cálculo mental: ${a} − ${b}`,a-b,near(a-b,10),`${a} − ${b} = ${a-b}`)}},
- {id:"g.compl",s:"mate",l:1,f:()=>{const n=rnd(6,9),a=rnd(11,79);return mk(`Para sumar ${n} con el complemento de 10, ¿qué hacés?`,`Sumar 10 y restar ${10-n}`,[`Sumar 10 y restar ${n}`,`Sumar 5 y restar ${10-n}`,`Restar 10 y sumar ${10-n}`],`${n} = 10 − ${10-n}. Por ejemplo ${a} + ${n} = ${a} + 10 − ${10-n} = ${a+n}`)}},
+ {id:"g.compl",s:"mate",l:1,f:()=>{const n=rnd(6,9),a=rnd(11,79);return mk(`En el ábaco, si en una varilla no te alcanzan las cuentas para sumar ${n}, usás el «amigo del 10»: sumás 1 cuenta en la varilla de la izquierda (vale 10) y sacás las que sobran. ¿Qué hacés para sumar ${n}?`,`Sumar 10 y restar ${10-n}`,[`Sumar 10 y restar ${n}`,`Sumar 5 y restar ${10-n}`,`Restar 10 y sumar ${10-n}`],`${n} = 10 − ${10-n}. Por ejemplo ${a} + ${n} = ${a} + 10 − ${10-n} = ${a+n}. Los amigos del 10 son 1 y 9, 2 y 8, 3 y 7, 4 y 6, 5 y 5.`)}},
  {id:"g.valor",s:"mate",l:1,f:()=>{const ds=shuffle([1,2,3,4,5,6,7,8,9]).slice(0,4);const n=+ds.join("");const i=rnd(0,3);const d=ds[i];const v=d*10**(3-i);const pl=["unidades de mil","centenas","decenas","unidades"][i];return mk(`En el número ${num(n)}, ¿cuánto vale el ${d}?`,num(v),[0,1,2,3].filter(k=>k!==3-i).map(k=>num(d*10**k)),`El ${d} está en el lugar de las ${pl}.`)}},
  {id:"g.compens",s:"mate",l:2,f:()=>{const b=pick([99,98,199,198,299,49]),c=rnd(3,8);return mk(`Usá compensación: ${b} × ${c}`,b*c,near(b*c,c*2),`${Math.round(b/50)*50} × ${c} = ${Math.round(b/50)*50*c}; menos ${Math.round(b/50)*50-b} × ${c} = ${b*c}`)}},
  {id:"g.dobles",s:"mate",l:2,f:()=>{const [a,b]=pick([[16,25],[14,50],[12,25],[18,50],[24,25],[32,25]]);return mk(`Usá dobles y mitades: ${a} × ${b}`,a*b,near(a*b,50),`${a/2} × ${b*2} = ${a*b}`)}},
@@ -768,23 +816,25 @@ const GEN=[
 /* ---------- catálogo ---------- */
 let QUESTIONS=[];
 G.setQuestions=function(list){
-  const src=(list&&list.length)?list:BANK;
+  let src=(list&&list.length)?list:BANK;
+  src=src.filter(x=>!/por complementos|con el complemento de 5/.test(x[2]));   // reemplazadas por versiones con explicación
   QUESTIONS=src.map(x=>({id:"q."+hashStr(x[2]),s:x[0],l:+x[1],q:x[2],opts:x[3],e:x[4]}));
   QUESTIONS=QUESTIONS.concat(GEN.map(g=>({id:g.id,s:g.s,l:g.l,gen:g}))).concat((typeof DATA_GEN!=="undefined"?DATA_GEN:[]).map(g=>({id:g.id,s:g.s,l:g.l,gen:g})));
 };
 /* ---------- progreso ---------- */
-function newProgress(){return {v:1,updated:0,avatar:null,rewards:null,xp:0,level:1,gold:0,silver:0,
+function newProgress(){return {v:1,updated:0,avatar:null,rewards:null,xp:0,level:1,gold:0,silver:0,cash:0,
   streak:{count:0,last:null,best:0,shields:0},skill:{},srs:{},games:{},medals:{bronze:0,silver:0,gold:0},
   trophies:{},badges:{},owned:[],stats:{answered:0,correct:0,daily:{}}}}
 function needFor(L){return 80+40*(L-1)}
 function levelInfo(xp){let L=1,a=0;while(xp>=a+needFor(L)){a+=needFor(L);L++}return {level:L,into:xp-a,need:needFor(L)}}
 G.P=null;G.user=null;
 G.load=function(user){G.user=user;let p=null;try{p=JSON.parse(localStorage.getItem("mj-prog-"+user))}catch(e){}G.P=G.fix(p)};
-G.fix=function(p){const n=newProgress();if(!p)return n;const o=Object.assign(n,p);o.streak=Object.assign(newProgress().streak,p.streak||{});o.stats=Object.assign(newProgress().stats,p.stats||{});o.medals=Object.assign(newProgress().medals,p.medals||{});return o};
+G.fix=function(p){const n=newProgress();if(!p)return n;const o=Object.assign(n,p);if(p.cash==null)o.cash=(p.silver||0)*100+(p.gold||0)*2500;   // las monedas viejas pasan a pesos
+  o.streak=Object.assign(newProgress().streak,p.streak||{});o.stats=Object.assign(newProgress().stats,p.stats||{});o.medals=Object.assign(newProgress().medals,p.medals||{});return o};
 G.merge=function(s){if(s&&s.updated&&(!G.P.updated||s.updated>G.P.updated)){G.P=G.fix(s);G.saveLocal()}};
 G.saveLocal=function(){try{localStorage.setItem("mj-prog-"+G.user,JSON.stringify(G.P))}catch(e){}};
 let syncT=null;
-G.save=function(){G.P.level=levelInfo(G.P.xp).level;G.P.updated=Date.now();G.saveLocal();clearTimeout(syncT);syncT=setTimeout(()=>G.onSync&&G.onSync(G.P),3000);G.onChange&&G.onChange()};
+G.save=function(){G.P.level=levelInfo(G.P.xp).level;G.P.gold=Math.floor(G.cash()/100);G.P.silver=0;G.P.updated=Date.now();G.saveLocal();clearTimeout(syncT);syncT=setTimeout(()=>G.onSync&&G.onSync(G.P),3000);G.onChange&&G.onChange()};
 G.flush=function(){clearTimeout(syncT);G.onSync&&G.onSync(G.P,true)};
 
 /* ---------- dificultad adaptativa + repaso ---------- */
@@ -828,8 +878,8 @@ G.answer=function(q,ok){
       if(s.due<=now||s.bx===0)s.bx=Math.min(5,s.bx+1);s.due=now+WAIT[s.bx]}
     else{s.wrong=(s.wrong||0)+1;s.fixed=false;s.bx=Math.max(0,s.bx-2);s.due=now+3*MIN}}
   if(q.l===3)p.stats.hardTried=(p.stats.hardTried||0)+1;
-  if(ok){p.stats.correct++;const sv=(q.l===3?2:1)+(overcame?2:0);p.silver+=sv;return {xp:6+q.l*2+(overcame?5:0),silver:sv,overcame}}
-  return {xp:1,silver:0,overcame:false};   // el costo en monedas lo cobra UI.miss
+  if(ok){p.stats.correct++;const c=G.earn((PAY.answer[q.l]||50)+(overcame?PAY.overcome:0));return {xp:6+q.l*2+(overcame?5:0),cents:c,overcame}}
+  return {xp:1,cents:0,overcame:false};   // el costo en monedas lo cobra UI.miss
 };
 /* volver después de un día difícil (menos de la mitad bien) */
 G.checkComeback=function(){
@@ -844,10 +894,10 @@ const CHARACTER=[
   {id:"esfuerzo",name:"Esfuerzo",icon:"⛰️",desc:"preguntas de desafío intentadas",goal:[20,100,300],val:p=>p.stats.hardTried||0}
 ];
 const GROWTH=["Todavía no… ¡pero ya casi!","Equivocarse es parte de aprender: tu cerebro está creciendo.","Los errores son pistas. Leé la explicación y seguí.","Respirá hondo. La próxima la sacás.","Nadie nace sabiendo: cada intento suma.","Las personas valientes se equivocan y lo vuelven a intentar.","Eso que te costó va a volver, y la próxima vez vas a poder."];
-G.addXP=function(xp,gold=0,silver=0){
-  const p=G.P,before=levelInfo(p.xp).level;p.xp=Math.max(0,p.xp+Math.round(xp));p.gold+=gold;p.silver+=silver;
+G.addXP=function(xp,cents=0){
+  const p=G.P,before=levelInfo(p.xp).level;p.xp=Math.max(0,p.xp+Math.round(xp));G.earn(cents);
   if(xp>0)G.touchStreak();
-  const after=levelInfo(p.xp).level;if(after>before){p.gold+=after-before;setTimeout(()=>{FX.toast(`⬆️ ¡Nivel ${after}! +${after-before} ${R.coinName("gold")}`);FX.fanfare();FX.confetti(140)},700)}
+  const after=levelInfo(p.xp).level;if(after>before){const c=G.earn(PAY.level*(after-before));setTimeout(()=>{FX.toast(`⬆️ ¡Nivel ${after}! +${fmtM(c)}`);FX.fanfare();FX.confetti(140)},700)}
   G.checkAwards();G.save();
 };
 G.touchStreak=function(){
@@ -857,7 +907,7 @@ G.touchStreak=function(){
   else s.count=1;
   s.last=t;s.best=Math.max(s.best,s.count);
   if(s.count%7===0&&s.shields<2){s.shields++;setTimeout(()=>FX.toast("🛡️ ¡Ganaste un escudo de racha!"),1200)}
-  G.P.silver+=Math.min(10,s.count);
+  G.earn(Math.min(PAY.streakMax,s.count*100));
 };
 G.streakNow=function(){const s=G.P.streak;if(!s.last)return 0;const t=today();if(s.last===t||s.last===dayBefore(t))return s.count;if(s.shields>0&&s.last===dayBefore(dayBefore(t)))return s.count;return 0};
 /* medalla por partida según porcentaje */
@@ -869,9 +919,9 @@ G.gameDone=function(id,correct,total,extra={}){
   if(m){g.medals[m]++;G.P.medals[m]++}
   if(m==="gold"){g.lvl++;up=true}else if(pct<0.4&&g.lvl>1&&(extra.allowDown!==false)){g.lvl--}
   const xp=correct*5+Math.min(5,total-correct)+(m==="gold"?20:m==="silver"?12:m==="bronze"?6:0);   // intentar también suma
-  const gold=m==="gold"?2:m==="silver"?1:0;
-  G.addXP(xp,gold,0);
-  return {medal:m,up,xp,gold,lvl:g.lvl,pct};
+  const cents=m?PAY.medal[m]:0;
+  G.addXP(xp,cents);
+  return {medal:m,up,xp,cents,lvl:g.lvl,pct};
 };
 G.gameLvl=id=>(G.P.games[id]||{}).lvl||1;
 
@@ -1041,7 +1091,7 @@ GEN.push(
  {id:"g.horas",s:"mate",l:2,f:()=>{const h=rnd(1,4),m=pick([15,30,45]);const t=h*60+m;return mk(`¿Cuántos minutos son ${h} h ${m} min?`,t+" min",[(h*100+m)+" min",(t+60)+" min",(h*60)+" min"],`${h} × 60 + ${m} = ${t}`)}},
  {id:"g.medidas",s:"mate",l:2,f:()=>{if(Math.random()<.5){const m=rnd(2,9)*100+rnd(1,9)*10;return mk(`¿Cuántos metros son ${num(m)} cm?`,String(m/100).replace(".",",")+" m",[m/10+" m",m+" m",String(m/1000).replace(".",",")+" m"],"100 cm = 1 m")}const k=rnd(2,9);return mk(`¿Cuántos metros son ${k} km?`,num(k*1000)+" m",[num(k*100)+" m",num(k*10)+" m",num(k*10000)+" m"],"1 km = 1.000 m")}},
  {id:"g.grilla",s:"mate",l:2,f:()=>{const a=rnd(12,48),b=rnd(3,9);const d=Math.floor(a/10)*10,u=a%10;return mk(`Método de grilla: ${a} × ${b} = (${d} × ${b}) + (${u} × ${b}) = ?`,a*b,near(a*b,b),`${d*b} + ${u*b} = ${a*b}`)}},
- {id:"g.complem5",s:"mate",l:1,f:()=>{const n=rnd(1,4);return mk(`En el ábaco, para sumar ${n} con el complemento de 5, ¿qué hacés?`,`Sumar 5 y restar ${5-n}`,[`Sumar 5 y restar ${n}`,`Sumar 10 y restar ${10-n}`,`Restar 5 y sumar ${5-n}`],`${n} = 5 − ${5-n}.`)}},
+ {id:"g.complem5",s:"mate",l:1,f:()=>{const n=rnd(1,4);return mk(`En el ábaco, cada varilla tiene abajo 4 cuentas que valen 1 y arriba 1 cuenta que vale 5. Si abajo no te quedan cuentas libres para sumar ${n}, usás el «amigo del 5»: bajás la cuenta de 5 y sacás las que sobran. ¿Qué hacés para sumar ${n}?`,`Sumar 5 y restar ${5-n}`,[`Sumar 5 y restar ${n}`,`Sumar 10 y restar ${10-n}`,`Restar 5 y sumar ${5-n}`],`${n} = 5 − ${5-n}: sumás 5 y sacás ${5-n}. Los amigos del 5 son 1 y 4, 2 y 3.`)}},
  {id:"g.precio",s:"economia",l:1,f:()=>{const p=rnd(3,15)*100,n=rnd(2,6),[sg,pl]=pick([["alfajor","alfajores"],["lápiz","lápices"],["sticker","stickers"],["jugo","jugos"],["cuaderno","cuadernos"]]);return mk(`Un ${sg} cuesta ${money(p)}. ¿Cuánto cuestan ${n} ${pl}?`,money(p*n),[money(p*n+p),money(p*(n-1)),money(p+n)],`${n} × ${p} = ${p*n}`)}},
  {id:"g.aumento",s:"economia",l:2,f:()=>{const a=rnd(5,30)*100,b=a+rnd(1,10)*100;return mk(`Un alfajor costaba ${money(a)} y ahora cuesta ${money(b)}. ¿Cuánto aumentó?`,money(b-a),[money(b+a),money(b),money(a)],`${b} − ${a} = ${b-a}. Cuando los precios suben con el tiempo, eso es inflación.`)}},
  {id:"g.oportunidad",s:"economia",l:2,f:()=>{const c=rnd(5,15)*100,g=c*rnd(6,12);return mk(`Ahorrás para un juego de ${money(g)}. Si hoy gastás ${money(c)} en un chocolate, ¿cuánto te falta además para tu meta?`,money(c),[money(g),money(g-c),"Nada"],"Es el costo de oportunidad: lo que gastás hoy lo restás de tu meta.")}},
@@ -1223,6 +1273,49 @@ function monkeySVG(size=110){
 }
 
 /* =====================================================================
+   DINERO: pesos argentinos de juego (se guarda en centavos)
+   Monedas de 25 y 50 centavos, $1 y $2; billetes de $10 a $20.000.
+   Los dibujos son de juguete (no copian los billetes reales).
+   ===================================================================== */
+const DENOMS=[2000000,1000000,200000,100000,50000,20000,10000,5000,2000,1000,200,100,50,25];   // en centavos
+const BILL_COL={1000:["#c08457","#7c4a1e"],2000:["#e57373","#8e1b1b"],5000:["#90a4ae","#37474f"],10000:["#a78bfa","#4c1d95"],20000:["#6fbf73","#1b5e20"],50000:["#9ccc65","#33691e"],100000:["#ffb74d","#9a4a00"],200000:["#f48fb1","#880e4f"],1000000:["#64b5f6","#0d47a1"],2000000:["#4db6ac","#004d40"]};
+const fmtM=c=>{const neg=c<0;c=Math.abs(Math.round(c));const p=Math.floor(c/100),ct=c%100;return (neg?"−":"")+"$ "+p.toLocaleString("es-AR")+(ct?","+String(ct).padStart(2,"0"):"")};
+const denName=d=>d<100?`moneda de ${d} centavos`:d<1000?`moneda de $ ${d/100}`:`billete de $ ${(d/100).toLocaleString("es-AR")}`;
+/* dibujo de una moneda o billete */
+function moneySVG(d,size=40){
+  if(d<1000){
+    const two=d>=100;const rim=d===25?"#c9a227":d===50?"#d4af37":d===100?"#d4af37":"#b0b7c3";const core=d===100?"#c0c7d2":d===200?"#d4af37":rim;
+    const lab=d<100?String(d):String(d/100);const id="m"+(SVGID++);
+    return `<svg class="mon" width="${size}" height="${size}" viewBox="0 0 48 48" aria-label="${denName(d)}"><defs><radialGradient id="${id}" cx="35%" cy="30%"><stop offset="0" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
+      <circle cx="24" cy="24" r="22" fill="${rim}" stroke="${shade(rim,.6)}" stroke-width="1.5"/>${two?`<circle cx="24" cy="24" r="14" fill="${core}" stroke="${shade(core,.65)}"/>`:`<circle cx="24" cy="24" r="17" fill="none" stroke="${shade(rim,.6)}" stroke-dasharray="1.5 2"/>`}
+      <text x="24" y="${d<100?27:30}" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="${d<100?14:18}" fill="${shade(two?core:rim,.4)}">${lab}</text>${d<100?`<text x="24" y="37" text-anchor="middle" font-size="6.5" font-weight="800" fill="${shade(rim,.4)}">CENT.</text>`:`<text x="24" y="15" text-anchor="middle" font-size="5.5" font-weight="800" fill="${shade(rim,.4)}">PESO${d>100?"S":""}</text>`}
+      <circle cx="24" cy="24" r="22" fill="url(#${id})"/></svg>`;
+  }
+  const [a,b]=BILL_COL[d]||["#ccc","#555"];const n=(d/100).toLocaleString("es-AR");const w=size*1.9;
+  return `<svg class="billsvg" width="${w}" height="${size}" viewBox="0 0 95 50" aria-label="${denName(d)}"><rect x="1" y="1" width="93" height="48" rx="4" fill="${a}" stroke="${b}" stroke-width="1.5"/>
+    <rect x="5" y="5" width="85" height="40" rx="3" fill="none" stroke="${b}" stroke-opacity=".45" stroke-dasharray="2 1.5"/>
+    <circle cx="70" cy="25" r="15" fill="#fff" fill-opacity=".35" stroke="${b}" stroke-opacity=".4"/><text x="70" y="31" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="16" fill="${b}" fill-opacity=".55">A</text>
+    <text x="9" y="17" font-family="Georgia,serif" font-weight="700" font-size="${n.length>5?11:13}" fill="${b}">$${n}</text>
+    <text x="9" y="33" font-size="5.6" font-weight="900" fill="${b}">ATELIER ALPHA</text><text x="9" y="41" font-size="4.6" font-weight="700" fill="${b}" fill-opacity=".8">DINERO DE JUEGO</text>
+    <text x="88" y="45" text-anchor="end" font-family="Georgia,serif" font-weight="700" font-size="7" fill="${b}">${n}</text></svg>`;
+}
+/* desglose en billetes y monedas (lo más grande posible) */
+function breakdown(c){const out=[];c=Math.max(0,Math.round(c));for(const d of DENOMS){const n=Math.floor(c/d);if(n){out.push([d,n]);c-=n*d}}if(c>0)out.push([25,1]);return out}
+function walletHTML(c,size=30){
+  const b=breakdown(c);if(!b.length)return `<span class="wempty">Billetera vacía</span>`;
+  return `<span class="wallet-list">${b.map(([d,n])=>`<span class="wd">${moneySVG(d,size)}${n>1?`<b>×${n}</b>`:""}</span>`).join("")}</span>`;
+}
+/* moneda que mejor representa un monto chico (para los "+$" de cada respuesta) */
+const iconFor=c=>moneySVG(breakdown(c)[0]?breakdown(c)[0][0]:100,16);
+const plus=c=>`<span class="plusm">+${fmtM(c)} ${iconFor(c)}</span>`;
+/* cuánto se gana y cuánto cuesta (en centavos) */
+const PAY={answer:[0,50,100,200],overcome:200,round:100,detective:100,medal:{gold:2000,silver:1000,bronze:500},level:5000,daily:2000,exam:500,revancha:100,streakMax:1000,station:10000,bigStation:50000};
+G.cash=()=>G.P.cash||0;
+G.earn=c=>{G.P.cash=G.cash()+c;return c};
+G.spend=c=>{if(G.cash()<c)return false;G.P.cash-=c;return true};
+G.payUpTo=c=>{const p=Math.min(G.cash(),c);G.P.cash-=p;return p};
+
+/* =====================================================================
    AVATAR v2 — figura estilizada por capas (SVG original)
    Proporciones más altas, forma de cara, cejas, nariz, ojos con iris,
    ropa por partes, accesorios por zona y maquillaje.
@@ -1265,8 +1358,8 @@ const SHOP=[
   ["hand:celular",{gold:10}],["hand:cartera",{silver:280}],["ring:anillo",{silver:150}],
   ["makeup:rubor",{silver:70}],["makeup:labial",{silver:90}],["makeup:sombra",{silver:120}],["makeup:brillo",{silver:80}],["makeup:pecas",{silver:40}],
   ["color:#d4a017",{gold:6}],["color:#c0c7d2",{silver:250}]
-].map(([id,price])=>({id,price}));
-const AV_CHANGE={base:8,outfit:40};   // costo de guardar cambios después de creado
+].map(([id,price])=>({id,price:price.gold?price.gold*2500:price.silver*100}));   // precios en centavos
+const AV_CHANGE={base:20000,outfit:4000};   // centavos: cuerpo o pelo $200; ropa $40   // costo de guardar cambios después de creado
 const EXCLUSIVE=["top:vestidoAtelier","head:tiaraAlpha","alt"];   // solo para Kendra
 const isKendra=()=>/kendra/i.test((typeof MJ!=="undefined"&&MJ.name)||"");
 function defaultAvatar(kind){
@@ -1469,7 +1562,7 @@ UI.ask=function(q,opt={}){
       b.querySelectorAll(".qopt").forEach((el,j)=>{el.disabled=true;if(q.opts[j]===q.ans)el.classList.add("right");else if(j===i)el.classList.add("wrong")});
       const r=G.answer(q,ok);const m=ok?null:UI.miss();const heal=ok?UI.hit():"";
       if(ok){FX.good();const rc=b.querySelector(".qopt.right").getBoundingClientRect();FX.sparkle(rc.left+rc.width/2,rc.top+rc.height/2)}else{FX.bad();FX.shake(b)}
-      $("qfeed").innerHTML=`${r.overcame?`<p class="overcome">🦁 ¡Lo superaste! Esta antes te había costado.</p>`:""}<p class="${ok?"okmsg":"badmsg"}">${ok?pick(["¡Bien!","¡Excelente!","¡Eso es!","¡Genial!"]):i==null?"Se terminó el tiempo.":"Esta no era."} ${ok?`+${r.silver} ${R.coin("silver",18)}`:""}</p><p class="expl">${esc(q.e||"")}</p>${heal}${m?m.html:""}<button class="btn primary" id="qnext" type="button">${m&&m.out?"Salir del juego":"Seguir"}</button>`;
+      $("qfeed").innerHTML=`${r.overcame?`<p class="overcome">🦁 ¡Lo superaste! Esta antes te había costado.</p>`:""}<p class="${ok?"okmsg":"badmsg"}">${ok?pick(["¡Bien!","¡Excelente!","¡Eso es!","¡Genial!"]):i==null?"Se terminó el tiempo.":"Esta no era."} ${ok?plus(r.cents):""}</p><p class="expl">${esc(q.e||"")}</p>${heal}${m?m.html:""}<button class="btn primary" id="qnext" type="button">${m&&m.out?"Salir del juego":"Seguir"}</button>`;
       if(r.overcame){FX.fanfare();FX.confetti(70)}
       $("qnext").focus();$("qnext").onclick=()=>{UI.close();if(m&&m.out){UI.kickOut();return}res({ok,xp:r.xp})}};
     b.querySelectorAll(".qopt").forEach(el=>el.onclick=()=>fin(+el.dataset.i));
@@ -1493,9 +1586,9 @@ UI.quiz=async function(title,n,subj,id,opt={}){
   const daily=id==="desafio"&&G.P.stats.dailyDone!==today();
   if(daily)G.P.stats.dailyDone=today();
   const res=G.gameDone(id,ok,n,{allowDown:false});
-  if(daily){G.P.gold+=1;G.save()}
-  if(revOk){G.P.silver+=revOk;G.save()}
-  const extra=[daily?`+1 ${R.coinName("gold")} por el desafío del día.`:"",revOk?`🦁 Ganaste ${revOk} revancha${revOk>1?"s":""}: +${revOk} ${R.coinName("silver")}.`:""].filter(Boolean).join(" ");
+  if(daily){G.earn(PAY.daily);G.save()}
+  if(revOk){G.earn(revOk*PAY.revancha);G.save()}
+  const extra=[daily?`+${fmtM(PAY.daily)} por el desafío del día.`:"",revOk?`🦁 Ganaste ${revOk} revancha${revOk>1?"s":""}: +${fmtM(revOk*PAY.revancha)}.`:""].filter(Boolean).join(" ");
   UI.cur=null;
   if(opt.after)return opt.after(ok,n,res,extra);
   UI.result(title,ok,n,res,extra,()=>UI.show(UI.view==="play"?"inicio":UI.view));
@@ -1510,8 +1603,8 @@ UI.exam=function(){
     UI.modal(`<h2 class="mtitle">¿Qué te decís hoy?</h2><p class="msub">Elegí una frase para llevar al examen.</p><div class="qopts">${PHR.map(p=>`<button class="qopt" type="button">${p}</button>`).join("")}</div>`);
     document.querySelectorAll(".qopt").forEach(b=>b.onclick=()=>{const phrase=b.textContent;UI.close();FX.toast("💬 "+phrase);
       UI.quiz("Examen tranquilo",12,null,"examen",{timer:45,after:(ok,n,res,extra)=>{
-        G.P.stats.exams=(G.P.stats.exams||0)+1;G.P.silver+=3;G.save();G.checkAwards();
-        UI.modal(`<div class="result"><h2 class="mtitle">¡Terminaste el examen!</h2>${res.medal?R.medal(res.medal,80):""}<p class="bigscore"><b>${ok}</b> de ${n}</p><p>Por completarlo: +3 ${R.coin("silver",18)} ${extra}</p><p class="msub">Tu frase: «${esc(phrase)}»</p><h3>¿Cómo te sentiste?</h3><div class="feel">${[["😄","Muy bien"],["🙂","Bien"],["😐","Más o menos"],["😟","Nerviosa o nervioso"]].map(f=>`<button type="button" class="feelb" data-f="${f[1]}"><span>${f[0]}</span><small>${f[1]}</small></button>`).join("")}</div><p class="note" id="ftip"></p><div class="mactions"><button class="btn primary" type="button" id="exOk">Seguir</button></div></div>`);
+        G.P.stats.exams=(G.P.stats.exams||0)+1;G.earn(PAY.exam);G.save();G.checkAwards();
+        UI.modal(`<div class="result"><h2 class="mtitle">¡Terminaste el examen!</h2>${res.medal?R.medal(res.medal,80):""}<p class="bigscore"><b>${ok}</b> de ${n}</p><p>Por completarlo: ${plus(PAY.exam)} ${extra}</p><p class="msub">Tu frase: «${esc(phrase)}»</p><h3>¿Cómo te sentiste?</h3><div class="feel">${[["😄","Muy bien"],["🙂","Bien"],["😐","Más o menos"],["😟","Nerviosa o nervioso"]].map(f=>`<button type="button" class="feelb" data-f="${f[1]}"><span>${f[0]}</span><small>${f[1]}</small></button>`).join("")}</div><p class="note" id="ftip"></p><div class="mactions"><button class="btn primary" type="button" id="exOk">Seguir</button></div></div>`);
         document.querySelectorAll(".feelb").forEach(b=>b.onclick=()=>{document.querySelectorAll(".feelb").forEach(x=>x.classList.toggle("on",x===b));const f=b.dataset.f;(G.P.stats.feel=G.P.stats.feel||[]).push([today(),f]);G.P.stats.feel=G.P.stats.feel.slice(-60);G.save();
           $("ftip").textContent=f.startsWith("Muy")||f==="Bien"?"¡Qué bueno! Recordá esa sensación para el próximo examen de la escuela.":"Es normal ponerse nervioso. Respirar, leer despacio y saltear la que no sabés ayuda mucho. Cada examen tranquilo te hace más fuerte."});
         $("exOk").onclick=()=>{UI.close();UI.show("inicio")};
@@ -1523,7 +1616,7 @@ UI.result=function(title,ok,n,res,extra,after){
   UI.modal(`<div class="result"><h2 class="mtitle">${res.medal?"¡"+esc(R.medalName(res.medal))+"!":"¡Seguí practicando!"}</h2>
     <div class="resmedal">${res.medal?R.medal(res.medal,90):`<span class="bigemoji">💪</span>`}</div>
     <p class="bigscore"><b>${ok}</b> de ${n}</p>
-    <p>+${Math.max(0,res.xp)} XP${res.gold?` · +${res.gold} ${R.coin("gold",18)}`:""}</p>
+    <p>+${Math.max(0,res.xp)} XP${res.cents?` · ${plus(res.cents)}`:""}</p>
     ${res.up?`<p class="lvlup">⬆️ Subiste al nivel ${res.lvl} de este juego: ahora es más difícil.</p>`:""}
     ${extra?`<p class="lvlup">${extra}</p>`:""}
     <p class="note">Bronce desde el 50%, plata desde el 70% y oro desde el 90%. Con oro subís de nivel.</p>
@@ -1545,9 +1638,13 @@ UI.show=function(v){
 };
 UI.hud=function(){
   if(!G.P||!G.P.avatar)return;const li=levelInfo(G.P.xp);
-  $("hud").innerHTML=`<span class="hchip">Nv ${li.level}</span><span class="hchip">${R.coin("gold",20)} ${G.P.gold}</span><span class="hchip">${R.coin("silver",20)} ${G.P.silver}</span><span class="hchip ${G.streakNow()?"fire":""}">🔥 ${G.streakNow()}${G.P.streak.shields?` 🛡️${G.P.streak.shields}`:""}</span>`;
+  $("hud").innerHTML=`<span class="hchip">Nv ${li.level}</span><button type="button" class="hchip money" id="hudMoney" aria-label="Ver mi billetera">${moneySVG(G.cash()>=1000?breakdown(G.cash())[0][0]:100,20)} ${fmtM(G.cash())}</button><span class="hchip ${G.streakNow()?"fire":""}">🔥 ${G.streakNow()}${G.P.streak.shields?` 🛡️${G.P.streak.shields}`:""}</span>`;
 };
 G.onChange=()=>UI.hud();
+document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#hudMoney"))UI.wallet()});
+UI.wallet=function(){UI.modal(`<h2 class="mtitle">💰 Mi billetera</h2><p class="bigscore"><b>${fmtM(G.cash())}</b></p><div class="walletbig">${walletHTML(G.cash(),44)}</div>
+  <p class="note">Ganás monedas de 25 y 50 centavos, de $1 y de $2 con cada respuesta correcta. Cuando juntás, se cambian por billetes: $10, $20, $50, $100, $200, $500, $1.000, $2.000, $10.000 y $20.000. Cada error cuesta ${fmtM(COST_WRONG)}.</p>
+  <div class="mactions"><button class="btn primary" type="button" onclick="UI.close()">Cerrar</button></div>`)};
 
 /* ---------- INICIO ---------- */
 UI.inicio=function(){
@@ -1561,7 +1658,7 @@ UI.inicio=function(){
      </div>
    </section>
    ${UI.caminoCard()}
-   <button class="daily ${doneToday?"done":""}" id="daily" type="button"><span class="dico">⭐</span><span><b>Desafío del día</b><small>${G.lockLeft("desafio")?`🔒 Bloqueado ${fmtLeft(G.lockLeft("desafio"))}`:doneToday?"Hecho. Podés repetirlo para practicar.":`10 preguntas mezcladas · premio: 1 ${esc(R.coinName("gold"))}`}</small></span></button>
+   <button class="daily ${doneToday?"done":""}" id="daily" type="button"><span class="dico">⭐</span><span><b>Desafío del día</b><small>${G.lockLeft("desafio")?`🔒 Bloqueado ${fmtLeft(G.lockLeft("desafio"))}`:doneToday?"Hecho. Podés repetirlo para practicar.":`10 preguntas mezcladas · premio: ${fmtM(PAY.daily)}`}</small></span></button>
    <button class="daily calm" id="exam" type="button"><span class="dico">🧘</span><span><b>Examen tranquilo</b><small>Respirar, concentrarse y responder 12 preguntas. Para practicar los exámenes sin nervios.</small></span></button>
    ${due?`<button class="daily rev" id="review" type="button"><span class="dico">🔁</span><span><b>${due} pregunta${due>1?"s":""} para repasar</b><small>Lo que te costó vuelve para que no se olvide.</small></span></button>`:""}
    <h3 class="sect">Materias</h3>
@@ -1590,7 +1687,7 @@ const GAMES=[
 ];
 UI.juegos=function(){
   if(UI.cleanup){UI.cleanup();UI.cleanup=null}
-  $("v-juegos").innerHTML=`<header class="vhead"><h2>Juegos</h2><p class="note">Cada error cuesta ${COST_WRONG} plateadas. Con dos errores en una partida, ese juego se bloquea un rato (${LOCK_MIN.slice(0,3).join(", ")}… minutos).</p></header>
+  $("v-juegos").innerHTML=`<header class="vhead"><h2>Juegos</h2><p class="note">Cada error cuesta ${fmtM(COST_WRONG)}. Con dos errores en una partida, ese juego se bloquea un rato (${LOCK_MIN.slice(0,3).join(", ")}… minutos).</p></header>
    <div class="gamegrid">${GAMES.map(g=>{const s=G.P.games[g.id]||{lvl:1,medals:{bronze:0,silver:0,gold:0},plays:0};const sb=SUBJ_BY[g.s];
      const lk=G.lockLeft(g.id);
      return `<button class="gamecard ${lk?"locked":""}" data-g="${g.id}" type="button" style="--c:${sb.color}">${lk?`<span class="lockbadge">🔒 <b data-lock="${g.id}">${fmtLeft(lk)}</b></span>`:""}<span class="gico">${g.icon}</span><b>${g.name}</b><span class="gdesc">${g.desc}</span>
@@ -1619,7 +1716,7 @@ UI.gameEnd=function(id,correct,total,lines=[]){
 UI.premios=function(){
   const p=G.P,rw=R.cfg();
   $("v-premios").innerHTML=`<header class="vhead"><h2>Mis premios</h2></header>
-   <section class="shelf"><h3>Monedas</h3><div class="shelfrow coins"><div class="item">${R.coin("gold",64)}<b>${p.gold}</b><small>${esc(rw.gold.name)}</small></div><div class="item">${R.coin("silver",64)}<b>${p.silver}</b><small>${esc(rw.silver.name)}</small></div></div><div class="plank"></div></section>
+   <section class="shelf"><h3>Mi billetera: ${fmtM(G.cash())}</h3><div class="walletbig">${walletHTML(G.cash(),40)}</div><p class="note">Cuando juntás monedas, se cambian solas por billetes más grandes. Es dinero del juego.</p><div class="plank"></div></section>
    <section class="shelf"><h3>Medallas</h3><div class="shelfrow">${["gold","silver","bronze"].map(t=>`<div class="item">${R.medal(t,56)}<b>${p.medals[t]}</b><small>${esc(R.medalName(t))}</small></div>`).join("")}</div><div class="plank"></div></section>
    <section class="shelf"><h3>Trofeos</h3><div class="shelfrow">${TROPHY_GOALS.map(t=>{const got=p.trophies[t.id];return `<div class="item ${got?"":"off"}">${R.trophy(t.id,64,!!got)}<b>${esc(R.trophyName(t.id))}</b><small>${got?"Ganado el "+got.split("-").reverse().join("/"):"Para ganarlo: "+t.desc}</small></div>`}).join("")}</div><div class="plank"></div></section>
    <section class="shelf"><h3>Medallas de carácter</h3><p class="note">Premian la valentía de equivocarse y volver a intentar.</p><div class="charlist">${CHARACTER.map(c=>{const v=c.val(p);const tier=c.goal.filter(g=>v>=g).length;const next=c.goal[tier];return `<div class="charc">${tier?medalSVG(["bronze","silver","gold"][tier-1],"#0ea5e9","corazon",48):`<span class="charico">${c.icon}</span>`}<div><b>${c.icon} ${c.name}</b><small>${v} ${c.desc}${next?` · próxima medalla: ${next}`:" · ¡completa!"}</small><span class="bar"><i style="width:${next?Math.round(v/next*100):100}%"></i></span></div></div>`}).join("")}</div></section>
@@ -1640,27 +1737,27 @@ UI.avatar=function(first){
     maquillaje:[["makeup","Maquillaje y detalles",AV.makeup,T(AV.makeupName),"multi"]]
   };
   const tabName={cuerpo:"Cuerpo",pelo:"Pelo",ropa:"Ropa",accesorios:"Accesorios",maquillaje:"Maquillaje"};
-  const extraHair={"#7c3aed":{silver:150},"#ec4899":{silver:150},"#14b8a6":{silver:150}};
+  const extraHair={"#7c3aed":15000,"#ec4899":15000,"#14b8a6":15000};
   const BASE=["kind","skin","face","eyeColor","hair","hairColor","alt"];const orig=JSON.stringify(p.avatar||{});
   const costNow=()=>{if(first||!p.avatar)return null;const o=p.avatar;const same=k=>JSON.stringify(o[k])===JSON.stringify(a[k]);
-    if(BASE.some(k=>!same(k)))return {gold:AV_CHANGE.base};if(Object.keys(a).some(k=>!same(k)))return {silver:AV_CHANGE.outfit};return null};
+    if(BASE.some(k=>!same(k)))return AV_CHANGE.base;if(Object.keys(a).some(k=>!same(k)))return AV_CHANGE.outfit;return null};
   const itemFor=(key,v)=>{
     if(key==="hairColor"&&extraHair[v])return {id:"hc:"+v,price:extraHair[v]};
     if(/Color$/.test(key)&&key!=="hairColor"&&key!=="eyeColor")return SHOP.find(s=>s.id==="color:"+v)||null;
     return SHOP.find(s=>s.id===key+":"+v)||null;
   };
   const locked=(key,v)=>{if(ken&&(EXCLUSIVE.includes(key+":"+v)||key==="alt"))return null;const it=itemFor(key,v);return it&&!p.owned.includes(it.id)?it:null};
-  const priceTxt=it=>it.price.gold?`${it.price.gold} ${R.coin("gold",14)}`:`${it.price.silver} ${R.coin("silver",14)}`;
+  const priceTxt=it=>fmtM(it.price);
   const isDress=()=>["vestido","vestidoElegante","vestidoAtelier"].includes(a.top);
   const render=()=>{
     const rows=tabs[tab].filter(r=>!(isDress()&&(r[0]==="bottom"||r[0]==="bottomColor")));
-    $("v-avatar").innerHTML=`<header class="vhead"><h2>${first?"¡Creá tu avatar!":"Mi vestidor"}</h2><p class="note">${first?"Elegilo con cuidado: el avatar se crea <b>una sola vez</b>. Después, cambiarlo cuesta muchas monedas.":`Lo que tiene candado se compra aparte. Guardar cambios cuesta: cuerpo o pelo <b>${AV_CHANGE.base} ${R.coinName("gold")}</b>; ropa, colores o accesorios <b>${AV_CHANGE.outfit} ${R.coinName("silver")}</b>.`}${ken?" ✨ Tenés piezas exclusivas de creadora.":""}</p></header>
-     <div class="aved"><div class="avprev">${avatarSVG(a,150,"wave")}<div class="wallet">${R.coin("gold",18)} ${p.gold} · ${R.coin("silver",18)} ${p.silver}</div></div>
+    $("v-avatar").innerHTML=`<header class="vhead"><h2>${first?"¡Creá tu avatar!":"Mi vestidor"}</h2><p class="note">${first?"Elegilo con cuidado: el avatar se crea <b>una sola vez</b>. Después, cambiarlo cuesta muchas monedas.":`Lo que tiene candado se compra aparte. Guardar cambios cuesta: cuerpo o pelo <b>${fmtM(AV_CHANGE.base)}</b>; ropa, colores o accesorios <b>${fmtM(AV_CHANGE.outfit)}</b>.`}${ken?" ✨ Tenés piezas exclusivas de creadora.":""}</p></header>
+     <div class="aved"><div class="avprev">${avatarSVG(a,150,"wave")}<div class="wallet">Tenés ${fmtM(G.cash())}</div></div>
      <div class="avpanel"><div class="avtabs">${Object.keys(tabs).map(k=>`<button type="button" data-t="${k}" class="${k===tab?"on":""}">${tabName[k]}</button>`).join("")}</div>
      ${rows.map(([key,label,list,fmt,type])=>`<div class="avrow"><span class="avlabel">${label}</span><div class="avopts">${list.map(v=>{const lk=locked(key,v);const on=type==="multi"?a.makeup.includes(v):a[key]===v;const excl=ken&&(EXCLUSIVE.includes(key+":"+v)||(key==="alt"&&v));
        return fmt==="color"?`<button type="button" class="sw ${on?"on":""} ${lk?"lock":""}" data-k="${key}" data-v="${v}" style="background:${v}" aria-label="${label}">${lk?"🔒":""}</button>`
        :`<button type="button" class="op ${on?"on":""} ${lk?"lock":""} ${excl?"excl":""}" data-k="${key}" data-v="${v}" data-type="${type||""}">${fmt(v)}${lk?` <small>🔒 ${priceTxt(lk)}</small>`:""}${excl?" ✨":""}</button>`}).join("")}</div></div>`).join("")}
-     <div class="mactions sticky">${first?"":`<button class="btn" id="avUndo" type="button">Deshacer cambios</button>`}<button class="btn primary big" id="avSave" type="button">${first?"¡Listo!":(c=>c?`Guardar (${c.gold?c.gold+" "+R.coin("gold",16):c.silver+" "+R.coin("silver",16)})`:"Sin cambios")(costNow())}</button></div></div></div>`;
+     <div class="mactions sticky">${first?"":`<button class="btn" id="avUndo" type="button">Deshacer cambios</button>`}<button class="btn primary big" id="avSave" type="button">${first?"¡Listo!":(c=>c?`Guardar (${fmtM(c)})`:"Sin cambios")(costNow())}</button></div></div></div>`;
     document.querySelectorAll(".avtabs button").forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
     document.querySelectorAll(".avopts button").forEach(b=>b.onclick=()=>{
       const k=b.dataset.k;let v=b.dataset.v;if(v==="true")v=true;else if(v==="false")v=false;
@@ -1669,11 +1766,11 @@ UI.avatar=function(first){
     if($("avUndo"))$("avUndo").onclick=()=>{a=Object.assign(defaultAvatar(p.avatar.kind),JSON.parse(orig));if(!Array.isArray(a.makeup))a.makeup=[];render()};
     $("avSave").onclick=()=>{
       const done=()=>{p.avatar=a;p.avatarSet=true;G.save();MJ.remember&&MJ.remember();FX.fanfare();FX.confetti(100);if(first)MJ.next();else{FX.toast("¡Guardado!");UI.hud();UI.avatar()}};
-      if(first){UI.modal(`<h2 class="mtitle">¿Así queda tu avatar?</h2><div class="center">${avatarSVG(a,90,"wave")}</div><p class="msub">Se crea una sola vez. Después, cambiar el cuerpo o el pelo cuesta ${AV_CHANGE.base} ${R.coinName("gold")} y la ropa ${AV_CHANGE.outfit} ${R.coinName("silver")}.</p><div class="mactions"><button class="btn" type="button" onclick="UI.close()">Seguir cambiando</button><button class="btn primary" type="button" id="avYes">¡Sí, crear!</button></div>`);$("avYes").onclick=()=>{UI.close();done()};return}
+      if(first){UI.modal(`<h2 class="mtitle">¿Así queda tu avatar?</h2><div class="center">${avatarSVG(a,90,"wave")}</div><p class="msub">Se crea una sola vez. Después, cambiar el cuerpo o el pelo cuesta ${fmtM(AV_CHANGE.base)} y la ropa ${fmtM(AV_CHANGE.outfit)}.</p><div class="mactions"><button class="btn" type="button" onclick="UI.close()">Seguir cambiando</button><button class="btn primary" type="button" id="avYes">¡Sí, crear!</button></div>`);$("avYes").onclick=()=>{UI.close();done()};return}
       const c=costNow();if(!c){FX.toast("No cambiaste nada");return}
-      const cur=c.gold?"gold":"silver",cost=c[cur],can=p[cur]>=cost;
-      UI.modal(`<h2 class="mtitle">Cambiar tu avatar</h2><div class="center">${avatarSVG(a,90,"wave")}</div><p class="msub">Este cambio cuesta <b>${cost}</b> ${R.coin(cur,20)} ${esc(R.coinName(cur))}. Tenés ${p[cur]}.</p>${can?"":`<p class="growth">Te faltan ${cost-p[cur]}. ¡Seguí jugando para juntarlas!</p>`}<div class="mactions"><button class="btn" type="button" onclick="UI.close()">Ahora no</button>${can?`<button class="btn primary" type="button" id="avPay">Pagar y guardar</button>`:""}</div>`);
-      if(can)$("avPay").onclick=()=>{p[cur]-=cost;UI.close();FX.coin();done()}};
+      const cost=c,can=G.cash()>=cost;
+      UI.modal(`<h2 class="mtitle">Cambiar tu avatar</h2><div class="center">${avatarSVG(a,90,"wave")}</div><p class="msub">Este cambio cuesta <b>${fmtM(cost)}</b>. Tenés ${fmtM(G.cash())}.</p>${can?"":`<p class="growth">Te faltan ${fmtM(cost-G.cash())}. ¡Seguí jugando para juntarlos!</p>`}<div class="mactions"><button class="btn" type="button" onclick="UI.close()">Ahora no</button>${can?`<button class="btn primary" type="button" id="avPay">Pagar y guardar</button>`:""}</div>`);
+      if(can)$("avPay").onclick=()=>{G.spend(cost);UI.close();FX.coin();done()}};
   };
   const apply=(k,v,type)=>{
     if(type==="multi"){a.makeup=a.makeup.includes(v)?a.makeup.filter(x=>x!==v):a.makeup.concat(v);return}
@@ -1685,12 +1782,12 @@ UI.avatar=function(first){
   render();
 };
 UI.buy=function(it,done){
-  const p=G.P;const cur=it.price.gold?"gold":"silver",cost=it.price[cur];const can=p[cur]>=cost;
+  const p=G.P;const cost=it.price;const can=G.cash()>=cost;
   const [slot,val]=it.id.split(":");const nm=(AV[slot+"Name"]||{})[val]||(slot==="color"||slot==="hc"?"Color especial":val);
-  UI.modal(`<h2 class="mtitle">${esc(nm)}</h2><p class="msub">Cuesta ${cost} ${R.coin(cur,20)} ${esc(R.coinName(cur))}. Tenés ${p[cur]}.</p>
-    ${can?"":`<p class="growth">🌱 Te faltan ${cost-p[cur]}. Cada respuesta correcta te acerca: ¡vos podés!</p>`}
+  UI.modal(`<h2 class="mtitle">${esc(nm)}</h2><p class="msub">Cuesta <b>${fmtM(cost)}</b>. Tenés ${fmtM(G.cash())}.</p><div class="walletbig">${walletHTML(cost,30)}</div>
+    ${can?"":`<p class="growth">🌱 Te faltan ${fmtM(cost-G.cash())}. Cada respuesta correcta te acerca: ¡vos podés!</p>`}
     <div class="mactions"><button class="btn" type="button" onclick="UI.close()">Ahora no</button>${can?`<button class="btn primary" type="button" id="buyOk">Comprar</button>`:""}</div>`);
-  if(can)$("buyOk").onclick=()=>{p[cur]-=cost;p.owned.push(it.id);G.save();UI.close();FX.coin();FX.confetti(60);FX.toast("🛍️ ¡Nuevo en tu vestidor!");done()};
+  if(can)$("buyOk").onclick=()=>{G.spend(cost);p.owned.push(it.id);G.save();UI.close();FX.coin();FX.confetti(60);FX.toast("🛍️ ¡Nuevo en tu vestidor!");done()};
 };
 
 /* ---------- TALLER DE PREMIOS (una sola vez) ---------- */
@@ -1699,10 +1796,6 @@ UI.taller=function(){
   const symGrid=(cur,key)=>`<div class="symgrid">${Object.keys(SYMBOLS).map(k=>`<button type="button" class="symb ${cur===k?"on":""}" data-sym="${k}" data-key="${key}" title="${SYM_NAMES[k]}"><svg width="30" height="30" viewBox="0 0 24 24"><path d="${SYMBOLS[k]}" fill="currentColor" ${k==="hoja"||k==="planeta"||k==="cohete"?'stroke="currentColor" stroke-width="1.6"':""}/></svg></button>`).join("")}</div>`;
   const RIB=["#7c3aed","#ec4899","#ef4444","#f97316","#22c55e","#14b8a6","#3b82f6","#1f2937"];
   const steps=[
-    {t:"Tus monedas",d:"Tenés dos monedas: una de oro, que cuesta más ganar, y una de plata, que ganás en cada respuesta correcta. Ponele nombre y elegí su dibujo.",
-     h:()=>`<div class="tgrid"><div class="tcard"><div class="tprev">${coinSVG("gold",rw.gold.sym,96)}</div><label>Nombre de la moneda de oro<input id="nGold" maxlength="20" value="${esc(rw.gold.name)}"></label>${symGrid(rw.gold.sym,"gold")}</div>
-       <div class="tcard"><div class="tprev">${coinSVG("silver",rw.silver.sym,96)}</div><label>Nombre de la moneda de plata<input id="nSilver" maxlength="20" value="${esc(rw.silver.name)}"></label>${symGrid(rw.silver.sym,"silver")}</div></div>`,
-     save:()=>{rw.gold.name=$("nGold").value.trim()||"Doradas";rw.silver.name=$("nSilver").value.trim()||"Plateadas"}},
     {t:"Tus medallas",d:"Se ganan al terminar un juego: bronce, plata u oro según cuántas respuestas aciertes. Elegí el color de la cinta, el dibujo y el nombre de cada una.",
      h:()=>`<div class="tprev row">${["bronze","silver","gold"].map(t=>medalSVG(t,rw.medal.ribbon,rw.medal.sym,80)).join("")}</div>
        <p class="tlab">Color de la cinta</p><div class="ribgrid">${RIB.map(c=>`<button type="button" class="sw ${rw.medal.ribbon===c?"on":""}" data-rib="${c}" style="background:${c}" aria-label="Cinta ${c}"></button>`).join("")}</div>
@@ -1718,7 +1811,7 @@ UI.taller=function(){
        <div class="tnames two">${SUBJECTS.map(s=>`<label><span>${badgeSVG(rw.badge.shape,s.color,s.icon,3,30)} ${s.name}</span><input data-bn="${s.id}" maxlength="30" value="${esc(rw.badge.names[s.id])}"></label>`).join("")}</div>`,
      save:()=>{document.querySelectorAll("[data-bn]").forEach(i=>rw.badge.names[i.dataset.bn]=i.value.trim()||DEFAULT_REWARDS.badge.names[i.dataset.bn])}},
     {t:"¡Así quedan tus premios!",d:"Revisá todo. Cuando toques «Crear mis premios» quedan fijos y este taller se cierra.",
-     h:()=>`<div class="final"><div class="row">${coinSVG("gold",rw.gold.sym,64)}<b>${esc(rw.gold.name)}</b>${coinSVG("silver",rw.silver.sym,64)}<b>${esc(rw.silver.name)}</b></div>
+     h:()=>`<div class="final">
        <div class="row">${["bronze","silver","gold"].map(t=>`<span class="fi">${medalSVG(t,rw.medal.ribbon,rw.medal.sym,56)}<small>${esc(rw.medal.names[t])}</small></span>`).join("")}</div>
        <div class="row">${TROPHY_GOALS.map(g=>`<span class="fi">${trophySVG(rw.trophy.shape,48)}<small>${esc(rw.trophy.names[g.id])}</small></span>`).join("")}</div>
        <div class="row">${SUBJECTS.map(s=>`<span class="fi">${badgeSVG(rw.badge.shape,s.color,s.icon,3,48)}<small>${esc(rw.badge.names[s.id])}</small></span>`).join("")}</div></div>`}
@@ -1739,7 +1832,7 @@ UI.taller=function(){
       UI.modal(`<h2 class="mtitle">¿Crear tus premios?</h2><p class="msub">Después ya no se pueden cambiar. Si querés revisar algo, volvé atrás.</p><div class="mactions"><button class="btn" type="button" onclick="UI.close()">Revisar</button><button class="btn primary" type="button" id="tYes">¡Sí, crear!</button></div>`);
       $("tYes").onclick=async()=>{$("tYes").disabled=true;G.P.rewards=rw;G.save();
         try{await MJ.lockRewards();UI.close();FX.fanfare();FX.confetti(260);MJ.taller="BLOQUEADO";
-          UI.modal(`<div class="result"><h2 class="mtitle">¡Premios creados!</h2><div class="row">${coinSVG("gold",rw.gold.sym,70)}${medalSVG("gold",rw.medal.ribbon,rw.medal.sym,70)}${trophySVG(rw.trophy.shape,60)}</div><p class="msub">Ahora a jugar para ganarlos.</p><div class="mactions"><button class="btn primary" type="button" id="goPlay">¡A jugar!</button></div></div>`);
+          UI.modal(`<div class="result"><h2 class="mtitle">¡Premios creados!</h2><div class="row">${medalSVG("gold",rw.medal.ribbon,rw.medal.sym,70)}${trophySVG(rw.trophy.shape,60)}</div><p class="msub">Ahora a jugar para ganarlos.</p><div class="mactions"><button class="btn primary" type="button" id="goPlay">¡A jugar!</button></div></div>`);
           $("goPlay").onclick=()=>{UI.close();MJ.next()}}
         catch(e){UI.close();FX.toast(e.message)}};
     };
@@ -1751,15 +1844,15 @@ UI.taller=function(){
 UI.amigos=function(){
   const f=MJ.friends||[];
   $("v-amigos").innerHTML=`<header class="vhead"><h2>Amigos</h2><p class="note">Para sumar a un compañero o compañera, pedile a un adulto que le cree un usuario en la hoja.</p></header>
-   ${f.length?`<div class="friends">${f.map((x,i)=>`<div class="friend ${x.name===MJ.name?"me":""}"><span class="pos">${i+1}</span><span class="favw">${avatarSVG(x.avatar&&x.avatar.kind?x.avatar:defaultAvatar("nena"),34)}</span><b>${esc(x.name)}</b><span>Nivel ${x.level}</span><span>🔥 ${x.streak}</span><span>${R.coin("gold",18)} ${x.gold}</span></div>`).join("")}</div>`:`<p class="note">Todavía no hay nadie más.</p>`}`;
+   ${f.length?`<div class="friends">${f.map((x,i)=>`<div class="friend ${x.name===MJ.name?"me":""}"><span class="pos">${i+1}</span><span class="favw">${avatarSVG(x.avatar&&x.avatar.kind?x.avatar:defaultAvatar("nena"),34)}</span><b>${esc(x.name)}</b><span>Nivel ${x.level}</span><span>🔥 ${x.streak}</span><span>💰 ${fmtM((x.gold||0)*100)}</span></div>`).join("")}</div>`:`<p class="note">Todavía no hay nadie más.</p>`}`;
 };
 
 /* =====================================================================
    ERRORES CON COSTO · CONSECUENCIA EN EL AVATAR · MONITO · BLOQUEOS
    CAMINO DE 800 PASOS · AYUDA PAGA
    ===================================================================== */
-const COST_WRONG=3;                     // plateadas que cuesta cada error
-const HELP_COST=5;                      // plateadas que cuesta pedir ayuda
+const COST_WRONG=200;                   // centavos que cuesta cada error ($ 2)
+const HELP_COST=300;                    // centavos que cuesta pedir ayuda ($ 3)
 const LOCK_MIN=[5,10,20,30,45,60];      // minutos de bloqueo: 1ª, 2ª, 3ª vez del día…
 const MOCKS=["¡Ja, ja, ja! ¡Esa no era!","¡Uy, uy, uy! ¡Le erraste!","¡Ji, ji! ¿Leíste bien?","¡Jo, jo! ¡Pensalo mejor!","¡Ups! ¡Me río un poquito!","¡Ja! ¡Te agarré distraída!"];
 const fem=()=>((G.P&&G.P.avatar)||{}).kind!=="nene";
@@ -1825,13 +1918,13 @@ function missHTML(c,pay,stage,out){
   const txt=stage!=null?`Comer mal te hace mal: ahora estás en la etapa «${HEALTH[stage].n()}».`:k.txt();
   return `<div class="miss"><div class="missrow"><div class="missav">${pic}</div><div class="monkey"><span class="mbubble">${esc(pick(MOCKS))}</span>${monkeySVG(78)}</div></div>
     <p class="misstxt">${esc(txt)}</p>
-    <p class="cost">−${pay} ${R.coin("silver",18)} ${pay<COST_WRONG?"(no te alcanzaba para pagar todo)":""}</p>
+    <p class="cost">Pagaste −${fmtM(pay)} ${moneySVG(200,20)} ${pay<COST_WRONG?"(no te alcanzaba para pagar todo)":""}</p>
     ${c.noLock?"":out?`<p class="strike s2">⛔ Segundo error: este juego se cierra.</p>`:`<p class="strike s1">⚠️ Primer error. Si te equivocás otra vez, este juego se bloquea ${G.nextLockMin(c.id)} minutos. Leé con calma antes de responder.</p>`}</div>`;
 }
 /* registra un error: cobra, enferma (plato), cuenta strikes. Devuelve {html,out} */
 UI.miss=function(){
   const c=UI.cur||(UI.cur={id:"_",strikes:0,noLock:true});c.strikes++;
-  const p=G.P;const pay=Math.min(p.silver,COST_WRONG);p.silver-=pay;p.stats.paid=(p.stats.paid||0)+pay;
+  const p=G.P;const pay=G.payUpTo(COST_WRONG);p.stats.paid=(p.stats.paid||0)+pay;
   let stage=null;if(c.id==="plato"){p.health=Math.min(6,(p.health||0)+1);stage=p.health}
   const out=!c.noLock&&c.strikes>=2;G.save();
   return {html:missHTML(c,pay,stage,out),out};
@@ -1861,13 +1954,13 @@ UI.kickOut=function(){
 UI.helpBtn=function(box,q,onUse){
   const wrongs=[...box.querySelectorAll(".qopt")].filter(b=>!b.disabled&&b.dataset.v!==q.ans);
   if(wrongs.length<2)return "";
-  return `<button class="btn small help" type="button" id="qhelp">💡 Ayuda: quitar ${wrongs.length>=3?2:1} opción${wrongs.length>=3?"es":""} (−${HELP_COST} ${R.coin("silver",14)})</button>`;
+  return `<button class="btn small help" type="button" id="qhelp">💡 Ayuda: quitar ${wrongs.length>=3?2:1} opción${wrongs.length>=3?"es":""} (−${fmtM(HELP_COST)})</button>`;
 };
 UI.useHelp=function(box,ans){
-  const p=G.P;if(p.silver<HELP_COST){FX.toast(`Te faltan ${HELP_COST-p.silver} plateadas para pedir ayuda`);return false}
+  const p=G.P;if(G.cash()<HELP_COST){FX.toast(`Te faltan ${fmtM(HELP_COST-G.cash())} para pedir ayuda`);return false}
   const wrongs=shuffle([...box.querySelectorAll(".qopt")].filter(b=>!b.disabled&&b.dataset.v!==ans));
   wrongs.slice(0,wrongs.length>=3?2:1).forEach(b=>{b.disabled=true;b.classList.add("gone")});
-  p.silver-=HELP_COST;p.stats.helps=(p.stats.helps||0)+1;G.save();FX.coin();return true;
+  G.spend(HELP_COST);p.stats.helps=(p.stats.helps||0)+1;G.save();FX.coin();return true;
 };
 
 /* ---------- CAMINO DEL SABER: 800 pasos ---------- */
@@ -1876,8 +1969,8 @@ const STATIONS=["Puerta del Atelier","Bosque de los Números","Puente de las Mon
 G.steps=function(){const p=G.P;if(p.steps==null)p.steps=Object.values(p.srs||{}).filter(s=>s.ok||s.bx>=1).length;return p.steps};
 G.stepUp=function(){
   const p=G.P;G.steps();p.steps++;const st=Math.floor(p.steps/PATH_EVERY);p.stats.station=p.stats.station||0;
-  if(st>p.stats.station&&st<=STATIONS.length){p.stats.station=st;const big=st%5===0;const g=big?5:2;p.gold+=g;
-    setTimeout(()=>{FX.fanfare();FX.confetti(big?220:120);FX.toast(`🗺️ ¡Llegaste a «${STATIONS[st-1]}»! +${g} ${R.coinName("gold")}`)},900)}
+  if(st>p.stats.station&&st<=STATIONS.length){p.stats.station=st;const big=st%5===0;const g=G.earn(big?PAY.bigStation:PAY.station);
+    setTimeout(()=>{FX.fanfare();FX.confetti(big?220:120);FX.toast(`🗺️ ¡Llegaste a «${STATIONS[st-1]}»! +${fmtM(g)}`)},900)}
 };
 UI.caminoCard=function(){
   const n=Math.min(PATH_TOTAL,G.steps());const st=Math.floor(n/PATH_EVERY);const next=STATIONS[Math.min(st,STATIONS.length-1)];
@@ -1887,8 +1980,8 @@ UI.caminoCard=function(){
 };
 UI.caminoMap=function(){
   const n=Math.min(PATH_TOTAL,G.steps());
-  UI.modal(`<h2 class="mtitle">🗺️ Camino del saber</h2><p class="msub">${n} de ${PATH_TOTAL} pasos. Cada parada da ${R.coin("gold",16)} 2, y cada 5 paradas ${R.coin("gold",16)} 5.</p>
-    <ol class="cam-list">${STATIONS.map((s,i)=>{const need=(i+1)*PATH_EVERY;const done=n>=need;return `<li class="${done?"done":n>=need-PATH_EVERY?"cur":""}"><span>${done?"✅":n>=need-PATH_EVERY?"📍":"🔒"}</span><b>${esc(s)}</b><small>${need} pasos · ${(i+1)%5===0?5:2} doradas</small></li>`}).join("")}</ol>
+  UI.modal(`<h2 class="mtitle">🗺️ Camino del saber</h2><p class="msub">${n} de ${PATH_TOTAL} pasos. Cada parada da ${fmtM(PAY.station)} ${moneySVG(PAY.station,16)} y cada 5 paradas ${fmtM(PAY.bigStation)} ${moneySVG(PAY.bigStation,16)}.</p>
+    <ol class="cam-list">${STATIONS.map((s,i)=>{const need=(i+1)*PATH_EVERY;const done=n>=need;return `<li class="${done?"done":n>=need-PATH_EVERY?"cur":""}"><span>${done?"✅":n>=need-PATH_EVERY?"📍":"🔒"}</span><b>${esc(s)}</b><small>${need} pasos · ${fmtM((i+1)%5===0?PAY.bigStation:PAY.station)}</small></li>`}).join("")}</ol>
     <div class="mactions"><button class="btn primary" type="button" onclick="UI.close()">Cerrar</button></div>`,true);
 };
 
@@ -1913,6 +2006,81 @@ function dots(total,done,results){return `<div class="rdots">${Array.from({lengt
 const askQ=async(s,opt)=>(await UI.ask(G.pickQ(s),opt||{})).ok;
 
 /* ================= 1. DETECTIVE POR EL MUNDO ================= */
+/* coordenadas aproximadas (latitud, longitud) */
+const GEO={"Madrid":[40.4,-3.7],"París":[48.9,2.35],"Londres":[51.5,-0.1],"Roma":[41.9,12.5],"Berlín":[52.5,13.4],"El Cairo":[30,31.2],"Nairobi":[-1.3,36.8],"Johannesburgo":[-26.2,28],"Tokio":[35.7,139.7],"Shanghái":[31.2,121.5],"Seúl":[37.6,127],"Mumbai":[19.1,72.9],"Dubái":[25.2,55.3],"Sídney":[-33.9,151.2],"Nueva York":[40.7,-74],"Toronto":[43.7,-79.4],"Ciudad de México":[19.4,-99.1],"Bogotá":[4.7,-74.1],"Lima":[-12,-77],"Río de Janeiro":[-22.9,-43.2],"Santiago de Chile":[-33.4,-70.6],"Ushuaia":[-54.8,-68.3],"Mendoza":[-32.9,-68.8],"Lisboa":[38.7,-9.1],"Atenas":[38,23.7],"Ámsterdam":[52.4,4.9],"Estocolmo":[59.3,18.1],"Moscú":[55.8,37.6],"Pekín":[39.9,116.4],"Bangkok":[13.8,100.5],"Montevideo":[-34.9,-56.2],"Cusco":[-13.5,-72],"La Habana":[23.1,-82.4],"Wellington":[-41.3,174.8],"Marrakech":[31.6,-8]};
+/* continentes muy simplificados para el globo */
+const LAND=[
+ [[12,-72],[10,-62],[5,-52],[0,-50],[-5,-35],[-10,-37],[-23,-42],[-34,-53],[-40,-62],[-52,-68],[-55,-67],[-50,-75],[-40,-73],[-30,-71],[-18,-70],[-5,-81],[2,-79],[8,-77]],
+ [[8,-77],[15,-92],[18,-95],[20,-105],[30,-115],[40,-124],[50,-127],[60,-140],[60,-165],[70,-160],[71,-130],[69,-100],[73,-85],[60,-65],[50,-55],[45,-65],[35,-76],[25,-80],[30,-90],[22,-98],[18,-88]],
+ [[60,-45],[70,-22],[82,-30],[80,-65],[70,-55]],
+ [[36,-9],[43,-9],[48,-5],[51,2],[54,8],[57,8],[58,6],[63,10],[70,20],[70,30],[65,40],[55,40],[45,40],[42,28],[40,22],[37,23],[40,18],[38,16],[44,12],[43,5],[37,-2]],
+ [[35,-6],[37,10],[32,20],[31,32],[22,37],[12,43],[11,51],[0,42],[-10,40],[-25,35],[-34,26],[-34,18],[-17,12],[-5,12],[5,8],[5,-5],[10,-15],[20,-17],[28,-12]],
+ [[42,28],[37,36],[30,35],[22,39],[12,44],[20,58],[25,57],[25,67],[8,77],[22,88],[15,98],[1,103],[10,107],[22,108],[30,122],[40,122],[39,128],[43,132],[53,141],[60,163],[66,180],[72,140],[76,100],[72,70],[68,55],[65,40],[55,40],[45,40]],
+ [[31,130],[35,135],[40,140],[44,143],[41,141],[35,140],[33,131]],
+ [[-11,132],[-12,142],[-25,153],[-38,147],[-38,140],[-32,133],[-35,117],[-22,113],[-14,127]],
+ [[-35,173],[-41,175],[-46,167],[-40,172]]
+];
+const toV=([la,lo])=>{const a=la*Math.PI/180,b=lo*Math.PI/180;return [Math.cos(a)*Math.cos(b),Math.cos(a)*Math.sin(b),Math.sin(a)]};
+const toLL=v=>{const r=Math.hypot(...v);return [Math.asin(v[2]/r)*180/Math.PI,Math.atan2(v[1],v[0])*180/Math.PI]};
+const slerp=(p,q,t)=>{const d=Math.acos(clamp(p[0]*q[0]+p[1]*q[1]+p[2]*q[2],-1,1));if(d<1e-6)return p;const s=Math.sin(d);const a=Math.sin((1-t)*d)/s,b=Math.sin(t*d)/s;return [p[0]*a+q[0]*b,p[1]*a+q[1]*b,p[2]*a+q[2]*b]};
+const kmBetween=(A,B)=>{const p=toV(A),q=toV(B);return Math.round(6371*Math.acos(clamp(p[0]*q[0]+p[1]*q[1]+p[2]*q[2],-1,1)))};
+function vehicleFor(a,b,km,last){
+  if(last)return ["🚁","helicóptero"];
+  if(a.c===b.c){
+    if(km<800)return pick([["🚌","micro"],["🚗","auto"]]);
+    if(a.c==="Europa"&&km<2600)return ["🚄","tren de alta velocidad"];
+    if(a.c==="Asia"&&km<2600)return ["🚅","tren bala"];
+    if(a.c==="Oceanía")return ["🛳️","barco"];
+    if(a.c==="África"&&km<3500)return ["🚙","jeep por la sabana"];
+    if(a.c==="América del Sur"&&km<2600)return pick([["🚌","micro de larga distancia"],["🚂","tren"]]);
+  }
+  if(km<2600)return ["⛴️","ferry"];
+  if(Math.random()<0.2)return ["🛳️","barco"];
+  return ["✈️","avión"];
+}
+/* globo 3D: gira de una ciudad a otra mostrando el viaje */
+function globeTrip(box,from,to,veh,info,done){
+  box.innerHTML=`<div class="trip"><canvas id="globe" aria-label="Viaje de ${esc(from.n)} a ${esc(to.n)}"></canvas><p class="tripline"><b>${veh[0]} En ${esc(veh[1])}</b> de ${esc(from.n)} a ${esc(to.n)}<br><small>${info}</small></p></div>`;
+  const c=$("globe"),ctx=c.getContext("2d");const S=Math.min(box.clientWidth,340),r=devicePixelRatio||1;c.width=S*r;c.height=S*r;c.style.width=c.style.height=S+"px";ctx.setTransform(r,0,0,r,0,0);
+  const A=GEO[from.n]||[0,0],B=GEO[to.n]||[0,0];const pa=toV(A),pb=toV(B);const R=S*0.42,cx=S/2,cy=S/2;const t0=performance.now(),DUR=2600;let raf;
+  const proj=(ll,c0)=>{const [la,lo]=ll.map(x=>x*Math.PI/180);const [la0,lo0]=c0.map(x=>x*Math.PI/180);
+    const cosc=Math.sin(la0)*Math.sin(la)+Math.cos(la0)*Math.cos(la)*Math.cos(lo-lo0);
+    let x=Math.cos(la)*Math.sin(lo-lo0),y=Math.cos(la0)*Math.sin(la)-Math.sin(la0)*Math.cos(la)*Math.cos(lo-lo0);
+    if(cosc<0){const m=Math.hypot(x,y)||1;x/=m;y/=m}return [cx+x*R,cy-y*R,cosc>=0]};
+  const frame=now=>{
+    const tt=Math.min(1,(now-t0)/DUR);const e=tt<.5?2*tt*tt:1-Math.pow(-2*tt+2,2)/2;
+    const camV=slerp(pa,pb,e);const cam=toLL(camV);cam[0]=clamp(cam[0]*0.8,-60,60);
+    ctx.clearRect(0,0,S,S);
+    // halo y océano con luz
+    const halo=ctx.createRadialGradient(cx,cy,R*0.9,cx,cy,R*1.18);halo.addColorStop(0,"rgba(167,139,250,.55)");halo.addColorStop(1,"rgba(167,139,250,0)");ctx.fillStyle=halo;ctx.beginPath();ctx.arc(cx,cy,R*1.18,0,7);ctx.fill();
+    const sea=ctx.createRadialGradient(cx-R*.35,cy-R*.4,R*.1,cx,cy,R);sea.addColorStop(0,"#7dd3fc");sea.addColorStop(.6,"#2563eb");sea.addColorStop(1,"#1e3a8a");ctx.fillStyle=sea;ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.fill();
+    ctx.save();ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.clip();
+    // paralelos y meridianos
+    ctx.strokeStyle="rgba(255,255,255,.18)";ctx.lineWidth=1;
+    for(let lat=-60;lat<=60;lat+=30){ctx.beginPath();let pen=false;for(let lo=-180;lo<=180;lo+=6){const [x,y,v]=proj([lat,lo],cam);if(v){pen?ctx.lineTo(x,y):ctx.moveTo(x,y);pen=true}else pen=false}ctx.stroke()}
+    for(let lo=-180;lo<180;lo+=30){ctx.beginPath();let pen=false;for(let lat=-90;lat<=90;lat+=6){const [x,y,v]=proj([lat,lo],cam);if(v){pen?ctx.lineTo(x,y):ctx.moveTo(x,y);pen=true}else pen=false}ctx.stroke()}
+    // tierra
+    LAND.forEach(poly=>{const pts=[];for(let i=0;i<poly.length;i++){const p=poly[i],q=poly[(i+1)%poly.length];for(let k=0;k<4;k++){const ll=toLL(slerp(toV(p),toV(q),k/4));pts.push(proj(ll,cam))}}
+      if(!pts.some(p=>p[2]))return;ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();
+      const g=ctx.createLinearGradient(cx-R,cy-R,cx+R,cy+R);g.addColorStop(0,"#86efac");g.addColorStop(1,"#15803d");ctx.fillStyle=g;ctx.fill();ctx.strokeStyle="rgba(20,83,45,.5)";ctx.stroke()});
+    // ruta
+    ctx.setLineDash([5,5]);ctx.strokeStyle="#fde68a";ctx.lineWidth=2.5;ctx.beginPath();let pen=false;
+    for(let k=0;k<=40;k++){const ll=toLL(slerp(pa,pb,k/40));const [x,y,v]=proj(ll,cam);if(v){pen?ctx.lineTo(x,y):ctx.moveTo(x,y);pen=true}else pen=false}ctx.stroke();ctx.setLineDash([]);
+    ctx.strokeStyle="#ec4899";ctx.lineWidth=3.5;ctx.beginPath();pen=false;for(let k=0;k<=40*e;k++){const ll=toLL(slerp(pa,pb,k/40));const [x,y,v]=proj(ll,cam);if(v){pen?ctx.lineTo(x,y):ctx.moveTo(x,y);pen=true}else pen=false}ctx.stroke();
+    [[A,from.n],[B,to.n]].forEach(([ll,n])=>{const [x,y,v]=proj(ll,cam);if(!v)return;ctx.fillStyle="#fff";ctx.beginPath();ctx.arc(x,y,5,0,7);ctx.fill();ctx.fillStyle="#db2777";ctx.beginPath();ctx.arc(x,y,3,0,7);ctx.fill();ctx.font="bold 12px system-ui";ctx.textAlign="center";ctx.lineWidth=3;ctx.strokeStyle="rgba(30,27,75,.8)";ctx.strokeText(n,x,y-10);ctx.fillStyle="#fff";ctx.fillText(n,x,y-10)});
+    // vehículo
+    const [vx,vy]=proj(toLL(slerp(pa,pb,e)),cam);const lift=Math.sin(e*Math.PI)*(veh[0]==="✈️"||veh[0]==="🚁"?14:3);
+    ctx.fillStyle="rgba(0,0,0,.25)";ctx.beginPath();ctx.ellipse(vx,vy+4,10,4,0,0,7);ctx.fill();
+    ctx.font=`26px ${EMOJI}`;ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillStyle="#000";ctx.fillText(veh[0],vx,vy-lift);ctx.textBaseline="alphabetic";
+    ctx.restore();
+    // brillo de esfera (profundidad)
+    const shine=ctx.createRadialGradient(cx-R*.45,cy-R*.5,0,cx-R*.45,cy-R*.5,R*.9);shine.addColorStop(0,"rgba(255,255,255,.35)");shine.addColorStop(1,"rgba(255,255,255,0)");ctx.fillStyle=shine;ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.fill();
+    const shade2=ctx.createRadialGradient(cx+R*.3,cy+R*.35,R*.3,cx,cy,R);shade2.addColorStop(0,"rgba(15,23,42,0)");shade2.addColorStop(1,"rgba(15,23,42,.35)");ctx.fillStyle=shade2;ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.fill();
+    if(tt<1)raf=requestAnimationFrame(frame);else setTimeout(()=>{if(!UI.ended)done()},500)};
+  raf=requestAnimationFrame(frame);FX.tone(400,.3,"sine",.06);
+  const old=UI.cleanup;UI.cleanup=()=>{cancelAnimationFrame(raf);old&&old()};
+}
+
 GAMEFN.detective=function(box,L){
   const F=fem();const NEED=8;
   let pos=0,cur=pick(CITIES),visited=[cur.n],correct=0,total=0,finished=false;
@@ -1944,13 +2112,13 @@ GAMEFN.detective=function(box,L){
     const k=dif();const dest=pick(CITIES.filter(x=>x.n!==cur.n&&!visited.slice(-4).includes(x.n)));const clues=cluesFor(dest,k);const opts=options(dest,k);let paid=false;
     box.innerHTML=`<div class="det"><div class="dethead"><div class="wanted"><small>SE BUSCA</small>${thiefSVG(54)}<b>${esc(Thief)}</b></div><div class="detinfo"><p>Robó <b>${loot}</b>. Necesitás <b>${NEED} aciertos</b> para atraparl${F?"a":"o"}. Si te equivocás, ${ladr} se te escapa un paso.</p>${track()}<span class="chip">Pista ${pos+1} de ${NEED} · dificultad ${k+1}</span></div></div>
       <div class="detcity"><span class="pin">📍</span><div><small>Estás en</small><h3>${esc(cur.n)}, ${esc(cur.p)}</h3></div></div>
-      <div class="witness"><h4>🗣️ Lo que dicen los testigos</h4><ol id="clues">${clues.map(c=>`<li>${esc(c)}</li>`).join("")}</ol><button class="btn small help" id="inform" type="button">💰 Pagarle a un informante: descarta 2 ciudades (−${HELP_COST} ${R.coin("silver",14)})</button></div>
+      <div class="witness"><h4>🗣️ Lo que dicen los testigos</h4><ol id="clues">${clues.map(c=>`<li>${esc(c)}</li>`).join("")}</ol><button class="btn small help" id="inform" type="button">💰 Pagarle a un informante: descarta 2 ciudades (−${fmtM(HELP_COST)})</button></div>
       <h4 class="qtext">¿A qué ciudad viajó ${ladr}?</h4><div class="qopts cities">${opts.map(o=>`<button class="qopt" type="button" data-n="${esc(o.n)}" data-v="${esc(o.n)}">✈️ ${esc(o.n)} <small>${esc(o.p)}</small></button>`).join("")}</div><div id="dfeed" class="qfeed"></div></div>`;
     $("inform").onclick=()=>{if(paid)return;if(UI.useHelp(box.querySelector(".cities"),dest.n)){paid=true;$("inform").remove();FX.toast("🕵️ El informante tachó dos ciudades")}};
     box.querySelectorAll(".cities .qopt").forEach(b=>b.onclick=()=>{
       box.querySelectorAll(".cities .qopt").forEach(x=>x.disabled=true);if($("inform"))$("inform").remove();total++;
-      if(b.dataset.n===dest.n){correct++;pos++;G.P.silver+=1;G.save();FX.good();b.classList.add("right");const r=b.getBoundingClientRect();FX.sparkle(r.left+r.width/2,r.top);
-        $("dfeed").innerHTML=`<p class="okmsg">¡Bien! +1 ${R.coin("silver",16)} ${esc(dest.n)} está en ${esc(dest.p)} (${esc(dest.c)}). Se habla ${esc(dest.lang)} y se paga con ${esc(dest.cur)}.</p><p class="note">${pos>=NEED?`¡Ya l${F?"a":"o"} tenés!`:`Te faltan ${NEED-pos} aciertos. La próxima pista va a ser más difícil.`}</p><button class="btn primary" id="go" type="button">${pos>=NEED?"🚓 ¡Atrapar!":"✈️ Viajar"}</button>`;
+      if(b.dataset.n===dest.n){correct++;pos++;G.earn(PAY.detective);G.save();FX.good();b.classList.add("right");const r=b.getBoundingClientRect();FX.sparkle(r.left+r.width/2,r.top);
+        $("dfeed").innerHTML=`<p class="okmsg">¡Bien! ${plus(PAY.detective)} ${esc(dest.n)} está en ${esc(dest.p)} (${esc(dest.c)}). Se habla ${esc(dest.lang)} y se paga con ${esc(dest.cur)}.</p><p class="note">${pos>=NEED?`¡Ya l${F?"a":"o"} tenés!`:`Te faltan ${NEED-pos} aciertos. La próxima pista va a ser más difícil.`}</p><button class="btn primary" id="go" type="button">${pos>=NEED?"🚓 ¡Atrapar!":"✈️ Viajar"}</button>`;
         $("go").onclick=()=>{cur=dest;visited.push(dest.n);pos>=NEED?capture():fly(dest.n,stage)};
       }else{b.classList.add("wrong");box.querySelector(`.cities .qopt[data-n="${CSS.escape(dest.n)}"]`).classList.add("right");FX.bad();FX.shake(box);
         const m=UI.miss();const back=pos>0;pos=Math.max(0,pos-1);
@@ -1958,7 +2126,11 @@ GAMEFN.detective=function(box,L){
         $("go").onclick=()=>{if(m.out){UI.kickOut();return}cur=dest;visited.push(dest.n);fly(dest.n,stage)}}
     });
   }
-  function fly(to,next){box.innerHTML=`<div class="flight"><div class="plane">✈️</div><p>Volando a <b>${esc(to)}</b>…</p></div>`;FX.tone(400,.3,"sine",.06);setTimeout(()=>{if(!UI.ended)next()},1300)}
+  function fly(to,next){
+    const from=CITIES.find(c=>c.n===visited[visited.length-2])||cur;const dest=CITIES.find(c=>c.n===to)||cur;const km=kmBetween(GEO[from.n]||[0,0],GEO[dest.n]||[0,0]);
+    const veh=vehicleFor(from,dest,km,pos===NEED-1);const left=NEED-pos;
+    const info=`${km.toLocaleString("es-AR")} km · ${left<=0?"¡Ya l"+(F?"a":"o")+" tenés!":left===1?`¡Está muy cerca! Te falta 1 acierto`:`${esc(Thief)} está a ${left} pistas de distancia`}`;
+    globeTrip(box,from,dest,veh,info,next)}
   function capture(){
     if(finished)return;finished=true;
     box.innerHTML=`<div class="capture"><div class="cap-sky"><span>🏙️</span><span>🏛️</span><span>🌆</span></div>
@@ -2120,8 +2292,8 @@ async function rounds(box,id,list,intro,head){
 function checkBtn(el,label,fn){const b=document.createElement("button");b.className="btn primary big";b.type="button";b.textContent=label||"Comprobar";el.appendChild(b);return new Promise(res=>{b.onclick=()=>{const r=fn();if(r==null)return;b.remove();res(r)}})}
 function feedback(el,ok,txt){return new Promise(res=>{
   const m=ok?null:UI.miss();const heal=ok?UI.hit():"";
-  if(ok){const c=G.P;c.silver+=1;G.save()}
-  const d=document.createElement("div");d.className="qfeed";d.innerHTML=`<p class="${ok?"okmsg":"badmsg"}">${ok?`¡Bien! +1 ${R.coin("silver",16)}`:"No era así."} ${txt||""}</p>${heal}${m?m.html:""}<button class="btn primary" type="button">${m&&m.out?"Salir del juego":"Seguir"}</button>`;
+  if(ok){G.earn(PAY.round);G.save()}
+  const d=document.createElement("div");d.className="qfeed";d.innerHTML=`<p class="${ok?"okmsg":"badmsg"}">${ok?`¡Bien! ${plus(PAY.round)}`:"No era así."} ${txt||""}</p>${heal}${m?m.html:""}<button class="btn primary" type="button">${m&&m.out?"Salir del juego":"Seguir"}</button>`;
   el.appendChild(d);if(ok){FX.good();FX.confetti(30)}else{FX.bad();FX.shake(el)}
   const btn=d.querySelector("button.btn.primary:last-child")||d.querySelector("button");btn.focus();d.scrollIntoView({behavior:"smooth",block:"nearest"});
   btn.onclick=()=>{if(m&&m.out){UI.kickOut();return}res(ok)}})}
@@ -2172,7 +2344,37 @@ GAMEFN.kiosco=function(box,L){
 };
 
 /* ================= 4. ÁBACO MÁGICO (soroban) ================= */
+/* dibujo estático de un soroban: vals = dígito de cada varilla (izquierda → derecha) */
+function sorobanSVG(vals,w=220,mark){
+  const n=vals.length,W=40*n+20;
+  const rods=vals.map((d,i)=>{const x=30+i*40;const up=d>=5,lo=d%5;const hl=mark&&mark[i];
+    const bead=(y,on,col)=>`<ellipse cx="${x}" cy="${y}" rx="15" ry="8" fill="${col}" stroke="${shade(col,.6)}" stroke-width="1.5" opacity="${on?1:.85}"/>`;
+    let s=`<rect x="${x-1.5}" y="12" width="3" height="136" fill="#a16207"/>`;
+    s+=bead(up?50:24,up,up?"#ec4899":"#f9a8d4");
+    for(let k=0;k<4;k++){const on=k<lo;const y=on?72+k*17:80+k*17+(4-lo)*0+18;s+=bead(on?72+k*17:94+k*17-((lo)*0),on,on?"#7c3aed":"#c4b5fd")}
+    if(hl)s+=`<rect x="${x-19}" y="8" width="38" height="144" rx="8" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="4 3"/>`;
+    s+=`<text x="${x}" y="166" text-anchor="middle" font-size="11" font-weight="800" fill="#6b7280">${["UM","C","D","U"].slice(-n)[i]}</text><text x="${x}" y="182" text-anchor="middle" font-size="15" font-weight="900" fill="#1e1b4b">${d}</text>`;
+    return s}).join("");
+  return `<svg width="${w}" viewBox="0 0 ${W} 190" aria-hidden="true"><rect x="4" y="4" width="${W-8}" height="150" rx="10" fill="#fde68a" stroke="#92400e" stroke-width="4"/><rect x="4" y="58" width="${W-8}" height="6" fill="#92400e"/>${rods}</svg>`;
+}
+function abacoLesson(onEnd){
+  const S=[
+    ["¿Cómo es un ábaco japonés?",`${sorobanSVG([0,0,0])}<p>Cada <b>varilla</b> es una columna: unidades (U), decenas (D), centenas (C)…</p><p>Arriba de la barra hay <b>1 cuenta rosa que vale 5</b>. Abajo hay <b>4 cuentas violetas que valen 1</b> cada una.</p><p>Solo cuentan las que <b>tocan la barra del medio</b>.</p>`],
+    ["Cómo se marca un número",`<div class="lsrow">${sorobanSVG([0,0,7],150)}${sorobanSVG([0,2,3],150)}</div><p><b>7</b> = la cuenta de 5 + 2 cuentas de 1.</p><p><b>23</b> = 2 cuentas en las decenas y 3 en las unidades.</p>`],
+    ["Los «amigos del 5»",`<div class="lsrow">${sorobanSVG([3],80,[1])}<span class="larrow">+4 →</span>${sorobanSVG([7],80,[1])}</div><p>Tenés 3 y querés sumar 4, pero abajo queda <b>1 sola cuenta libre</b>.</p><p>Truco: <b>4 = 5 − 1</b>. Bajás la cuenta de 5 y sacás 1. ¡Quedó 7!</p><p class="pairs">Amigos del 5: <b>1 y 4</b> · <b>2 y 3</b></p>`],
+    ["Los «amigos del 10»",`<div class="lsrow">${sorobanSVG([0,7],110,[0,1])}<span class="larrow">+8 →</span>${sorobanSVG([1,5],110,[1,1])}</div><p>Tenés 7 y querés sumar 8. En las unidades no entra.</p><p>Truco: <b>8 = 10 − 2</b>. Sumás 1 en las decenas (vale 10) y sacás 2 de las unidades. ¡Quedó 15!</p><p class="pairs">Amigos del 10: <b>1 y 9</b> · <b>2 y 8</b> · <b>3 y 7</b> · <b>4 y 6</b> · <b>5 y 5</b></p>`],
+    ["Anzan: el ábaco en la mente",`${sorobanSVG([0,4,2])}<p>Cuando practicás mucho, podés <b>imaginar</b> el ábaco y mover las cuentas en la cabeza. Así se hace cálculo mental súper rápido.</p><p>En el juego vas a ver números que pasan rápido: imaginá las cuentas y sumalos.</p>`]
+  ];let i=0;
+  const draw=()=>{UI.modal(`<p class="stepn">Aprender el ábaco · ${i+1} de ${S.length}</p><h2 class="mtitle">${S[i][0]}</h2><div class="lesson">${S[i][1]}</div><div class="mactions">${i?`<button class="btn" type="button" id="lb">← Atrás</button>`:""}<button class="btn primary" type="button" id="ln">${i<S.length-1?"Siguiente →":"¡A jugar!"}</button></div>`,true);
+    if($("lb"))$("lb").onclick=()=>{i--;draw()};$("ln").onclick=()=>{if(i<S.length-1){i++;draw()}else{UI.close();G.P.stats.abacoTut=1;G.save();onEnd&&onEnd()}}};
+  draw();
+}
 GAMEFN.abaco=function(box,L){
+  const lessonBtn=()=>`<p class="center"><button class="btn small" type="button" onclick="abacoLesson()">📘 ¿Cómo se usa el ábaco?</button></p>`;
+  const start=()=>startAbaco(box,L,lessonBtn);
+  if(!G.P.stats.abacoTut)abacoLesson(start);else start();
+};
+function startAbaco(box,L,lessonBtn){
   const RODS=L>=3?5:4;
   function soroban(el){
     const st=Array.from({length:RODS},()=>({h:0,e:0}));
@@ -2184,13 +2386,13 @@ GAMEFN.abaco=function(box,L){
     paint();return {val,set:n=>{const ds=String(n).padStart(RODS,"0").slice(-RODS).split("").map(Number);ds.forEach((d,i)=>{st[i].h=d>=5?1:0;st[i].e=d%5});paint()}};
   }
   const show=async el=>{const n=rnd(10,L>=3?9999:L>=2?999:99);el.innerHTML=`<h3 class="qtext">Mostrá el número <b>${num(n)}</b> en el ábaco</h3><p class="note">La cuenta de arriba vale 5; cada una de abajo vale 1.</p><div id="ab"></div>`;const s=soroban($("ab"));await checkBtn(el,"Listo",()=>true);return feedback(el,s.val()===n,s.val()===n?"":`Mostraste ${num(s.val())}. ${num(n)} = ${String(n).split("").map((d,i,a)=>d+"×"+num(10**(a.length-1-i))).join(" + ")}.`)};
-  const add=async el=>{const a=rnd(12,L>=3?5000:L>=2?500:60),b=rnd(3,L>=2?99:9);el.innerHTML=`<h3 class="qtext">En el ábaco está ${num(a)}. Sumale <b>${b}</b>.</h3><p class="note">Truco: si no te alcanzan las cuentas, usá el complemento (por ejemplo, +8 es +10 −2).</p><div id="ab"></div>`;const s=soroban($("ab"));s.set(a);await checkBtn(el,"Listo",()=>true);return feedback(el,s.val()===a+b,`${num(a)} + ${b} = ${num(a+b)}.`)};
+  const add=async el=>{const a=rnd(12,L>=3?5000:L>=2?500:60),b=rnd(3,L>=2?99:9);el.innerHTML=`<h3 class="qtext">En el ábaco está ${num(a)}. Sumale <b>${b}</b>.</h3><p class="note">Si no te alcanzan las cuentas, usá los amigos: del 5 (+4 = +5 −1) o del 10 (+8 = +10 −2). Tocá 📘 si no te acordás.</p><div id="ab"></div>`;const s=soroban($("ab"));s.set(a);await checkBtn(el,"Listo",()=>true);return feedback(el,s.val()===a+b,`${num(a)} + ${b} = ${num(a+b)}.`)};
   const flash=async el=>{const n=Math.min(7,3+Math.floor(L/2)),mx=L>=4?99:L>=2?20:9,speed=Math.max(500,1300-L*120);const ns=Array.from({length:n},()=>rnd(1,mx));const sum=ns.reduce((a,b)=>a+b,0);
     el.innerHTML=`<h3 class="qtext">Anzan relámpago: imaginá el ábaco y sumá los ${n} números que van a aparecer.</h3><div class="flashnum" id="fn">¿Lista?</div>`;
     await new Promise(r=>setTimeout(r,900));for(const x of ns){$("fn").textContent=x;FX.pop();await new Promise(r=>setTimeout(r,speed));$("fn").textContent="";await new Promise(r=>setTimeout(r,150))}
     $("fn").textContent="?";const opts=shuffle([sum,...near(sum,3)]);el.insertAdjacentHTML("beforeend",`<div class="qopts four">${opts.map(o=>`<button class="qopt" type="button">${o}</button>`).join("")}</div>`);
     const a=await new Promise(r=>el.querySelectorAll(".qopt").forEach(b=>b.onclick=()=>r(+b.textContent)));return feedback(el,a===sum,`Eran ${ns.join(" + ")} = ${sum}.`)};
-  rounds(box,"abaco",L>=2?[show,add,flash,add,flash,show,qRound("mate"),flash]:[show,show,add,show,add,flash,qRound("mate"),add]);
+  rounds(box,"abaco",L>=2?[show,add,flash,add,flash,show,qRound("mate"),flash]:[show,show,add,show,add,flash,qRound("mate"),add],null,lessonBtn);
 };
 
 /* ================= 5. PLATO ARCOÍRIS ================= */
@@ -2203,7 +2405,8 @@ const octa=t=>`<svg class="octa" width="54" height="54" viewBox="0 0 60 60" aria
 GAMEFN.plato=function(box,L){
   let d=L;   // dificultad: arranca en el nivel del juego y sube con cada acierto
   const plate=async el=>{
-    const needColors=Math.min(5,2+Math.ceil(d/2)),needLact=d>=3,needWater=d>=4,half=d>=5,max=d>=3?7:6;
+    const needColors=Math.min(5,2+Math.ceil(d/2)),needLact=d>=3,needWater=d>=4,half=d>=5;
+    const minItems=needColors+2+(needLact?1:0)+(needWater?1:0),max=minItems+1;   // siempre entra lo pedido y sobra un lugar
     let pool=shuffle(FOODS.filter(f=>f[3]!=="chatarra")).slice(0,11).concat(shuffle(FOODS.filter(f=>f[3]==="chatarra")).slice(0,2));
     ["proteina","carbo"].concat(needLact?["lacteo"]:[]).forEach(k=>{if(!pool.some(f=>f[3]===k))pool.push(pick(FOODS.filter(f=>f[3]===k)))});
     const cs=new Set(pool.filter(f=>f[2]).map(f=>f[2]));FOODS.filter(f=>f[2]&&!cs.has(f[2])).forEach(f=>{if(cs.size<needColors+1){pool.push(f);cs.add(f[2])}});
@@ -2337,12 +2540,18 @@ GAMEFN.robot=function(box,L){
       const walls=new Set();const nw=Math.floor(N*N*(0.12+Math.min(L,6)*0.02));for(let i=0;i<nw;i++)walls.add(rnd(0,N-1)+","+rnd(0,N-1));
       const s=[0,N-1],goal=[rnd(Math.floor(N/2),N-1),rnd(0,Math.floor(N/2))];walls.delete(s+"");walls.delete(goal+"");
       const q=[[...s]],seen={[s+""]:0};while(q.length){const [x,y]=q.shift();for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy,k=nx+","+ny;if(nx<0||ny<0||nx>=N||ny>=N||walls.has(k)||k in seen)continue;seen[k]=seen[x+","+y]+1;q.push([nx,ny])}}
-      if(seen[goal+""]>=N-1)return {walls,s,goal,dist:seen[goal+""]};
+      if(seen[goal+""]>=N-1){
+        // menor cantidad de bloques (avanzar y girar) para llegar: búsqueda sobre (x, y, dirección)
+        const D=[[0,-1],[1,0],[0,1],[-1,0]];const st=[[s[0],s[1],0]];const c={[s+",0"]:0};let best=99;
+        while(st.length){const [x,y,dd]=st.shift();const k=c[x+","+y+","+dd];if(x===goal[0]&&y===goal[1]){best=k;break}
+          const nx=x+D[dd][0],ny=y+D[dd][1];const nb=[[x,y,(dd+1)%4],[x,y,(dd+3)%4]];if(!(nx<0||ny<0||nx>=N||ny>=N||walls.has(nx+","+ny)))nb.push([nx,ny,dd]);
+          for(const z of nb){const kk=z.join(",");if(!(kk in c)){c[kk]=k+1;st.push(z)}}}
+        return {walls,s,goal,dist:seen[goal+""],minBlocks:best}}
     }
-    return {walls:new Set(),s:[0,N-1],goal:[N-1,0],dist:2*N-2};
+    return {walls:new Set(),s:[0,N-1],goal:[N-1,0],dist:2*N-2,minBlocks:2*N};
   }
   const puzzle=async el=>{
-    const m=maze();const limit=L>=3?Math.max(5,Math.ceil(m.dist*0.9)):99;
+    const m=maze();const limit=L>=3?m.minBlocks:99;   // siempre se puede: es el camino más corto sin «Repetir»
     const prog=[];let open=null;
     el.innerHTML=`<h3 class="qtext">Llevá al robot hasta la estrella ⭐ ${limit<99?`usando como máximo <b>${limit}</b> bloques`:""}</h3><p class="note">Empieza mirando hacia arriba. ${L>=2?"«Repetir» hace que los bloques de adentro se repitan.":""}</p>
       <div class="robo"><div class="grid" id="grid" style="--n:${N}"></div><div class="prog"><div class="blocks"><button type="button" data-b="F">⬆️ Avanzar</button><button type="button" data-b="L">↪️ Girar izq.</button><button type="button" data-b="R">↩️ Girar der.</button>${L>=2?`<button type="button" data-b="rep2">🔁 Repetir 2</button><button type="button" data-b="rep3">🔁 Repetir 3</button><button type="button" data-b="end">⏹ Cerrar repetir</button>`:""}<button type="button" data-b="del">⌫ Borrar</button></div><ol class="code" id="code"></ol><p id="cnt" class="note"></p></div></div>`;
@@ -2461,7 +2670,7 @@ GAMEFN.poleas=function(box,L){
   const polea=async el=>{
     const SYS=[["Polea fija",1],["Polea móvil",2],["Aparejo de 3 cuerdas",3],["Aparejo de 4 cuerdas",4]].slice(0,L>=3?4:3);
     const n=pick(SYS.slice(1))[1];const F=rnd(2,6)*10;const W=F*n-rnd(0,Math.min(9,F-1));
-    el.innerHTML=`<h3 class="qtext">Tenés que levantar un piano de <b>${W} kg</b>. Tu fuerza alcanza para <b>${F} kg</b>. ¿Qué sistema usás?</h3><p class="note">Con poleas, la fuerza se divide por la cantidad de cuerdas que sostienen la carga.</p><div id="pc"></div><div class="qopts">${SYS.map(s=>`<button class="qopt" type="button" data-n="${s[1]}">${s[0]} <small>(÷${s[1]})</small></button>`).join("")}</div>`;
+    el.innerHTML=`<h3 class="qtext">Tenés que levantar un piano de <b>${W} kg</b>. Tu fuerza alcanza para <b>${F} kg</b>. ¿Cuál es el sistema con <b>menos cuerdas</b> que te alcanza para levantarlo?</h3><p class="note">Con poleas, la fuerza se divide por la cantidad de cuerdas que sostienen la carga. Más cuerdas = más soga para tirar, por eso conviene usar las justas.</p><div id="pc"></div><div class="qopts">${SYS.map(s=>`<button class="qopt" type="button" data-n="${s[1]}">${s[0]} <small>(÷${s[1]})</small></button>`).join("")}</div>`;
     const cv=makeCanvas($("pc"),0.55,520),ctx=cv.ctx;let ropes=1,lift=0,raf,tP=performance.now(),go=false,fail=false;
     const draw=now=>{const dt=Math.max(0,Math.min(.05,(now-tP)/1000));tP=now;const W2=cv.W,H=cv.H;ctx.fillStyle="#f5f3ff";ctx.fillRect(0,0,W2,H);ctx.fillStyle="#475569";ctx.fillRect(0,0,W2,10);
       if(go&&!fail)lift=Math.min(1,lift+dt*0.5);if(fail)lift=Math.max(0,Math.sin(now/120)*0.03);
@@ -2556,6 +2765,11 @@ function loginFace(){
   $("loginAv").innerHTML=f&&f.avatar?`<div class="lav" style="--me:${f.avatar.topColor||"#7c3aed"}">${avatarSVG(f.avatar,74,"wave",{mood:"happy"})}</div><p><span>¡Hola, <b>${esc(f.name)}</b>!</span><small>Tu avatar te está esperando. Escribí tu código.</small></p>`
     :`<div class="lav ghost">${avatarSVG(defaultAvatar("nena"),74,"stand")}</div><p>¿Quién viene a jugar?<small>${u?"Cuando entres, acá vas a ver tu avatar.":"Escribí tu usuario y aparece tu avatar."}</small></p>`;
 }
+/* inclinación 3D de las tarjetas al mover el mouse */
+document.addEventListener("pointermove",e=>{if(e.pointerType!=="mouse")return;const el=e.target.closest&&e.target.closest(".gamecard,.subj,.hero,.camino");
+  document.querySelectorAll(".tilt").forEach(x=>{if(x!==el){x.classList.remove("tilt");x.style.transform=""}});
+  if(!el||matchMedia("(prefers-reduced-motion: reduce)").matches)return;const r=el.getBoundingClientRect();const dx=(e.clientX-r.left)/r.width-.5,dy=(e.clientY-r.top)/r.height-.5;
+  el.classList.add("tilt");el.style.transform=`translateY(-4px) rotateX(${(-dy*8).toFixed(2)}deg) rotateY(${(dx*10).toFixed(2)}deg)`});
 /* eventos */
 $("crestL").innerHTML=crestSVG(92);$("crestB").innerHTML=crestSVG(28);
 try{document.querySelector('link[rel="icon"]').href="data:image/svg+xml,"+encodeURIComponent(crestSVG(64).replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" '))}catch(e){}
