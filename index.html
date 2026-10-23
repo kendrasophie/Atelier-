@@ -1904,7 +1904,11 @@ UI.premios=function(){
 
 /* ---------- AVATAR: vestidor con tienda ---------- */
 UI.avatar=function(first){
-  const p=G.P;let a=Object.assign(defaultAvatar((p.avatar||{}).kind||"nena"),p.avatar||{});if(!Array.isArray(a.makeup))a.makeup=[];let tab="cuerpo";
+  const p=G.P;
+  // el avatar guardado se completa con los valores nuevos (estatura, ojos, mascota…) antes de comparar: abrir el vestidor no es un cambio
+  const norm=av=>{const x=genderClean(Object.assign(defaultAvatar((av||{}).kind||"nena"),av||{}));if(!Array.isArray(x.makeup))x.makeup=[];return x};
+  if(p.avatar&&!first)p.avatar=norm(p.avatar);
+  let a=norm(p.avatar);let tab="cuerpo";
   const ken=isKendra();
   const colorsPlus=AV.colors.concat(AV.special);
   const T=(obj)=>v=>obj[v]||v;
@@ -1919,8 +1923,8 @@ UI.avatar=function(first){
   };
   const tabName={mascota:"Mascota",cuerpo:"Cuerpo",pelo:"Pelo",ropa:"Ropa",deporte:"Deporte",accesorios:"Accesorios",maquillaje:"Maquillaje"};
   const extraHair={"#7c3aed":15000,"#ec4899":15000,"#14b8a6":15000};
-  const BASE=["kind","skin","face","eyeColor","hair","hairColor","alt","height"];const orig=JSON.stringify(p.avatar||{});const hist=[];
-  const costNow=()=>{if(first||!p.avatar)return null;const o=p.avatar;const same=k=>JSON.stringify(o[k])===JSON.stringify(a[k]);
+  const BASE=["kind","skin","face","eyeColor","hair","hairColor","alt","height"];const orig=JSON.stringify(a);const hist=[];
+  const costNow=()=>{if(first||!p.avatar)return null;const o=JSON.parse(orig);const same=k=>JSON.stringify(o[k])===JSON.stringify(a[k]);
     const kindOnly=k=>k==="kind"&&["nena","jirafa"].includes(o.kind)&&["nena","jirafa"].includes(a.kind);if(BASE.some(k=>!same(k)&&!kindOnly(k)))return AV_CHANGE.base;if(Object.keys(a).some(k=>!same(k)&&!kindOnly(k)))return AV_CHANGE.outfit;if(!same("kind"))return 0;return null};
   const itemFor=(key,v)=>{
     if(key==="hairColor"&&extraHair[v])return {id:"hc:"+v,price:extraHair[v]};
@@ -1946,7 +1950,7 @@ UI.avatar=function(first){
       const lk=locked(k,v);if(lk){UI.buy(lk,()=>{apply(k,v,b.dataset.type);render()});return}
       apply(k,v,b.dataset.type);FX.pop();render()});
     $("avUndo").onclick=()=>{if(!hist.length)return;a=JSON.parse(hist.pop());FX.toast("↩️ Cambio deshecho");render()};
-    if($("avReset"))$("avReset").onclick=()=>{hist.push(JSON.stringify(a));a=Object.assign(defaultAvatar(p.avatar.kind),JSON.parse(orig));if(!Array.isArray(a.makeup))a.makeup=[];FX.toast("Volvió a como estaba");render()};
+    if($("avReset"))$("avReset").onclick=()=>{hist.push(JSON.stringify(a));a=JSON.parse(orig);FX.toast("Volvió a como estaba");render()};
     $("avSave").onclick=()=>{
       const done=()=>{p.avatar=a;p.avatarSet=true;G.save();MJ.remember&&MJ.remember();FX.fanfare();FX.confetti(100);if(first)MJ.next();else{FX.toast("¡Guardado!");UI.hud();UI.avatar()}};
       if(first){UI.modal(`<h2 class="mtitle">¿Así queda tu avatar?</h2><div class="center">${avatarSVG(a,90,"wave")}</div><p class="msub">Se crea una sola vez. Después, cambiar el cuerpo o el pelo cuesta ${fmtM(AV_CHANGE.base)} y la ropa ${fmtM(AV_CHANGE.outfit)}.</p><div class="mactions"><button class="btn" type="button" onclick="UI.close()">Seguir cambiando</button><button class="btn primary" type="button" id="avYes">¡Sí, crear!</button></div>`);$("avYes").onclick=()=>{UI.close();done()};return}
