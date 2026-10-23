@@ -1399,6 +1399,7 @@ const AV={
   backName:{ninguno:"Nada",mochila:"Mochila",arcoFlechas:"Arco y carcaj con flechas",capaHeroe:"Capa de superhéroe",capaHeroina:"Capa de superheroína",capaPrincipe:"Capa de príncipe",capaPrincesa:"Capa de princesa"},
   gloves:["ninguno","box","ufc"],glovesName:{ninguno:"Nada",box:"Guantes de box",ufc:"Guantes de UFC"},
   ring:["ninguno","anillo"],ringName:{ninguno:"Nada",anillo:"Anillo"},
+  kindName:{jirafa:"Jirafa de peluche"},
   height:["baja","media","alta","muyAlta"],heightName:{baja:"Baja",media:"Media",alta:"Alta",muyAlta:"Muy alta"},
   eyes:["normales","guiño","cerrados"],eyesName:{normales:"Abiertos",guiño:"Guiñando un ojo",cerrados:"Cerrados"},
   mouth:["sonrisa","sonriendo","cerrada","abierta","triste","gritando"],mouthName:{sonrisa:"Sonrisa suave",sonriendo:"Sonriendo",cerrada:"Boca cerrada",abierta:"Boca abierta",triste:"Boca triste",gritando:"Gritando"},
@@ -1428,13 +1429,13 @@ const SHOP=[
   ["hand:tablet",{silver:600}],["hand:pelotaFutbol",{silver:120}],["hand:pelotaVoley",{silver:120}],["hand:pelotaBasquet",{silver:120}],["hand:raqueta",{silver:200}],["hand:espada",{silver:350}],["hand:hacha",{silver:300}],["hand:lazo",{silver:400}],
   ["back:mochila",{silver:180}],["back:arcoFlechas",{silver:450}],["back:capaHeroe",{silver:400}],["back:capaHeroina",{silver:400}],["back:capaPrincipe",{silver:500}],["back:capaPrincesa",{silver:500}],
   ["gloves:box",{silver:220}],["gloves:ufc",{silver:220}],
-  ["pet:perro",{silver:700}],["pet:gato",{silver:600}],["pet:conejo",{silver:550}],["pet:pollito",{silver:350}],["pet:caballo",{silver:1500}],
+  ["kind:jirafa",{silver:400}],["pet:perro",{silver:700}],["pet:gato",{silver:600}],["pet:conejo",{silver:550}],["pet:pollito",{silver:350}],["pet:caballo",{silver:1500}],
   ["petWear:collar",{silver:80}],["petWear:moño",{silver:80}],["petWear:bandana",{silver:100}],["petWear:sweater",{silver:180}],["petWear:capa",{silver:200}],["petWear:sombrerito",{silver:120}]
 ].map(([id,price])=>({id,price:price.gold?price.gold*2500:price.silver*100}));   // precios en centavos
 const AV_CHANGE={base:20000,outfit:4000};   // centavos: cuerpo o pelo $200; ropa $40   // costo de guardar cambios después de creado
 const EXCLUSIVE=["top:vestidoAtelier","head:tiaraAlpha","alt"];   // solo para Kendra
 /* prendas y accesorios solo para nenas (f) o solo para nenes (m) */
-const GENDER={"top:vestido":"f","top:vestidoElegante":"f","top:vestidoAtelier":"f","bottom:pollera":"f","bottom:tutu":"f","shoes:guillerminas":"f","head:vincha":"f","head:moño":"f","head:tiaraAlpha":"f",
+const GENDER={"kind:jirafa":"f","top:vestido":"f","top:vestidoElegante":"f","top:vestidoAtelier":"f","bottom:pollera":"f","bottom:tutu":"f","shoes:guillerminas":"f","head:vincha":"f","head:moño":"f","head:tiaraAlpha":"f",
   "ears:perlas":"f","ears:argollas":"f","ears:estrellitas":"f","neck:collarPerlas":"f","hand:cartera":"f","hand:lazo":"f","makeup:rubor":"f","makeup:labial":"f","makeup:sombra":"f","makeup:brillo":"f",
   "back:capaHeroina":"f","back:capaPrincesa":"f","back:capaHeroe":"m","back:capaPrincipe":"m","top:camLeonas":"f","top:camPumas":"m"};
 const genderOK=(kind,slot,v)=>{const g=GENDER[slot+":"+v];return !g||g===(kind==="nene"?"m":"f")};
@@ -1908,7 +1909,7 @@ UI.avatar=function(first){
   const colorsPlus=AV.colors.concat(AV.special);
   const T=(obj)=>v=>obj[v]||v;
   const tabs={
-    cuerpo:[["kind","Soy",["nena","nene","jirafa"],v=>({nena:"Nena",nene:"Nene",jirafa:"🦒 Jirafa de peluche"})[v]],["height","Estatura",AV.height,T(AV.heightName)],["eyes","Ojos",AV.eyes,T(AV.eyesName)],["mouth","Boca",AV.mouth,T(AV.mouthName)],["skin","Piel",AV.skin,"color"],["face","Forma de la cara",AV.face,T(AV.faceName)],["eyeColor","Color de ojos",AV.eyeColor,"color"]].concat(ken?[["alt","Figura",[false,true],v=>v?"✨ Estilizada (más alta)":"Clásica"]]:[]),
+    cuerpo:[["kind","Soy",["nena","nene","jirafa"].filter(v=>v!=="jirafa"||!first),v=>({nena:"Nena",nene:"Nene",jirafa:"🦒 Jirafa de peluche"})[v]],["height","Estatura",AV.height,T(AV.heightName)],["eyes","Ojos",AV.eyes,T(AV.eyesName)],["mouth","Boca",AV.mouth,T(AV.mouthName)],["skin","Piel",AV.skin,"color"],["face","Forma de la cara",AV.face,T(AV.faceName)],["eyeColor","Color de ojos",AV.eyeColor,"color"]].concat(ken?[["alt","Figura",[false,true],v=>v?"✨ Estilizada (más alta)":"Clásica"]]:[]),
     mascota:[["pet","Mascota",AV.pet,T(AV.petName)],["petColor","Color de la mascota",AV.petColor,"color"],["petWear","Ropa de la mascota",AV.petWear,T(AV.petWearName)]],
     pelo:[["hair","Peinado",AV.hair,T(AV.hairName)],["hairColor","Color",AV.hairColor.concat(["#7c3aed","#ec4899","#14b8a6"]),"color"]],
     ropa:[["top","Arriba",AV.top.filter(v=>(v!=="vestidoAtelier"||ken)&&!v.startsWith("cam")),T(AV.topName)],["topColor","Color",colorsPlus,"color"],["bottom","Abajo",AV.bottom,T(AV.bottomName)],["bottomColor","Color",colorsPlus,"color"],["shoes","Calzado",AV.shoes,T(AV.shoesName)],["shoesColor","Color",colorsPlus,"color"]],
@@ -1918,9 +1919,9 @@ UI.avatar=function(first){
   };
   const tabName={mascota:"Mascota",cuerpo:"Cuerpo",pelo:"Pelo",ropa:"Ropa",deporte:"Deporte",accesorios:"Accesorios",maquillaje:"Maquillaje"};
   const extraHair={"#7c3aed":15000,"#ec4899":15000,"#14b8a6":15000};
-  const BASE=["kind","skin","face","eyeColor","hair","hairColor","alt","height"];const orig=JSON.stringify(p.avatar||{});
+  const BASE=["kind","skin","face","eyeColor","hair","hairColor","alt","height"];const orig=JSON.stringify(p.avatar||{});const hist=[];
   const costNow=()=>{if(first||!p.avatar)return null;const o=p.avatar;const same=k=>JSON.stringify(o[k])===JSON.stringify(a[k]);
-    if(BASE.some(k=>!same(k)))return AV_CHANGE.base;if(Object.keys(a).some(k=>!same(k)))return AV_CHANGE.outfit;return null};
+    const kindOnly=k=>k==="kind"&&["nena","jirafa"].includes(o.kind)&&["nena","jirafa"].includes(a.kind);if(BASE.some(k=>!same(k)&&!kindOnly(k)))return AV_CHANGE.base;if(Object.keys(a).some(k=>!same(k)&&!kindOnly(k)))return AV_CHANGE.outfit;if(!same("kind"))return 0;return null};
   const itemFor=(key,v)=>{
     if(key==="hairColor"&&extraHair[v])return {id:"hc:"+v,price:extraHair[v]};
     if(/Color$/.test(key)&&key!=="hairColor"&&key!=="eyeColor")return SHOP.find(s=>s.id==="color:"+v)||null;
@@ -1938,22 +1939,23 @@ UI.avatar=function(first){
      ${rows.map(([key,label,list0,fmt,type])=>{const list=list0.filter(v=>typeof v!=="string"||genderOK(a.kind,key,v));if(!list.length)return "";return `<div class="avrow"><span class="avlabel">${label}</span><div class="avopts">${list.map(v=>{const lk=locked(key,v);const on=type==="multi"?a.makeup.includes(v):a[key]===v;const excl=ken&&(EXCLUSIVE.includes(key+":"+v)||(key==="alt"&&v));
        return fmt==="color"?`<button type="button" class="sw ${on?"on":""} ${lk?"lock":""}" data-k="${key}" data-v="${v}" style="background:${v}" aria-label="${label}">${lk?"🔒":""}</button>`
        :`<button type="button" class="op ${on?"on":""} ${lk?"lock":""} ${excl?"excl":""}" data-k="${key}" data-v="${v}" data-type="${type||""}">${fmt(v)}${lk?` <small>🔒 ${priceTxt(lk)}</small>`:""}${excl?" ✨":""}</button>`}).join("")}</div></div>`}).join("")}
-     <div class="mactions sticky">${first?"":`<button class="btn" id="avUndo" type="button">Deshacer cambios</button>`}<button class="btn primary big" id="avSave" type="button">${first?"¡Listo!":(c=>c?`Guardar (${fmtM(c)})`:"Sin cambios")(costNow())}</button></div></div></div>`;
+     <div class="mactions sticky"><button class="btn" id="avUndo" type="button" ${hist.length?"":"disabled"}>↩️ Deshacer${hist.length?` (${hist.length})`:""}</button>${first?"":`<button class="btn" id="avReset" type="button" ${costNow()?"":"disabled"}>Volver a como estaba</button>`}<button class="btn primary big" id="avSave" type="button">${first?"¡Listo!":(c=>c?`Guardar (${fmtM(c)})`:c===0?"Guardar":"Sin cambios")(costNow())}</button></div></div></div>`;
     document.querySelectorAll(".avtabs button").forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
     document.querySelectorAll(".avopts button").forEach(b=>b.onclick=()=>{
       const k=b.dataset.k;let v=b.dataset.v;if(v==="true")v=true;else if(v==="false")v=false;
       const lk=locked(k,v);if(lk){UI.buy(lk,()=>{apply(k,v,b.dataset.type);render()});return}
       apply(k,v,b.dataset.type);FX.pop();render()});
-    if($("avUndo"))$("avUndo").onclick=()=>{a=Object.assign(defaultAvatar(p.avatar.kind),JSON.parse(orig));if(!Array.isArray(a.makeup))a.makeup=[];render()};
+    $("avUndo").onclick=()=>{if(!hist.length)return;a=JSON.parse(hist.pop());FX.toast("↩️ Cambio deshecho");render()};
+    if($("avReset"))$("avReset").onclick=()=>{hist.push(JSON.stringify(a));a=Object.assign(defaultAvatar(p.avatar.kind),JSON.parse(orig));if(!Array.isArray(a.makeup))a.makeup=[];FX.toast("Volvió a como estaba");render()};
     $("avSave").onclick=()=>{
       const done=()=>{p.avatar=a;p.avatarSet=true;G.save();MJ.remember&&MJ.remember();FX.fanfare();FX.confetti(100);if(first)MJ.next();else{FX.toast("¡Guardado!");UI.hud();UI.avatar()}};
       if(first){UI.modal(`<h2 class="mtitle">¿Así queda tu avatar?</h2><div class="center">${avatarSVG(a,90,"wave")}</div><p class="msub">Se crea una sola vez. Después, cambiar el cuerpo o el pelo cuesta ${fmtM(AV_CHANGE.base)} y la ropa ${fmtM(AV_CHANGE.outfit)}.</p><div class="mactions"><button class="btn" type="button" onclick="UI.close()">Seguir cambiando</button><button class="btn primary" type="button" id="avYes">¡Sí, crear!</button></div>`);$("avYes").onclick=()=>{UI.close();done()};return}
-      const c=costNow();if(!c){FX.toast("No cambiaste nada");return}
+      const c=costNow();if(c===0){done();return}if(!c){FX.toast("No cambiaste nada");return}
       const cost=c,can=G.cash()>=cost;
       UI.modal(`<h2 class="mtitle">Cambiar tu avatar</h2><div class="center">${avatarSVG(a,90,"wave")}</div><p class="msub">Este cambio cuesta <b>${fmtM(cost)}</b>. Tenés ${fmtM(G.cash())}.</p>${can?"":`<p class="growth">Te faltan ${fmtM(cost-G.cash())}. ¡Seguí jugando para juntarlos!</p>`}<div class="mactions"><button class="btn" type="button" onclick="UI.close()">Ahora no</button>${can?`<button class="btn primary" type="button" id="avPay">Pagar y guardar</button>`:""}</div>`);
       if(can)$("avPay").onclick=()=>{G.spend(cost);UI.close();FX.coin();done()}};
   };
-  const apply=(k,v,type)=>{
+  const apply=(k,v,type)=>{hist.push(JSON.stringify(a));if(hist.length>30)hist.shift();
     if(type==="multi"){a.makeup=a.makeup.includes(v)?a.makeup.filter(x=>x!==v):a.makeup.concat(v);return}
     if(k==="kind"){const d=defaultAvatar(v);a=genderClean(Object.assign(a,{kind:v,hair:d.hair,top:d.top,bottom:d.bottom}));return}
     a[k]=v;
@@ -3023,6 +3025,8 @@ document.addEventListener("pointermove",e=>{if(e.pointerType!=="mouse")return;co
   document.querySelectorAll(".tilt").forEach(x=>{if(x!==el){x.classList.remove("tilt");x.style.transform=""}});
   if(!el||matchMedia("(prefers-reduced-motion: reduce)").matches)return;const r=el.getBoundingClientRect();const dx=(e.clientX-r.left)/r.width-.5,dy=(e.clientY-r.top)/r.height-.5;
   el.classList.add("tilt");el.style.transform=`translateY(-4px) rotateX(${(-dy*8).toFixed(2)}deg) rotateY(${(dx*10).toFixed(2)}deg)`});
+/* todos los botones suenan al tocarlos */
+document.addEventListener("pointerdown",e=>{const b=e.target.closest&&e.target.closest("button,.btn,[role=button]");if(!b||b.disabled)return;FX.tone(b.classList.contains("primary")?880:640,.05,"triangle",.07)},{passive:true});
 /* eventos */
 $("crestL").innerHTML=crestSVG(92);$("crestB").innerHTML=crestSVG(28);
 try{document.querySelector('link[rel="icon"]').href="data:image/svg+xml,"+encodeURIComponent(crestSVG(64).replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" '))}catch(e){}
