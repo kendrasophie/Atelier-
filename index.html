@@ -546,6 +546,33 @@ body{background:radial-gradient(1200px 600px at 10% -10%,#ddd6fe 0%,transparent 
 .mem-end h3{text-align:center;font-size:28px}
 .mem-board{max-width:560px;width:100%;margin:0 auto}
 .mem-game .mem-turn{max-width:560px;width:100%;margin:0 auto}
+/* memoria v2: objetos en movimiento, carteles grandes, comodines */
+.mem-wrap{position:relative;isolation:isolate}
+.mem-wrap>*:not(.mem-sky){position:relative;z-index:1}
+.mem-sky{position:absolute;inset:-10px;z-index:0;pointer-events:none;overflow:hidden;border-radius:24px}
+.mem-sky i{position:absolute;left:var(--x);top:var(--y);font-style:normal;font-size:calc(26px * var(--s));opacity:.55;animation:drift var(--d) ease-in-out var(--dl) infinite alternate;filter:drop-shadow(0 6px 4px rgba(0,0,0,.15))}
+@keyframes drift{0%{transform:translate(0,0) rotate(-8deg)}50%{transform:translate(40px,-30px) rotate(6deg)}100%{transform:translate(-30px,20px) rotate(-4deg)}}
+.mem-pl{animation:castin .4s both,hop 1.4s ease-in-out infinite;animation-delay:0s,var(--bd,0s)}
+@keyframes hop{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.mem-lvl{text-align:center;font-weight:800;background:var(--surface);border-radius:14px;padding:8px;box-shadow:var(--lift)}
+.mem-emotes{max-width:640px;margin:0 auto}
+.emo{font-size:22px;padding:4px 10px}.emo.txt{font-size:14px}
+.emo:active{transform:scale(.92)}
+.emo-pop{position:fixed;top:16%;z-index:80;display:flex;align-items:center;gap:10px;max-width:min(86vw,420px);background:#fff;border:4px solid var(--pc,#7c3aed);border-radius:22px;padding:10px 16px;box-shadow:0 18px 40px -10px rgba(30,27,75,.5);animation:epop 3.2s ease-out forwards;pointer-events:none}
+.emo-pop small{display:block;font-weight:900;color:var(--pc,#7c3aed);font-size:14px}
+.emo-pop b{display:block;font-family:var(--display);font-size:26px;line-height:1.1;color:#1e1b4b}.emo-pop b.big{font-size:54px;line-height:1}
+.emo-pop .ep-av svg.avatar{width:40px!important;height:auto}
+@keyframes epop{0%{opacity:0;transform:translateY(30px) scale(.6)}12%{opacity:1;transform:translateY(0) scale(1.08)}20%{transform:scale(1)}80%{opacity:1;transform:translateY(-30px)}100%{opacity:0;transform:translateY(-70px) scale(.9)}}
+.mem-tools{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;min-height:0}
+.mem-turn.frozen{background:#dbeafe;color:#1e3a8a}.mem-turn.frozen .mem-timer i{background:#60a5fa}
+.mcard.peek .mc-in{transform:rotateY(180deg)}
+.mcard.peek .mc-face{border-color:#60a5fa;box-shadow:0 0 0 4px #93c5fd}
+.mem-board{max-width:640px}
+@media (prefers-reduced-motion:reduce){.mem-sky i,.mem-pl{animation:none}}
+.music-bar{display:flex;align-items:center;gap:6px;align-self:center;background:#1e1b4b;color:#fff;border-radius:99px;padding:4px 6px 4px 12px;box-shadow:var(--lift);max-width:100%}
+.music-bar .mb-name{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:56vw}
+.music-bar .mb-ico.on{display:inline-block;animation:bob .5s ease-in-out infinite alternate}
+.mb-b{font:inherit;font-size:16px;border:0;background:#312e81;color:#fff;border-radius:99px;width:34px;height:34px;cursor:pointer}
 
 </style>
 </head>
@@ -2000,7 +2027,7 @@ UI.avatar=function(first){
     document.querySelectorAll(".avopts button").forEach(b=>b.onclick=()=>{
       const k=b.dataset.k;let v=b.dataset.v;if(v==="true")v=true;else if(v==="false")v=false;
       const lk=locked(k,v);if(lk){UI.buy(lk,()=>{apply(k,v,b.dataset.type);render()});return}
-      apply(k,v,b.dataset.type);FX.pop();render()});
+      if(apply(k,v,b.dataset.type)===false){FX.toast("Eso ya lo tenés elegido");return}FX.pop();render()});
     $("avUndo").onclick=()=>{if(!hist.length)return;a=JSON.parse(hist.pop());FX.toast("↩️ Cambio deshecho");render()};
     if($("avReset"))$("avReset").onclick=()=>{hist.push(JSON.stringify(a));a=JSON.parse(orig);FX.toast("Volvió a como estaba");render()};
     $("avSave").onclick=()=>{
@@ -2011,7 +2038,8 @@ UI.avatar=function(first){
       UI.modal(`<h2 class="mtitle">Cambiar tu avatar</h2><div class="center">${avatarSVG(a,90,"wave")}</div><p class="msub">Este cambio cuesta <b>${fmtM(cost)}</b>. Tenés ${fmtM(G.cash())}.</p>${can?"":`<p class="growth">Te faltan ${fmtM(cost-G.cash())}. ¡Seguí jugando para juntarlos!</p>`}<div class="mactions"><button class="btn" type="button" onclick="UI.close()">Ahora no</button>${can?`<button class="btn primary" type="button" id="avPay">Pagar y guardar</button>`:""}</div>`);
       if(can)$("avPay").onclick=()=>{G.spend(cost);UI.close();FX.coin();done()}};
   };
-  const apply=(k,v,type)=>{hist.push(JSON.stringify(a));if(hist.length>30)hist.shift();
+  const apply=(k,v,type)=>{if(type!=="multi"&&JSON.stringify(a[k])===JSON.stringify(v))return false;   // tocar lo que ya está elegido no cuenta como cambio
+    const snap=JSON.stringify(a);if(hist[hist.length-1]!==snap)hist.push(snap);if(hist.length>30)hist.shift();
     if(type==="multi"){a.makeup=a.makeup.includes(v)?a.makeup.filter(x=>x!==v):a.makeup.concat(v);return}
     if(k==="kind"){const d=defaultAvatar(v);a=genderClean(Object.assign(a,{kind:v,hair:d.hair,top:d.top,bottom:d.bottom}));return}
     a[k]=v;
@@ -2264,36 +2292,41 @@ UI.caminoMap=function(){
    (para practicar con robots sin internet).
    ===================================================================== */
 var ROOM = {
-  MAXP: 6, TURN_MS: 25000, SHOW_MS: 2300, AWAY_MS: 40000, LETTERS: 'ABCDEFGHJKLMNPQRSTUVWXYZ',
+  MAXP: 8, TURN_MS: 25000, SHOW_MS: 1700, AWAY_MS: 40000, FREEZE_MAX: 30000, MAX_CARDS: 60, LETTERS: 'ABCDEFGHJKLMNPQRSTUVWXYZ',
   newCode: function () { var s = ''; for (var i = 0; i < 4; i++) s += ROOM.LETTERS[Math.floor(Math.random() * ROOM.LETTERS.length)]; return s; },
   err: function (m) { var e = new Error(m); e.room = true; throw e; },
   create: function (code, u, name, av, now) {
-    return { code: code, v: 1, host: u, status: 'lobby', players: [{ u: u, name: name, av: av, score: 0, last: now, pairs: [] }],
-      deck: [], done: {}, flips: [], turn: 0, turnAt: now, pend: 0, emo: [], topic: '', last: null, created: now, ends: 0 };
+    return { code: code, v: 1, host: u, status: 'lobby', players: [{ u: u, name: name, av: av, score: 0, last: now, pairs: [], at: 0 }],
+      deck: [], done: {}, flips: [], turn: 0, turnAt: now, pend: 0, freeze: 0, frzLeft: 0, frz: 0, emo: [], topic: '', last: null, created: now, ends: 0 };
   },
   touch: function (st, u, now) { var p = ROOM.player(st, u); if (p) p.last = now; },
   player: function (st, u) { for (var i = 0; i < st.players.length; i++) if (st.players[i].u === u) return st.players[i]; return null; },
   join: function (st, u, name, av, now) {
     var p = ROOM.player(st, u);
-    if (p) { p.last = now; p.av = av || p.av; p.name = name || p.name; st.v++; return st; }
-    if (st.status !== 'lobby') ROOM.err('La partida ya empezó. Pedí que armen una sala nueva.');
+    if (p) { p.last = now; p.av = av || p.av; p.name = name || p.name; p.left = false; st.v++; return st; }
+    if (st.status !== 'lobby') ROOM.err('La partida ya empezó. Esperá a que termine o pedí una sala nueva.');
     if (st.players.length >= ROOM.MAXP) ROOM.err('La sala está llena (máximo ' + ROOM.MAXP + ').');
-    st.players.push({ u: u, name: name, av: av, score: 0, last: now, pairs: [] }); st.v++; return st;
+    st.players.push({ u: u, name: name, av: av, score: 0, last: now, pairs: [], at: 0 }); st.v++; return st;
   },
   leave: function (st, u, now) {
     var i = -1; for (var k = 0; k < st.players.length; k++) if (st.players[k].u === u) i = k;
     if (i < 0) return st;
     if (st.status === 'lobby') { st.players.splice(i, 1); if (st.host === u && st.players.length) st.host = st.players[0].u; }
-    else { st.players[i].left = true; if (st.turn === i && st.status === 'play') { st.flips = []; st.pend = 0; st.turn = ROOM.next(st, now); st.turnAt = now; } }
+    else { st.players[i].left = true; if (st.turn === i && st.status === 'play') ROOM.pass(st, now); }
     st.v++; return st;
   },
   start: function (st, u, deck, topic, now) {
     if (u !== st.host) ROOM.err('Solo quien creó la sala puede empezar.');
     if (st.status !== 'lobby') ROOM.err('La partida ya empezó.');
-    if (!deck || deck.length < 4 || deck.length > 40) ROOM.err('Mazo inválido.');
-    st.deck = deck; st.topic = topic || ''; st.status = 'play'; st.done = {}; st.flips = []; st.pend = 0;
-    st.players.forEach(function (p) { p.score = 0; p.pairs = []; });
+    if (!deck || deck.length < 4 || deck.length > ROOM.MAX_CARDS) ROOM.err('Mazo inválido.');
+    st.deck = deck; st.topic = topic || ''; st.status = 'play'; st.done = {}; st.flips = []; st.pend = 0; st.freeze = 0; st.frz = 0; st.last = null;
+    st.players.forEach(function (p) { p.score = 0; p.pairs = []; p.at = 0; });
     st.turn = Math.floor(Math.random() * st.players.length); st.turnAt = now; st.v++; return st;
+  },
+  again: function (st, u, now) {
+    if (u !== st.host) ROOM.err('Solo quien creó la sala puede armar otra partida.');
+    st.status = 'lobby'; st.deck = []; st.done = {}; st.flips = []; st.pend = 0; st.freeze = 0; st.last = null;
+    st.players = st.players.filter(function (p) { return !p.left; }); st.v++; return st;
   },
   active: function (st, i, now) { var p = st.players[i]; return p && !p.left && (now - p.last) < ROOM.AWAY_MS; },
   next: function (st, now) {
@@ -2301,11 +2334,13 @@ var ROOM = {
     for (var k = 1; k <= n; k++) { var j = (st.turn + k) % n; if (ROOM.active(st, j, now)) return j; }
     return st.turn;
   },
+  pass: function (st, now) { st.flips = []; st.pend = 0; st.freeze = 0; st.frz = 0; st.turn = ROOM.next(st, now); st.turnAt = now; },
   tick: function (st, now) {
     if (st.status !== 'play') return st;
-    if (st.pend && now >= st.pend) { st.flips = []; st.pend = 0; st.turn = ROOM.next(st, now); st.turnAt = now; st.v++; }
+    if (st.freeze) { if (now - st.freeze < ROOM.FREEZE_MAX) return st; st.freeze = 0; st.turnAt = now - (ROOM.TURN_MS - st.frzLeft); st.v++; }
+    if (st.pend && now >= st.pend) { ROOM.pass(st, now); st.v++; }
     else if (!st.pend && now - st.turnAt > ROOM.TURN_MS) {
-      var who = st.players[st.turn]; st.flips = []; st.turn = ROOM.next(st, now); st.turnAt = now;
+      var who = st.players[st.turn]; ROOM.pass(st, now);
       st.last = { ok: false, timeout: true, name: who ? who.name : '' }; st.v++;
     }
     return st;
@@ -2316,13 +2351,15 @@ var ROOM = {
     var cur = st.players[st.turn];
     if (!cur || cur.u !== u) ROOM.err('Esperá tu turno.');
     if (st.pend) ROOM.err('Esperá que se den vuelta las cartas.');
+    if (st.freeze) { st.freeze = 0; st.turnAt = now - (ROOM.TURN_MS - st.frzLeft); }
     i = Number(i);
-    if (!(i >= 0 && i < st.deck.length) || st.done[i] != null || st.flips.indexOf(i) >= 0) ROOM.err('Esa carta no se puede dar vuelta.');
-    st.flips.push(i); st.turnAt = now; st.v++;
+    if (!(i >= 0 && i < st.deck.length) || st.done[i] != null) ROOM.err('Esa carta ya está descubierta.');
+    if (st.flips.indexOf(i) >= 0) return st;                       // el mismo toque repetido no cuenta
+    st.flips.push(i); st.turnAt = Math.max(st.turnAt, now - ROOM.TURN_MS + 8000); st.v++;
     if (st.flips.length === 2) {
       var a = st.flips[0], b = st.flips[1];
       if (st.deck[a].p === st.deck[b].p) {
-        st.done[a] = st.turn; st.done[b] = st.turn; cur.score++; cur.pairs.push(st.deck[a].p); st.flips = [];
+        st.done[a] = st.turn; st.done[b] = st.turn; cur.score++; cur.at = now; cur.pairs.push(st.deck[a].p); st.flips = []; st.turnAt = now;
         st.last = { ok: true, a: a, b: b, name: cur.name, u: cur.u, e: st.deck[a].e || '' };
         var all = true; for (var k = 0; k < st.deck.length; k++) if (st.done[k] == null) { all = false; break; }
         if (all) { st.status = 'end'; st.ends = now; }
@@ -2332,26 +2369,33 @@ var ROOM = {
     }
     return st;
   },
-  again: function (st, u, now) {
-    if (u !== st.host) ROOM.err('Solo quien creó la sala puede armar otra partida.');
-    st.status = 'lobby'; st.deck = []; st.done = {}; st.flips = []; st.pend = 0; st.last = null;
-    st.players = st.players.filter(function (p) { return !p.left; }); st.v++; return st;
+  /* comodín: el reloj se frena mientras responde una pregunta */
+  freezeOn: function (st, u, now) {
+    ROOM.tick(st, now); var cur = st.players[st.turn];
+    if (st.status !== 'play' || !cur || cur.u !== u || st.pend) ROOM.err('Solo en tu turno.');
+    if (st.frz >= 2) ROOM.err('Ya usaste 2 comodines en este turno.');
+    if (!st.freeze) { st.freeze = now; st.frzLeft = Math.max(0, ROOM.TURN_MS - (now - st.turnAt)); st.frz++; st.v++; }
+    return st;
+  },
+  freezeOff: function (st, u, ok, now) {
+    var cur = st.players[st.turn];
+    if (!cur || cur.u !== u || !st.freeze) return st;
+    st.freeze = 0; st.turnAt = ok ? now : now - (ROOM.TURN_MS - st.frzLeft); st.v++; return st;
   },
   emote: function (st, u, e, now) {
     var p = ROOM.player(st, u); if (!p) return st;
-    st.emo.push({ u: u, name: p.name, e: String(e).slice(0, 24), t: now }); if (st.emo.length > 10) st.emo.shift(); st.v++; return st;
+    st.emo.push({ id: now + '' + Math.floor(Math.random() * 1000), u: u, name: p.name, e: String(e).slice(0, 40), t: now }); if (st.emo.length > 12) st.emo.shift(); st.v++; return st;
   },
   view: function (st, u, now) {
     var me = -1; for (var k = 0; k < st.players.length; k++) if (st.players[k].u === u) me = k;
     return {
-      code: st.code, v: st.v, status: st.status, host: st.host === u, topic: st.topic, me: me, turn: st.turn,
-      turnLeft: st.status === 'play' ? Math.max(0, ROOM.TURN_MS - (now - st.turnAt)) : 0, pend: !!st.pend,
-      players: st.players.map(function (p, i) { return { name: p.name, av: p.av, score: p.score, away: !ROOM.active(st, i, now), left: !!p.left }; }),
+      code: st.code, v: st.v, status: st.status, host: st.host === u, topic: st.topic, me: me, turn: st.turn, frozen: !!st.freeze, frz: st.frz,
+      turnLeft: st.status !== 'play' ? 0 : st.freeze ? st.frzLeft : Math.max(0, ROOM.TURN_MS - (now - st.turnAt)), pend: !!st.pend,
+      players: st.players.map(function (p, i) { return { name: p.name, av: p.av, score: p.score, at: p.at, away: !ROOM.active(st, i, now), left: !!p.left }; }),
       cards: st.deck.map(function (c, i) {
-        var up = st.done[i] != null || st.flips.indexOf(i) >= 0;
-        return { s: st.done[i] != null ? 'done' : st.flips.indexOf(i) >= 0 ? 'up' : 'down', t: up ? c.t : '', k: up ? c.k : '', by: st.done[i] != null ? st.done[i] : -1 };
+        return { s: st.done[i] != null ? 'done' : st.flips.indexOf(i) >= 0 ? 'up' : 'down', t: c.t, k: c.k, by: st.done[i] != null ? st.done[i] : -1 };
       }),
-      last: st.last, emo: st.emo.filter(function (x) { return now - x.t < 6000; })
+      last: st.last, emo: st.emo.filter(function (x) { return now - x.t < 8000; })
     };
   }
 };
@@ -3135,8 +3179,8 @@ const MEM_TOPICS={
 };
 function memDeck(topic,n){const T=MEM_TOPICS[topic]||MEM_TOPICS.mezcla;const pairs=T.gen(n);
   return shuffle(pairs.flatMap((pr,j)=>[{p:j,t:String(pr[0]),k:"a",e:pr[2]},{p:j,t:String(pr[1]),k:"b",e:pr[2]}]))}
-const EMOTES=["👋","😂","🔥","👏","😮","🎉","¡Bien!","¡Uy!","¡Te toca!","¡Qué memoria!"];   // sin chat libre: solo frases preparadas
-const P_COL=["#7c3aed","#ec4899","#10b981","#f59e0b","#3b82f6","#ef4444"];
+const EMOTES=["👋","😂","💀","🔥","🫶","🤩","😎","🥳","🤯","😭","🫣","👀","💯","⚡","🏆","🗿","¡Hola!","¡Daleeee!","¡Bien!","¡Uy!","¡Te toca!","¡Qué memoria!","Mi abuelita lo haría más rápido","Te falta entrenar","¡No vale así!","¡Revancha!"];   // sin chat libre: solo frases preparadas
+const P_COL=["#7c3aed","#ec4899","#10b981","#f59e0b","#3b82f6","#ef4444","#14b8a6","#a16207"];
 
 /* --- conexión: online por la hoja, o local con robots --- */
 const NET={mode:"online",code:"",local:null,
@@ -3155,106 +3199,176 @@ const LOCALROOM={st:null,mem:{},lastBot:0,
     if(op==="start")ROOM.start(st,"yo",data.deck,data.topic,now);
     if(op==="flip")ROOM.flip(st,"yo",data.i,now);
     if(op==="emote")ROOM.emote(st,"yo",data.e,now);
+    if(op==="freeze")ROOM.freezeOn(st,"yo",now);
+    if(op==="unfreeze")ROOM.freezeOff(st,"yo",!!data.ok,now);
     if(op==="again")ROOM.again(st,"yo",now);
     st.players.forEach(p=>p.last=now);ROOM.tick(st,now);this.bots(now);
     return JSON.parse(JSON.stringify(ROOM.view(st,"yo",now)))},
   bots(now){const st=this.st;if(st.status!=="play")return;
     // los robots recuerdan lo que vieron (a veces se olvidan)
     st.flips.forEach(i=>{if(Math.random()<.8)this.mem[i]=st.deck[i].p});
-    const cur=st.players[st.turn];if(!cur||!cur.u.startsWith("bot")||st.pend||now-this.lastBot<900)return;this.lastBot=now;
+    const cur=st.players[st.turn];if(!cur||!cur.u.startsWith("bot")||st.pend||st.freeze||now-this.lastBot<800)return;this.lastBot=now;
     const open=st.deck.map((c,i)=>i).filter(i=>st.done[i]==null&&!st.flips.includes(i));let pickI;
     if(st.flips.length===1){const a=st.flips[0],p=st.deck[a].p;pickI=open.find(i=>this.mem[i]===p&&i!==a)}
     else{const known={};for(const i of open){const p=this.mem[i];if(p==null)continue;if(known[p]!=null){pickI=known[p];break}known[p]=i}}
     if(pickI==null){const unk=open.filter(i=>this.mem[i]==null);pickI=pick(unk.length?unk:open)}
-    try{ROOM.flip(st,cur.u,pickI,now);this.mem[pickI]=st.deck[pickI].p;if(Math.random()<.35)ROOM.emote(st,cur.u,pick(EMOTES),now)}catch(e){}}
+    try{ROOM.flip(st,cur.u,pickI,now);this.mem[pickI]=st.deck[pickI].p;if(Math.random()<.25)ROOM.emote(st,cur.u,pick(EMOTES),now)}catch(e){}}
 };
 
+/* cantidad de parejas: siempre impar (para que no haya empate entre dos) y más cartas si hay más chicos */
+function memPairs(size,players){let n=size+Math.max(0,players-4)*2;if(n%2===0)n++;return Math.min(29,n)}
+function memDeckN(topic,n){let d=memDeck(topic,n);let pairs=d.length/2;
+  if(pairs<n){const extra=memDeck("mezcla",n-pairs+2).filter(c=>!d.some(x=>x.t===c.t));const ids=[...new Set(extra.map(c=>c.p))];ids.forEach(id=>{if(d.length/2<n){const two=extra.filter(c=>c.p===id);if(two.length===2)d=d.concat(two.map(c=>Object.assign({},c,{p:1000+id})))}});d=shuffle(d)}
+  pairs=d.length/2;if(pairs%2===0){const drop=d[0].p;d=d.filter(c=>c.p!==drop)}return d}
+const SKY=["🎈","⭐","🪐","✈️","☁️","🦋","🌟","🚀","🎯","🍭","⚽","🎵"];
+const skyHTML=()=>`<div class="mem-sky" aria-hidden="true">${Array.from({length:11},(_,i)=>`<i style="--x:${rnd(0,95)}%;--y:${rnd(0,90)}%;--d:${rnd(9,20)}s;--dl:-${rnd(0,15)}s;--s:${(rnd(7,14)/10).toFixed(1)}">${SKY[i%SKY.length]}</i>`).join("")}</div>`;
+const memLvl=()=>G.gameLvl("memoria");
+/* música de fondo (archivos en la carpeta «musica», junto al index.html) */
+const MUSIC={tracks:[["vivaldi-invierno.mp3","Vivaldi · El invierno"],["grieg-rey-montana.mp3","Grieg · En la gruta del rey de la montaña"],["rimsky-abejorro.mp3","Rimsky-Kórsakov · El vuelo del abejorro"]],
+  i:0,a:null,on:true,fail:false,
+  pref(){try{const v=localStorage.getItem("aa-music");if(v!=null)this.on=v==="1"}catch(e){}},
+  start(){this.pref();if(!this.on||G.mute){this.ui();return}if(this.a&&!this.a.paused)return;this.play(this.i)},
+  play(i){this.i=(i+this.tracks.length)%this.tracks.length;
+    if(!this.a){this.a=new Audio();this.a.volume=.3;this.a.preload="auto";this.a.onended=()=>this.play(this.i+1);this.a.onerror=()=>{this.fail=true;this.ui()}}
+    this.fail=false;this.a.src="musica/"+this.tracks[this.i][0];const pr=this.a.play();if(pr&&pr.catch)pr.catch(()=>{});this.ui()},
+  stop(){if(this.a)this.a.pause();this.ui()},
+  toggle(){this.on=!this.on;try{localStorage.setItem("aa-music",this.on?"1":"0")}catch(e){}if(this.on&&!G.mute)this.play(this.i);else this.stop()},
+  next(){this.on=true;try{localStorage.setItem("aa-music","1")}catch(e){}this.play(this.i+1)},
+  playing(){return this.a&&!this.a.paused},
+  bar(){return `<div class="music-bar" id="mMusic"><span class="mb-ico ${this.playing()?"on":""}">🎵</span><span class="mb-name">${this.fail?"No encuentro la carpeta «musica»":esc(this.tracks[this.i][1])}</span><button type="button" class="mb-b" data-music="next" aria-label="Otra música">⏭️</button><button type="button" class="mb-b" data-music="toggle" aria-label="Música sí o no">${this.playing()?"🔊":"🔇"}</button></div>`},
+  ui(){const b=document.getElementById("mMusic");if(b)b.outerHTML=this.bar()}
+};
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-music]");if(!b)return;if(b.dataset.music==="next")MUSIC.next();else MUSIC.toggle()});
+
 GAMEFN.memoria=function(box){
-  let timer=null,view=null,busy=false,paid=false,lastV=-1,lastEvt="",myTurnWas=false,leaving=false;
+  if(UI.cur)UI.cur.noLock=true;   // en la partida online nadie queda afuera por equivocarse en un comodín
+  let timer=null,view=null,inflight=0,paid=false,lastV=-1,lastEvt="",myTurnWas=false,leaving=false,prevStatus="";
+  let localUp=new Set(),peek=false,peekI=-1,espiar=2,qOk=0,qTot=0,seenEmo=new Set(),topic="mezcla",size=9,confirmAlone=false,tbAt=0;
   const online=API_OK()&&!MJ.demo;
   const stop=()=>{clearInterval(timer);timer=null};
-  const poll=()=>{stop();timer=setInterval(async()=>{if(busy)return;try{busy=true;const v=await NET.call("state");apply(v)}catch(e){}finally{busy=false}},NET.mode==="local"?450:1300)};
-  const act=async(op,data)=>{try{busy=true;const v=await NET.call(op,data);apply(v);return v}catch(e){FX.toast(e.message||"No se pudo");FX.bad()}finally{busy=false}};
+  const poll=()=>{stop();timer=setInterval(async()=>{if(inflight)return;try{inflight++;const v=await NET.call("state");apply(v)}catch(e){}finally{inflight--}},NET.mode==="local"?400:1100)};
+  const act=async(op,data)=>{try{inflight++;const v=await NET.call(op,data);apply(v);return v}catch(e){FX.toast(e.message||"No se pudo");FX.bad();return null}finally{inflight--}};
+  const avOf=p=>p.av&&p.av.kind?p.av:defaultAvatar("nena");
+  const tName=k=>{const T=Object.values(MEM_TOPICS).find(t=>t.name===(view&&view.topic))||{};return k==="a"?(T.a||""):(T.b||"")};
 
-  /* menú */
   function menu(){
-    stop();NET.code="";
-    box.innerHTML=`<div class="mem-menu"><div class="mem-hero"><span class="mem-cards">🃏</span><div><h3>Memoria en equipo</h3><p class="note">Por turnos, cada uno da vuelta 2 cartas. Si forman pareja (país y capital, palabra y traducción, hecho y año…) suma un punto y vuelve a jugar. ¡Gana quien más parejas encuentre!</p></div></div>
+    stop();NET.code="";lastV=-1;view=null;
+    box.innerHTML=`<div class="mem-menu mem-wrap">${skyHTML()}${MUSIC.bar()}<div class="mem-hero"><span class="mem-cards">🃏</span><div><h3>Memoria en equipo</h3><p class="note">Hasta ${ROOM.MAXP} jugadores. Por turnos, cada uno da vuelta 2 cartas: si forman pareja (país y capital, palabra y traducción, hecho y año…) suma y vuelve a jugar. Las parejas son siempre impares para que no haya empate.</p></div></div>
+      <div class="mem-lvl">Tu nivel en Memoria: <b>${memLvl()}</b> · Se sube ganando y respondiendo bien las preguntas de los comodines ⏸️ 👁️</div>
       <div class="mem-actions">
         <button class="mem-act" id="mCreate" type="button" ${online?"":"disabled"}><span>🌐</span><b>Crear una sala</b><small>Te damos un código para pasarle a tus amigas y amigos</small></button>
         <div class="mem-act join"><span>🔑</span><b>Unirme con un código</b><div class="mem-join"><input id="mCode" maxlength="4" placeholder="ABCD" autocapitalize="characters" autocomplete="off" ${online?"":"disabled"}><button class="btn primary" id="mJoin" type="button" ${online?"":"disabled"}>Entrar</button></div></div>
-        <button class="mem-act" id="mBots" type="button"><span>🤖</span><b>Practicar con robots</b><small>Sin internet, contra 1 a 3 robots</small></button>
+        <button class="mem-act" id="mBots" type="button"><span>🤖</span><b>Practicar con robots</b><small>Sin internet, contra 1 a 7 robots</small></button>
       </div>${online?"":`<p class="note center">Para jugar online hace falta entrar con usuario y código (no en «Probar sin hoja»).</p>`}
       <p class="note center">🛡️ Para cuidar a los chicos, en la sala no hay chat libre: solo emojis y frases preparadas.</p></div>`;
     $("mCreate").onclick=async()=>{NET.mode="online";const v=await act("create");if(v)poll()};
     $("mJoin").onclick=async()=>{const c=$("mCode").value.trim().toUpperCase();if(c.length!==4){FX.toast("El código tiene 4 letras");return}NET.mode="online";NET.code=c;const v=await act("join");if(v)poll()};
     $("mCode").onkeydown=e=>{if(e.key==="Enter")$("mJoin").click()};
-    $("mBots").onclick=()=>{UI.modal(`<h2 class="mtitle">¿Contra cuántos robots?</h2><div class="qopts">${[1,2,3].map(n=>`<button class="qopt" data-n="${n}" type="button">${"🤖".repeat(n)} ${n} robot${n>1?"s":""}</button>`).join("")}</div>`);
+    $("mBots").onclick=()=>{UI.modal(`<h2 class="mtitle">¿Contra cuántos robots?</h2><div class="qopts four">${[1,2,3,4,5,6,7].map(n=>`<button class="qopt" data-n="${n}" type="button">🤖 ${n}</button>`).join("")}</div>`);
       document.querySelectorAll("[data-n]").forEach(b=>b.onclick=()=>{UI.close();NET.mode="local";LOCALROOM.start(+b.dataset.n);apply(LOCALROOM.call("state",{}));poll()})};
   }
-  /* aplica el estado que llega */
-  let prevStatus="";
-  function apply(v){if(!v||leaving)return;const changed=v.v!==lastV;if(v.status==="play"&&prevStatus!=="play")paid=false;prevStatus=v.status;view=v;lastV=v.v;
-    if(v.status==="lobby"){if(changed)lobby();return}
-    if(v.status==="end"){if(changed)podium();return}
-    if(changed||!$("mBoard"))board();else timerBar()}
-  /* sala de espera */
-  let topic="mezcla",size=8;
+  function apply(v){if(!v||leaving)return;if(v.v<lastV)return;   // una respuesta vieja no pisa una nueva
+    const changed=v.v!==lastV;if(v.status==="play"&&prevStatus!=="play"){paid=false;espiar=2;qOk=0;qTot=0;localUp.clear()}prevStatus=v.status;view=v;lastV=v.v;
+    showEmotes(v);
+    if(v.status==="lobby"){if(changed||!$("mLobby"))lobby();return}
+    if(v.status==="end"){if(changed||!$("mEnd"))podium();return}
+    if(!$("mBoard")||$("mBoard").children.length!==v.cards.length)board();else if(changed)patch();else timerBar()}
+  /* carteles grandes de lo que mandan */
+  function showEmotes(v){(v.emo||[]).forEach(x=>{if(seenEmo.has(x.id))return;seenEmo.add(x.id);
+    const pi=(view.players||[]).findIndex(p=>p.name===x.name);const p=view.players[pi]||{};
+    const el=document.createElement("div");el.className="emo-pop";el.style.setProperty("--pc",P_COL[(pi<0?0:pi)%8]);el.style.left=rnd(8,52)+"%";
+    el.innerHTML=`<span class="ep-av">${avatarSVG(avOf(p),40,"wave",{mood:"happy"})}</span><div><small>${esc(x.name)}</small><b class="${x.e.length<=3?"big":""}">${esc(x.e)}</b></div>`;
+    document.body.appendChild(el);FX.pop();setTimeout(()=>el.remove(),3200)})}
+  const emoteBar=()=>`<div class="mem-emotes">${EMOTES.map(e=>`<button type="button" class="emo ${e.length>3?"txt":""}" data-e="${esc(e)}">${esc(e)}</button>`).join("")}</div>`;
+  const wireEmotes=()=>box.querySelectorAll(".emo").forEach(b=>b.onclick=()=>{act("emote",{e:b.dataset.e})});
   function lobby(){
-    const v=view;const host=v.host;
-    box.innerHTML=`<div class="mem-lobby">
+    const v=view;const host=v.host;const n=memPairs(size,v.players.length);
+    MUSIC.start();
+    box.innerHTML=`<div class="mem-lobby mem-wrap" id="mLobby">${skyHTML()}${MUSIC.bar()}
       <div class="mem-code"><small>${NET.mode==="local"?"Práctica con robots":"Código de la sala"}</small><b>${NET.mode==="local"?"🤖":esc(v.code)}</b>${NET.mode==="local"?"":`<button class="btn small" id="mCopy" type="button">📋 Copiar</button>`}</div>
       ${NET.mode==="local"?"":`<p class="note center">Pasale este código a tus amigas y amigos: entran a <b>Juegos → Memoria en equipo → Unirme</b>.</p>`}
-      <div class="mem-stage">${v.players.map((p,i)=>`<div class="mem-pl ${p.away?"away":""}" style="--pc:${P_COL[i%6]}"><div class="mem-plav">${avatarSVG(p.av&&p.av.kind?p.av:defaultAvatar("nena"),58,"wave",{mood:"happy"})}</div><span>${esc(p.name)}${i===v.me?" (vos)":""}</span></div>`).join("")}<div class="mem-floor"></div></div>
-      <p class="center note">${v.players.length} de ${ROOM.MAXP} jugadores</p>
+      <div class="mem-stage">${v.players.map((p,i)=>`<div class="mem-pl ${p.away?"away":""}" style="--pc:${P_COL[i%8]};--bd:${(i*0.17).toFixed(2)}s"><div class="mem-plav">${avatarSVG(avOf(p),58,"wave",{mood:"happy"})}</div><span>${esc(p.name)}${i===v.me?" (vos)":""}</span></div>`).join("")}<div class="mem-floor"></div></div>
+      <p class="center note">${v.players.length} de ${ROOM.MAXP} jugadores · se van a jugar <b>${n} parejas (${n*2} cartas)</b></p>
       ${host?`<h4>Tema</h4><div class="mem-topics">${Object.entries(MEM_TOPICS).map(([k,t])=>`<button type="button" class="op ${k===topic?"on":""}" data-topic="${k}">${t.icon} ${t.name}</button>`).join("")}</div>
-        <h4>Tamaño</h4><div class="mem-topics">${[[6,"Chico · 12 cartas"],[8,"Mediano · 16 cartas"],[10,"Grande · 20 cartas"]].map(([n,l])=>`<button type="button" class="op ${n===size?"on":""}" data-size="${n}">${l}</button>`).join("")}</div>
+        <h4>Tamaño</h4><div class="mem-topics">${[[7,"Chico"],[9,"Mediano"],[11,"Grande"]].map(([k,l])=>`<button type="button" class="op ${k===size?"on":""}" data-size="${k}">${l} · ${memPairs(k,v.players.length)} parejas</button>`).join("")}</div>
+        <p class="note">Con más de 4 jugadores se suman 2 parejas por cada chico extra.</p>
         <div class="mactions"><button class="btn" id="mLeave" type="button">Salir</button><button class="btn primary big" id="mStart" type="button">🎮 ¡Empezar!</button></div>`
-       :`<p class="center"><b>Esperando que ${esc((v.players.find((p,i)=>i===0)||{}).name||"quien creó la sala")} empiece…</b></p><div class="mactions"><button class="btn" id="mLeave" type="button">Salir</button></div>`}
+       :`<p class="center"><b>Esperando que ${esc((v.players[0]||{}).name||"quien creó la sala")} empiece…</b></p><div class="mactions"><button class="btn" id="mLeave" type="button">Salir</button></div>`}
       ${emoteBar()}</div>`;
     if($("mCopy"))$("mCopy").onclick=()=>{try{navigator.clipboard.writeText(v.code);FX.toast("Código copiado: "+v.code)}catch(e){FX.toast(v.code)}};
-    document.querySelectorAll("[data-topic]").forEach(b=>b.onclick=()=>{topic=b.dataset.topic;lobby()});
-    document.querySelectorAll("[data-size]").forEach(b=>b.onclick=()=>{size=+b.dataset.size;lobby()});
+    box.querySelectorAll("[data-topic]").forEach(b=>b.onclick=()=>{topic=b.dataset.topic;lobby()});
+    box.querySelectorAll("[data-size]").forEach(b=>b.onclick=()=>{size=+b.dataset.size;lobby()});
     if($("mStart"))$("mStart").onclick=async()=>{if(v.players.length<2&&NET.mode==="online"&&!confirmAlone){confirmAlone=true;FX.toast("Estás sola en la sala. Tocá de nuevo para jugar igual.");return}
-      paid=false;await act("start",{deck:memDeck(topic,size),topic:MEM_TOPICS[topic].name})};
+      paid=false;await act("start",{deck:memDeckN(topic,memPairs(size,view.players.length)),topic:MEM_TOPICS[topic].name})};
     $("mLeave").onclick=leave;wireEmotes();
   }
-  let confirmAlone=false;
-  const emoteBar=()=>`<div class="mem-emotes">${EMOTES.map(e=>`<button type="button" class="emo" data-e="${esc(e)}">${esc(e)}</button>`).join("")}</div>${(view.emo||[]).length?`<div class="mem-emofeed">${view.emo.map(x=>`<span><b>${esc(x.name)}:</b> ${esc(x.e)}</span>`).join("")}</div>`:""}`;
-  const wireEmotes=()=>document.querySelectorAll(".emo").forEach(b=>b.onclick=()=>{act("emote",{e:b.dataset.e});FX.pop()});
-  /* tablero */
+  /* tablero: se arma una vez y después se actualiza carta por carta (así se ve el giro) */
   function board(){
-    const v=view;const myTurn=v.me===v.turn&&v.status==="play";const cols=v.cards.length>16?5:4;
-    const evt=v.last?(v.last.timeout?`⏰ ${esc(v.last.name)} tardó mucho: pasa el turno.`:v.last.ok?`✅ ${esc(v.last.name)} encontró una pareja. ${esc(v.last.e||"")}`:`❌ ${esc(v.last.name)} no encontró pareja.`):"";
-    const evKey=JSON.stringify(v.last);if(evKey!==lastEvt){lastEvt=evKey;if(v.last){if(v.last.ok){FX.good();const me=v.players[v.me];if(v.last.name===me.name)FX.confetti(40)}else if(!v.last.timeout)FX.tone(220,.18,"sine",.08)}}
-    if(myTurn&&!myTurnWas){FX.tone(880,.08,"triangle",.1);FX.tone(1175,.12,"triangle",.1,.09)}myTurnWas=myTurn;
-    box.innerHTML=`<div class="mem-game">
-      <div class="mem-players">${v.players.map((p,i)=>`<div class="mem-chip ${i===v.turn?"turn":""} ${p.away||p.left?"away":""}" style="--pc:${P_COL[i%6]}"><span class="mem-mini">${avatarSVG(p.av&&p.av.kind?p.av:defaultAvatar("nena"),26,i===v.turn?"wave":"stand",{mood:i===v.turn?"happy":""})}</span><b>${esc(p.name)}</b><i>${p.score}</i></div>`).join("")}</div>
-      <div class="mem-turn ${myTurn?"mine":""}">${myTurn?(v.pend?"Mirá bien dónde están…":"🟢 ¡Te toca! Da vuelta 2 cartas"):`Turno de <b>${esc((v.players[v.turn]||{}).name||"")}</b>`}<div class="mem-timer"><i id="mBar"></i></div></div>
-      <div class="mem-board" id="mBoard" style="--cols:${cols}">${v.cards.map((c,i)=>`<button type="button" class="mcard ${c.s} ${c.k}" data-i="${i}" ${c.s!=="down"||!myTurn||v.pend?"disabled":""} style="${c.by>=0?`--pc:${P_COL[c.by%6]}`:""}" aria-label="${c.s==="down"?"Carta tapada":esc(c.t)}"><span class="mc-in"><span class="mc-back">${crestSVG(30)}</span><span class="mc-face"><small>${c.k==="a"?esc((Object.values(MEM_TOPICS).find(t=>t.name===v.topic)||{}).a||""):esc((Object.values(MEM_TOPICS).find(t=>t.name===v.topic)||{}).b||"")}</small><b style="font-size:${c.t.length>40?11:c.t.length>22?13:c.t.length>10?16:22}px">${esc(c.t)}</b></span></span></button>`).join("")}</div>
-      <p class="mem-evt">${evt}</p>${emoteBar()}
+    const v=view;const cols=v.cards.length<=18?(v.cards.length<=14?4:5):v.cards.length<=30?6:7;
+    MUSIC.start();
+    box.innerHTML=`<div class="mem-game mem-wrap">${skyHTML()}${MUSIC.bar()}
+      <div class="mem-players" id="mPl"></div>
+      <div class="mem-turn" id="mTurn"><span id="mTurnTxt"></span><div class="mem-timer"><i id="mBar"></i></div></div>
+      <div class="mem-tools" id="mTools"></div>
+      <div class="mem-board" id="mBoard" style="--cols:${cols}">${v.cards.map((c,i)=>`<button type="button" class="mcard down ${c.k}" data-i="${i}" aria-label="Carta tapada"><span class="mc-in"><span class="mc-back">${crestSVG(26)}</span><span class="mc-face"><small>${esc(tName(c.k))}</small><b style="font-size:${c.t.length>40?10:c.t.length>22?12:c.t.length>10?15:20}px">${esc(c.t)}</b></span></span></button>`).join("")}</div>
+      <p class="mem-evt" id="mEvt"></p>${emoteBar()}
       <div class="mactions"><button class="btn small" id="mLeave" type="button">Salir de la partida</button></div></div>`;
-    document.querySelectorAll(".mcard:not(:disabled)").forEach(b=>b.onclick=async()=>{if(busy)return;b.classList.add("wait");document.querySelectorAll(".mcard").forEach(x=>x.disabled=true);await act("flip",{i:+b.dataset.i})});
-    $("mLeave").onclick=leave;wireEmotes();timerBar();
+    box.querySelectorAll(".mcard").forEach(b=>b.onclick=()=>tap(+b.dataset.i,b));
+    $("mLeave").onclick=leave;wireEmotes();patch();
   }
-  let tbAt=0;function timerBar(){const b=$("mBar");if(!b||!view)return;b.style.width=Math.round(view.turnLeft/ROOM.TURN_MS*100)+"%"}
-  /* podio y premio */
+  function myTurn(){const v=view;return v&&v.status==="play"&&v.me===v.turn}
+  async function tap(i,b){
+    const v=view;
+    if(peek){peek=false;peekI=i;b.classList.add("peek");FX.tone(1200,.08,"sine",.08);setTimeout(()=>{b.classList.remove("peek");peekI=-1},1600);act("unfreeze",{ok:false});patch();return}
+    if(!myTurn()||v.pend||v.frozen)return;const c=v.cards[i];if(c.s!=="down"||localUp.has(i))return;
+    const upNow=v.cards.filter((x,k)=>x.s==="up"||localUp.has(k)).length;if(upNow>=2)return;
+    localUp.add(i);b.classList.remove("down");b.classList.add("up");FX.tone(520,.05,"triangle",.08);   // se da vuelta al instante
+    const r=await act("flip",{i});localUp.delete(i);if(!r){patch()}
+  }
+  function patch(){
+    const v=view;if(!v||!$("mBoard"))return;const mt=myTurn();
+    $("mPl").innerHTML=v.players.map((p,i)=>`<div class="mem-chip ${i===v.turn?"turn":""} ${p.away||p.left?"away":""}" style="--pc:${P_COL[i%8]}"><span class="mem-mini">${avatarSVG(avOf(p),26,i===v.turn?"wave":"stand",{mood:i===v.turn?"happy":""})}</span><b>${esc(p.name)}</b><i>${p.score}</i></div>`).join("");
+    $("mTurn").className="mem-turn"+(mt?" mine":"")+(v.frozen?" frozen":"");
+    $("mTurnTxt").innerHTML=v.frozen?`⏸️ Reloj parado: ${mt?"respondé la pregunta":esc((v.players[v.turn]||{}).name)+" está respondiendo un comodín"}`:mt?(v.pend?"Mirá bien dónde están…":peek?"👁️ Tocá la carta que querés espiar":"🟢 ¡Te toca! Tocá 2 cartas"):`Turno de <b>${esc((v.players[v.turn]||{}).name||"")}</b>`;
+    const cards=$("mBoard").children;
+    v.cards.forEach((c,i)=>{const el=cards[i];const st=localUp.has(i)&&c.s==="down"?"up":c.s;
+      el.className=`mcard ${st} ${c.k}${i===peekI?" peek":""}`;el.style.setProperty("--pc",c.by>=0?P_COL[c.by%8]:"");
+      el.disabled=!(peek||(mt&&!v.pend&&!v.frozen&&st==="down"));el.setAttribute("aria-label",st==="down"?"Carta tapada":c.t)});
+    $("mTools").innerHTML=mt&&!v.pend&&!v.frozen&&!peek?`<button class="btn small help" id="mFrz" type="button" ${v.frz>=2?"disabled":""}>⏸️ Parar el reloj (respondé una pregunta)</button><button class="btn small help" id="mPeek" type="button" ${espiar<=0||v.frz>=2?"disabled":""}>👁️ Espiar una carta (${espiar}) · pregunta</button>`:"";
+    if($("mFrz"))$("mFrz").onclick=()=>comodin("frz");if($("mPeek"))$("mPeek").onclick=()=>comodin("peek");
+    const evKey=JSON.stringify(v.last);if(evKey!==lastEvt){lastEvt=evKey;const L=v.last;
+      $("mEvt").innerHTML=L?(L.timeout?`⏰ ${esc(L.name)} tardó mucho: pasa el turno.`:L.ok?`✅ <b>${esc(L.name)}</b> encontró una pareja. ${esc(L.e||"")}`:`❌ ${esc(L.name)} no encontró pareja.`):"";
+      if(L&&L.ok){FX.good();const r=$("mBoard").children[L.a].getBoundingClientRect();FX.sparkle(r.left+r.width/2,r.top+r.height/2,P_COL[v.turn%8],20)}else if(L&&!L.timeout)FX.tone(220,.15,"sine",.07)}
+    if(mt&&!myTurnWas){FX.tone(880,.08,"triangle",.1);FX.tone(1175,.12,"triangle",.1,.09)}myTurnWas=mt;
+    timerBar();
+  }
+  async function comodin(kind){
+    const r=await act("freeze");if(!r)return;
+    qTot++;const res=await UI.ask(G.pickQ(null),{progress:kind==="frz"?"⏸️ Comodín":"👁️ Comodín"});
+    if(res.ok){qOk++;if(kind==="frz"){await act("unfreeze",{ok:true});FX.toast("⏱️ ¡Reloj renovado! Tenés el tiempo completo")}
+      else{espiar--;peek=true;patch();FX.toast("👁️ Tocá una carta para espiarla un momento")}}
+    else{await act("unfreeze",{ok:false});FX.toast("No era: el reloj sigue donde estaba")}
+  }
+  function timerBar(){const b=$("mBar");if(!b||!view)return;b.style.width=Math.round(view.turnLeft/ROOM.TURN_MS*100)+"%"}
   function podium(){
-    stop();const v=view;const ord=v.players.map((p,i)=>Object.assign({i},p)).sort((a,b)=>b.score-a.score);const me=v.players[v.me]||{score:0};
-    const best=ord[0]?ord[0].score:0;const iWon=me.score===best&&best>0;
-    let earned=0;if(!paid){paid=true;earned=me.score*200+(iWon?1000:0)+200;G.earn(earned);G.addXP(me.score*6+(iWon?20:5));G.P.stats.memGames=(G.P.stats.memGames||0)+1;if(iWon)G.P.stats.memWins=(G.P.stats.memWins||0)+1;G.save();SND.medal(iWon?"gold":me.score?"silver":"bronze");if(iWon){FX.confetti(220)}}
-    const step=(p,place)=>p?`<div class="pod p${place}" style="--pc:${P_COL[p.i%6]}"><div class="pod-av">${avatarSVG(p.av&&p.av.kind?p.av:defaultAvatar("nena"),place===1?74:58,place===1?"jump":"wave",{mood:"happy"})}</div><b>${esc(p.name)}</b><span>${p.score} pareja${p.score===1?"":"s"}</span><div class="pod-block">${place}</div></div>`:"";
-    box.innerHTML=`<div class="mem-end"><h3>${iWon?"🏆 ¡Ganaste!":"¡Partida terminada!"}</h3><div class="podium">${step(ord[1],2)}${step(ord[0],1)}${step(ord[2],3)}</div>
+    const v=view;
+    // desempate: gana quien llegó primero a ese puntaje
+    const ord=v.players.map((p,i)=>Object.assign({i},p)).sort((a,b)=>b.score-a.score||(a.at||9e15)-(b.at||9e15));const me=v.players[v.me]||{score:0};
+    const iWon=ord[0]&&ord[0].i===v.me&&me.score>0;const tie=ord[1]&&ord[1].score===ord[0].score;
+    let earned=0,res=null;if(!paid){paid=true;earned=me.score*200+(iWon?1000:0)+200;G.earn(earned);
+      res=G.gameDone("memoria",qOk+(iWon?1:0),qTot+1);G.P.stats.memGames=(G.P.stats.memGames||0)+1;if(iWon)G.P.stats.memWins=(G.P.stats.memWins||0)+1;G.save();SND.medal(iWon?"gold":me.score?"silver":"bronze");if(res&&res.up)SND.levelUp();if(iWon)FX.confetti(220)}
+    const step=(p,place)=>p?`<div class="pod p${place}" style="--pc:${P_COL[p.i%8]}"><div class="pod-av">${avatarSVG(avOf(p),place===1?74:58,place===1?"jump":"wave",{mood:"happy"})}</div><b>${esc(p.name)}</b><span>${p.score} pareja${p.score===1?"":"s"}</span><div class="pod-block">${place}</div></div>`:"";
+    box.innerHTML=`<div class="mem-end mem-wrap" id="mEnd">${skyHTML()}${MUSIC.bar()}<h3>${iWon?"🏆 ¡Ganaste!":"¡Partida terminada!"}</h3><div class="podium">${step(ord[1],2)}${step(ord[0],1)}${step(ord[2],3)}</div>
+      ${tie?`<p class="center note">Empataron en parejas: gana quien llegó primero a ese puntaje.</p>`:""}
       ${ord.slice(3).map((p,k)=>`<p class="center">${k+4}. ${esc(p.name)} · ${p.score}</p>`).join("")}
-      ${earned?`<p class="center">Ganaste ${plus(earned)} (${me.score} pareja${me.score===1?"":"s"}${iWon?" + premio de ganadora":""})</p>`:""}
-      <div class="mactions">${v.host||NET.mode==="local"?`<button class="btn primary" id="mAgain" type="button">🔁 Otra partida en esta sala</button>`:`<p class="note">Si quien creó la sala arma otra, vas a entrar sola.</p>`}<button class="btn" id="mLeave" type="button">Salir</button></div></div>`;
-    if($("mAgain"))$("mAgain").onclick=async()=>{lastV=-1;await act("again");poll()};
-    $("mLeave").onclick=leave;
-    if(!v.host&&NET.mode==="online")poll();   // sigue escuchando por si arman otra
+      ${earned?`<p class="center">Ganaste ${plus(earned)} · Comodines: ${qOk} de ${qTot} bien${res&&res.up?` · ⬆️ <b>¡Subiste al nivel ${res.lvl} de Memoria!</b>`:""}</p>`:""}
+      <div class="mactions">${v.host||NET.mode==="local"?`<button class="btn primary" id="mAgain" type="button">🔁 Otra partida en esta sala</button>`:`<p class="note">Esperando si arman otra partida…</p>`}<button class="btn" id="mLeave" type="button">Salir</button></div>${emoteBar()}</div>`;
+    if($("mAgain"))$("mAgain").onclick=async()=>{await act("again")};
+    $("mLeave").onclick=leave;wireEmotes();
   }
   async function leave(){leaving=true;stop();if(NET.mode==="online"&&NET.code){try{await NET.call("leave")}catch(e){}}leaving=false;lastV=-1;menu()}
   menu();
-  return ()=>{stop();if(NET.mode==="online"&&NET.code&&view&&view.status!=="end"){NET.call("leave").catch(()=>{})}};
+  return ()=>{stop();MUSIC.stop();document.querySelectorAll(".emo-pop").forEach(e=>e.remove());if(NET.mode==="online"&&NET.code&&view&&view.status!=="end"){NET.call("leave").catch(()=>{})}};
 };
 
 /* =====================================================================
@@ -3328,7 +3442,7 @@ $("loginForm").addEventListener("submit",e=>{e.preventDefault();login({user:$("l
 $("demoBtn").onclick=()=>{const n=$("lUser").value.trim()||"Invitada";login({user:n,code:""},true)};
 $("eye").onclick=()=>{const p=$("lPass"),show=p.type==="password";p.type=show?"text":"password";$("eye").setAttribute("aria-pressed",show);$("eye").setAttribute("aria-label",show?"Ocultar código":"Mostrar código");$("eye").textContent=show?"🙈":"👁️";p.focus()};
 $("logout").onclick=logout;
-$("muteBtn").onclick=()=>{G.mute=!G.mute;$("muteBtn").textContent=G.mute?"🔇":"🔊";$("muteBtn").setAttribute("aria-pressed",G.mute)};
+$("muteBtn").onclick=()=>{G.mute=!G.mute;if(G.mute&&typeof MUSIC!=="undefined")MUSIC.stop();$("muteBtn").textContent=G.mute?"🔇":"🔊";$("muteBtn").setAttribute("aria-pressed",G.mute)};
 document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>UI.show(b.dataset.v));
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"&&G.P&&MJ.cred)G.flush()});
 (function(){
