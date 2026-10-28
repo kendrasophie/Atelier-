@@ -1339,6 +1339,9 @@ const DEFAULT_REWARDS={gold:{name:"Doradas",sym:"estrella"},silver:{name:"Platea
   medal:{ribbon:"#7c3aed",sym:"estrella",names:{bronze:"Medalla de Bronce",silver:"Medalla de Plata",gold:"Medalla de Oro"}},
   trophy:{shape:"copa",names:Object.fromEntries(TROPHY_GOALS.map(t=>[t.id,t.def]))},
   badge:{shape:"escudo",names:{mate:"Maga de los Números",economia:"Experta en Plata",geografia:"Exploradora del Mundo",historia:"Viajera del Tiempo",civica:"Ciudadana Ejemplar",ingles:"English Star",ia:"Programadora Genial",salud:"Superheroína Sana"}}};
+/* nombres de insignias para nenas y para nenes (si no los cambiaron en el taller, se usa el que corresponde al perfil) */
+const BADGE_F={mate:"Maga de los Números",economia:"Experta en Plata",geografia:"Exploradora del Mundo",historia:"Viajera del Tiempo",civica:"Ciudadana Ejemplar",ingles:"English Star",ia:"Programadora Genial",salud:"Superheroína Sana"};
+const BADGE_M={mate:"Mago de los Números",economia:"Experto en Plata",geografia:"Explorador del Mundo",historia:"Viajero del Tiempo",civica:"Ciudadano Ejemplar",ingles:"English Star",ia:"Programador Genial",salud:"Superhéroe Sano"};
 const R={
   cfg(){return (G.P&&G.P.rewards)||DEFAULT_REWARDS},
   coin(kind,size){const c=this.cfg()[kind];return coinSVG(kind,c.sym,size)},
@@ -1348,7 +1351,8 @@ const R={
   trophy(id,size,on){return trophySVG(this.cfg().trophy.shape,size,on)},
   trophyName(id){return this.cfg().trophy.names[id]},
   badge(s,tier,size){const b=this.cfg().badge;return badgeSVG(b.shape,SUBJ_BY[s].color,SUBJ_BY[s].icon,tier,size)},
-  badgeName(s){return this.cfg().badge.names[s]}
+  badgeName(s){const n=this.cfg().badge.names[s];const isFem=typeof fem==="function"?fem():true;
+    if(!isFem&&n===BADGE_F[s])return BADGE_M[s];if(isFem&&n===BADGE_M[s])return BADGE_F[s];return n}
 };
 
 /* ---------- escudo heráldico con K, S y E (logo original) ---------- */
@@ -2085,6 +2089,7 @@ UI.buy=function(it,done){
 /* ---------- TALLER DE PREMIOS (una sola vez) ---------- */
 UI.taller=function(){
   const rw=JSON.parse(JSON.stringify(G.P.rewards||DEFAULT_REWARDS));let step=0;
+  if(!fem())Object.keys(rw.badge.names).forEach(k=>{if(rw.badge.names[k]===BADGE_F[k])rw.badge.names[k]=BADGE_M[k]});   // para nenes, los nombres en masculino
   const symGrid=(cur,key)=>`<div class="symgrid">${Object.keys(SYMBOLS).map(k=>`<button type="button" class="symb ${cur===k?"on":""}" data-sym="${k}" data-key="${key}" title="${SYM_NAMES[k]}"><svg width="30" height="30" viewBox="0 0 24 24"><path d="${SYMBOLS[k]}" fill="currentColor" ${k==="hoja"||k==="planeta"||k==="cohete"?'stroke="currentColor" stroke-width="1.6"':""}/></svg></button>`).join("")}</div>`;
   const RIB=["#7c3aed","#ec4899","#ef4444","#f97316","#22c55e","#14b8a6","#3b82f6","#1f2937"];
   const steps=[
@@ -3100,7 +3105,7 @@ GAMEFN.ingles=function(box,L){
     $("play").onclick=()=>say(d.line);setTimeout(()=>say(d.line),300);
     const r=await new Promise(res=>el.querySelectorAll(".qopt").forEach(x=>x.onclick=()=>res(x.textContent)));
     if(r===d.ok)say(d.ok);
-    return feedback(el,r===d.ok,`«${d.ok}» ${d.es}`);
+    return feedback(el,r===d.ok,`«${d.ok}» ${d.es.replace("perdida",ao("perdida","perdido"))}`);
   };
   const map=async el=>{
     // mapa de 4×4 manzanas: arrancás abajo en el medio, mirando al norte
@@ -3330,7 +3335,7 @@ GAMEFN.memoria=function(box){
     if($("mCopy"))$("mCopy").onclick=()=>{try{navigator.clipboard.writeText(v.code);FX.toast("Código copiado: "+v.code)}catch(e){FX.toast(v.code)}};
     box.querySelectorAll("[data-topic]").forEach(b=>b.onclick=()=>{topic=b.dataset.topic;lobby()});
     box.querySelectorAll("[data-size]").forEach(b=>b.onclick=()=>{size=+b.dataset.size;lobby()});
-    if($("mStart"))$("mStart").onclick=async()=>{if(v.players.length<2&&NET.mode==="online"&&!confirmAlone){confirmAlone=true;FX.toast("Estás sola en la sala. Tocá de nuevo para jugar igual.");return}
+    if($("mStart"))$("mStart").onclick=async()=>{if(v.players.length<2&&NET.mode==="online"&&!confirmAlone){confirmAlone=true;FX.toast(`Estás ${ao("sola","solo")} en la sala. Tocá de nuevo para jugar igual.`);return}
       paid=false;await act("start",{deck:memDeckN(topic,memPairs(size,view.players.length)),topic:MEM_TOPICS[topic].name})};
     $("mLeave").onclick=leave;wireEmotes();
   }
