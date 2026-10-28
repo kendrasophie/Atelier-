@@ -3361,9 +3361,15 @@ GAMEFN.memoria=function(box){
     const v=view;if(!v||!$("mBoard"))return;const mt=myTurn();
     $("mPl").innerHTML=v.players.map((p,i)=>`<div class="mem-chip ${i===v.turn?"turn":""} ${p.away||p.left?"away":""}" style="--pc:${P_COL[i%8]}"><span class="mem-mini">${avatarSVG(avOf(p),26,i===v.turn?"wave":"stand",{mood:i===v.turn?"happy":""})}</span><b>${esc(p.name)}</b><i>${p.score}</i></div>`).join("");
     $("mTurn").className="mem-turn"+(mt?" mine":"")+(v.frozen?" frozen":"");
+    if(NET.mode==="online"&&v.frz===undefined&&!$("mOld")){$("mTurn").insertAdjacentHTML("beforebegin",`<p class="strike s1" id="mOld">⚠️ La hoja de Google tiene una versión anterior del juego. Pedile a un adulto que pegue el Codigo.gs nuevo y haga «Nueva versión» de la implementación.</p>`)}
     $("mTurnTxt").innerHTML=v.frozen?`⏸️ Reloj parado: ${mt?"respondé la pregunta":esc((v.players[v.turn]||{}).name)+" está respondiendo un comodín"}`:mt?(v.pend?"Mirá bien dónde están…":peek?"👁️ Tocá la carta que querés espiar":"🟢 ¡Te toca! Tocá 2 cartas"):`Turno de <b>${esc((v.players[v.turn]||{}).name||"")}</b>`;
     const cards=$("mBoard").children;
     v.cards.forEach((c,i)=>{const el=cards[i];const st=localUp.has(i)&&c.s==="down"?"up":c.s;
+      // el texto se actualiza siempre que llega (sirve también si la hoja tiene una versión anterior del Codigo.gs)
+      const fb=el.querySelector(".mc-face b"),fs=el.querySelector(".mc-face small");
+      if(c.t&&fb.textContent!==c.t){fb.textContent=c.t;fb.className=c.t.length>24?"long":"";fb.style.setProperty("--L",Math.max(5,...c.t.split(/\s+/).map(w=>w.length)));fb.style.setProperty("--A",(1.02/Math.sqrt(Math.max(8,c.t.length))).toFixed(3))}
+      if(c.k&&fs.textContent!==tName(c.k))fs.textContent=tName(c.k);
+      if(!c.t&&st!=="down"&&!fb.textContent)fb.textContent="…";
       el.className=`mcard ${st} ${c.k}${i===peekI?" peek":""}`;el.style.setProperty("--pc",c.by>=0?P_COL[c.by%8]:"");
       el.disabled=!(peek||(mt&&!v.pend&&!v.frozen&&st==="down"));el.setAttribute("aria-label",st==="down"?"Carta tapada":c.t)});
     $("mTools").innerHTML=mt&&!v.pend&&!v.frozen&&!peek?`<button class="btn small help" id="mFrz" type="button" ${v.frz>=2?"disabled":""}>⏸️ Parar el reloj (respondé una pregunta)</button><button class="btn small help" id="mPeek" type="button" ${espiar<=0||v.frz>=2?"disabled":""}>👁️ Espiar una carta (${espiar}) · pregunta</button>`:"";
