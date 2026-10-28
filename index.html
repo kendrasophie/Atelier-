@@ -3229,13 +3229,15 @@ const MUSIC={tracks:[["vivaldi-invierno.mp3","Vivaldi · El invierno"],["grieg-r
   pref(){try{const v=localStorage.getItem("aa-music");if(v!=null)this.on=v==="1"}catch(e){}},
   start(){this.pref();if(!this.on||G.mute){this.ui();return}if(this.a&&!this.a.paused)return;this.play(this.i)},
   play(i){this.i=(i+this.tracks.length)%this.tracks.length;
-    if(!this.a){this.a=new Audio();this.a.volume=.3;this.a.preload="auto";this.a.onended=()=>this.play(this.i+1);this.a.onerror=()=>{this.fail=true;this.ui()}}
-    this.fail=false;this.a.src="musica/"+this.tracks[this.i][0];const pr=this.a.play();if(pr&&pr.catch)pr.catch(()=>{});this.ui()},
+    if(!this.a){this.a=new Audio();this.a.volume=.3;this.a.preload="auto";this.a.onended=()=>this.play(this.i+1);
+      // busca el archivo al lado del index.html; si no está, en la carpeta «musica»
+      this.a.onerror=()=>{if(this.alt){this.alt=false;this.a.src="musica/"+this.tracks[this.i][0];const q=this.a.play();if(q&&q.catch)q.catch(()=>{})}else{this.fail=true;this.ui()}}}
+    this.fail=false;this.alt=true;this.a.src=this.tracks[this.i][0];const pr=this.a.play();if(pr&&pr.catch)pr.catch(()=>{});this.ui()},
   stop(){if(this.a)this.a.pause();this.ui()},
   toggle(){this.on=!this.on;try{localStorage.setItem("aa-music",this.on?"1":"0")}catch(e){}if(this.on&&!G.mute)this.play(this.i);else this.stop()},
   next(){this.on=true;try{localStorage.setItem("aa-music","1")}catch(e){}this.play(this.i+1)},
   playing(){return this.a&&!this.a.paused},
-  bar(){return `<div class="music-bar" id="mMusic"><span class="mb-ico ${this.playing()?"on":""}">🎵</span><span class="mb-name">${this.fail?"No encuentro la carpeta «musica»":esc(this.tracks[this.i][1])}</span><button type="button" class="mb-b" data-music="next" aria-label="Otra música">⏭️</button><button type="button" class="mb-b" data-music="toggle" aria-label="Música sí o no">${this.playing()?"🔊":"🔇"}</button></div>`},
+  bar(){return `<div class="music-bar" id="mMusic"><span class="mb-ico ${this.playing()?"on":""}">🎵</span><span class="mb-name">${this.fail?"No encuentro el archivo de música":esc(this.tracks[this.i][1])}</span><button type="button" class="mb-b" data-music="next" aria-label="Otra música">⏭️</button><button type="button" class="mb-b" data-music="toggle" aria-label="Música sí o no">${this.playing()?"🔊":"🔇"}</button></div>`},
   ui(){const b=document.getElementById("mMusic");if(b)b.outerHTML=this.bar()}
 };
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-music]");if(!b)return;if(b.dataset.music==="next")MUSIC.next();else MUSIC.toggle()});
