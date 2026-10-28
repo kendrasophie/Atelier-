@@ -573,6 +573,22 @@ body{background:radial-gradient(1200px 600px at 10% -10%,#ddd6fe 0%,transparent 
 .music-bar .mb-name{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:56vw}
 .music-bar .mb-ico.on{display:inline-block;animation:bob .5s ease-in-out infinite alternate}
 .mb-b{font:inherit;font-size:16px;border:0;background:#312e81;color:#fff;border-radius:99px;width:34px;height:34px;cursor:pointer}
+/* cartas: el texto siempre oscuro sobre la carta clara (también con el celular en modo oscuro) */
+.mc-face{color:#1e1b4b}.mc-face b{color:#1e1b4b;overflow-wrap:anywhere;hyphens:auto;max-width:100%}
+.mc-face small{color:#6b6894}
+.playbar .music-bar{order:10;flex-basis:100%;justify-content:center;margin-top:4px}
+.playbar{flex-wrap:wrap}
+/* el tamaño de letra se ajusta al ancho de la carta para que las palabras no se corten */
+.mcard{container-type:inline-size}
+.mc-face b{overflow-wrap:normal;word-break:normal;hyphens:manual;font-size:min(20px,calc(150cqw / var(--L,6)))}
+.mc-face b.long{font-size:min(12px,calc(150cqw / var(--L,6)));font-weight:800}
+.mc-face small{font-size:min(9px,12cqw)}
+.mc-face b{font-size:min(20px,calc(150cqw / var(--L,6)),calc(var(--A,.3) * 100cqw))}
+.mc-face b.long{font-size:min(12px,calc(150cqw / var(--L,6)),calc(var(--A,.3) * 100cqw));line-height:1.05}
+.mc-face b{font-size:min(20px,calc(132cqw / var(--L,6)),calc(var(--A,.3) * 100cqw))}
+.mc-face b.long{font-size:min(12px,calc(132cqw / var(--L,6)),calc(var(--A,.3) * 100cqw))}
+.mc-face{padding:4px}
+@media (max-width:420px){.mem-chip{font-size:11px;padding:1px 8px 1px 2px}.mem-chip .mem-mini svg.avatar{width:20px!important}.mem-players{gap:4px}}
 
 </style>
 </head>
@@ -1887,6 +1903,7 @@ UI.view="inicio";
 UI.show=function(v){
   if(UI.cleanup){UI.cleanup();UI.cleanup=null}
   UI.ended=true;UI.cur=null;
+  if(v!=="play"&&typeof MUSIC!=="undefined")MUSIC.stop();   // fuera de los juegos, silencio
   if(!$("modal").hidden)UI.close();
   UI.view=v;document.querySelectorAll(".view").forEach(el=>el.hidden=el.id!=="v-"+v);
   document.querySelectorAll("#tabs button").forEach(b=>b.setAttribute("aria-current",b.dataset.v===v?"page":"false"));
@@ -1958,9 +1975,10 @@ UI.play=function(id){
   const g=GAMES.find(x=>x.id===id);
   if(G.lockLeft(id)){FX.toast(`🔒 ${g.name} está bloqueado ${fmtLeft(G.lockLeft(id))}. Elegí otro juego.`);FX.bad();return}
   UI.show("play");UI.startSession(id);
-  $("v-play").innerHTML=`<div class="playbar"><button class="btn small" id="exitGame" type="button">← Juegos</button><b>${g.icon} ${g.name}</b><span class="chip">Nivel ${G.gameLvl(id)}</span>${id==="memoria"?"":`<span class="chip errs" id="errChip">Errores: 0 de 2</span>`}</div><div id="gamebox" class="gamebox"></div>`;
+  $("v-play").innerHTML=`<div class="playbar"><button class="btn small" id="exitGame" type="button">← Juegos</button><b>${g.icon} ${g.name}</b><span class="chip">Nivel ${G.gameLvl(id)}</span>${id==="memoria"?"":`<span class="chip errs" id="errChip">Errores: 0 de 2</span>`}${typeof MUSIC!=="undefined"?MUSIC.bar():""}</div><div id="gamebox" class="gamebox"></div>`;
   $("exitGame").onclick=()=>UI.show("juegos");
-  UI.ended=false;UI.cleanup=GAMEFN[id]($("gamebox"),G.gameLvl(id))||null;
+  UI.ended=false;if(typeof MUSIC!=="undefined")MUSIC.start();   // la música acompaña todos los juegos
+  UI.cleanup=GAMEFN[id]($("gamebox"),G.gameLvl(id))||null;
 };
 /* fin de partida común a todos los juegos */
 UI.gameEnd=function(id,correct,total,lines=[],opts={}){
@@ -3190,7 +3208,7 @@ const NET={mode:"online",code:"",local:null,
     if(j.room&&j.room.code)this.code=j.room.code;return j.room;
   }
 };
-const BOT_NAMES=["Robotina","Bit","Chispa","Pixel"];
+const BOT_NAMES=["Robotina","Bit","Chispa","Pixel","Tuerca","Nube","Byte"];
 const LOCALROOM={st:null,mem:{},lastBot:0,
   start(nBots){const now=Date.now();this.st=ROOM.create("ROBO","yo",MJ.name,G.P.avatar,now);this.mem={};
     for(let i=0;i<nBots;i++){const av=Object.assign(defaultAvatar(i%2?"nene":"nena"),{top:pick(["remera","buzo","campera"]),topColor:pick(AV.colors),hair:pick(AV.hair),hairColor:pick(AV.hairColor),eyesAcc:pick(["ninguno","anteojos"]),alt:false});
@@ -3224,10 +3242,13 @@ const SKY=["🎈","⭐","🪐","✈️","☁️","🦋","🌟","🚀","🎯","�
 const skyHTML=()=>`<div class="mem-sky" aria-hidden="true">${Array.from({length:11},(_,i)=>`<i style="--x:${rnd(0,95)}%;--y:${rnd(0,90)}%;--d:${rnd(9,20)}s;--dl:-${rnd(0,15)}s;--s:${(rnd(7,14)/10).toFixed(1)}">${SKY[i%SKY.length]}</i>`).join("")}</div>`;
 const memLvl=()=>G.gameLvl("memoria");
 /* música de fondo (archivos en la carpeta «musica», junto al index.html) */
-const MUSIC={tracks:[["vivaldi-invierno.mp3","Vivaldi · El invierno"],["grieg-rey-montana.mp3","Grieg · En la gruta del rey de la montaña"],["rimsky-abejorro.mp3","Rimsky-Kórsakov · El vuelo del abejorro"]],
-  i:0,a:null,on:true,fail:false,
+const MUSIC={tracks:[["vivaldi-invierno.mp3","Vivaldi · El invierno"],["grieg-rey-montana.mp3","Grieg · En la gruta del rey de la montaña"],["rimsky-abejorro.mp3","Rimsky-Kórsakov · El vuelo del abejorro"],
+    ["mozart-marcha-turca.mp3","Mozart · Marcha turca"],["strauss-marcha-radetzky.mp3","Johann Strauss · Marcha Radetzky"],["bizet-toreadores.mp3","Bizet · Los toreadores (Carmen)"],
+    ["chaikovski-cascanueces-marcha.mp3","Chaikovski · Marcha de El Cascanueces"],["brahms-danza-hungara-5.mp3","Brahms · Danza húngara n.º 5"],["prokofiev-pedro-y-el-lobo.mp3","Prokófiev · Pedro y el lobo (marcha)"],
+    ["elgar-pompa-y-circunstancia.mp3","Elgar · Pompa y circunstancia n.º 1"],["beethoven-para-elisa.mp3","Beethoven · Para Elisa"]],
+  i:Math.floor(Math.random()*11),a:null,on:true,fail:false,
   pref(){try{const v=localStorage.getItem("aa-music");if(v!=null)this.on=v==="1"}catch(e){}},
-  start(){this.pref();if(!this.on||G.mute){this.ui();return}if(this.a&&!this.a.paused)return;this.play(this.i)},
+  start(){this.pref();if(!this.on||G.mute){this.ui();return}if(this.a&&!this.a.paused)return;if(this.a&&this.a.src&&!this.fail){const q=this.a.play();if(q&&q.catch)q.catch(()=>{});this.ui();return}this.play(this.i)},   // sigue donde había quedado
   play(i){this.i=(i+this.tracks.length)%this.tracks.length;
     if(!this.a){this.a=new Audio();this.a.volume=.3;this.a.preload="auto";this.a.onended=()=>this.play(this.i+1);
       // busca el archivo al lado del index.html; si no está, en la carpeta «musica»
@@ -3255,7 +3276,7 @@ GAMEFN.memoria=function(box){
 
   function menu(){
     stop();NET.code="";lastV=-1;view=null;
-    box.innerHTML=`<div class="mem-menu mem-wrap">${skyHTML()}${MUSIC.bar()}<div class="mem-hero"><span class="mem-cards">🃏</span><div><h3>Memoria en equipo</h3><p class="note">Hasta ${ROOM.MAXP} jugadores. Por turnos, cada uno da vuelta 2 cartas: si forman pareja (país y capital, palabra y traducción, hecho y año…) suma y vuelve a jugar. Las parejas son siempre impares para que no haya empate.</p></div></div>
+    box.innerHTML=`<div class="mem-menu mem-wrap">${skyHTML()}<div class="mem-hero"><span class="mem-cards">🃏</span><div><h3>Memoria en equipo</h3><p class="note">Hasta ${ROOM.MAXP} jugadores. Por turnos, cada uno da vuelta 2 cartas: si forman pareja (país y capital, palabra y traducción, hecho y año…) suma y vuelve a jugar. Las parejas son siempre impares para que no haya empate.</p></div></div>
       <div class="mem-lvl">Tu nivel en Memoria: <b>${memLvl()}</b> · Se sube ganando y respondiendo bien las preguntas de los comodines ⏸️ 👁️</div>
       <div class="mem-actions">
         <button class="mem-act" id="mCreate" type="button" ${online?"":"disabled"}><span>🌐</span><b>Crear una sala</b><small>Te damos un código para pasarle a tus amigas y amigos</small></button>
@@ -3285,8 +3306,7 @@ GAMEFN.memoria=function(box){
   const wireEmotes=()=>box.querySelectorAll(".emo").forEach(b=>b.onclick=()=>{act("emote",{e:b.dataset.e})});
   function lobby(){
     const v=view;const host=v.host;const n=memPairs(size,v.players.length);
-    MUSIC.start();
-    box.innerHTML=`<div class="mem-lobby mem-wrap" id="mLobby">${skyHTML()}${MUSIC.bar()}
+    box.innerHTML=`<div class="mem-lobby mem-wrap" id="mLobby">${skyHTML()}
       <div class="mem-code"><small>${NET.mode==="local"?"Práctica con robots":"Código de la sala"}</small><b>${NET.mode==="local"?"🤖":esc(v.code)}</b>${NET.mode==="local"?"":`<button class="btn small" id="mCopy" type="button">📋 Copiar</button>`}</div>
       ${NET.mode==="local"?"":`<p class="note center">Pasale este código a tus amigas y amigos: entran a <b>Juegos → Memoria en equipo → Unirme</b>.</p>`}
       <div class="mem-stage">${v.players.map((p,i)=>`<div class="mem-pl ${p.away?"away":""}" style="--pc:${P_COL[i%8]};--bd:${(i*0.17).toFixed(2)}s"><div class="mem-plav">${avatarSVG(avOf(p),58,"wave",{mood:"happy"})}</div><span>${esc(p.name)}${i===v.me?" (vos)":""}</span></div>`).join("")}<div class="mem-floor"></div></div>
@@ -3306,13 +3326,12 @@ GAMEFN.memoria=function(box){
   }
   /* tablero: se arma una vez y después se actualiza carta por carta (así se ve el giro) */
   function board(){
-    const v=view;const cols=v.cards.length<=18?(v.cards.length<=14?4:5):v.cards.length<=30?6:7;
-    MUSIC.start();
-    box.innerHTML=`<div class="mem-game mem-wrap">${skyHTML()}${MUSIC.bar()}
+    const v=view;const cols=Math.min(v.cards.length<=18?(v.cards.length<=14?4:5):v.cards.length<=30?6:7,innerWidth<420?4:innerWidth<620?5:7);
+    box.innerHTML=`<div class="mem-game mem-wrap">${skyHTML()}
       <div class="mem-players" id="mPl"></div>
       <div class="mem-turn" id="mTurn"><span id="mTurnTxt"></span><div class="mem-timer"><i id="mBar"></i></div></div>
       <div class="mem-tools" id="mTools"></div>
-      <div class="mem-board" id="mBoard" style="--cols:${cols}">${v.cards.map((c,i)=>`<button type="button" class="mcard down ${c.k}" data-i="${i}" aria-label="Carta tapada"><span class="mc-in"><span class="mc-back">${crestSVG(26)}</span><span class="mc-face"><small>${esc(tName(c.k))}</small><b style="font-size:${c.t.length>40?10:c.t.length>22?12:c.t.length>10?15:20}px">${esc(c.t)}</b></span></span></button>`).join("")}</div>
+      <div class="mem-board" id="mBoard" style="--cols:${cols}">${v.cards.map((c,i)=>`<button type="button" class="mcard down ${c.k}" data-i="${i}" aria-label="Carta tapada"><span class="mc-in"><span class="mc-back">${crestSVG(26)}</span><span class="mc-face"><small>${esc(tName(c.k))}</small><b class="${c.t.length>24?"long":""}" style="--L:${Math.max(5,...c.t.split(/\s+/).map(w=>w.length))};--A:${(1.02/Math.sqrt(Math.max(8,c.t.length))).toFixed(3)}">${esc(c.t)}</b></span></span></button>`).join("")}</div>
       <p class="mem-evt" id="mEvt"></p>${emoteBar()}
       <div class="mactions"><button class="btn small" id="mLeave" type="button">Salir de la partida</button></div></div>`;
     box.querySelectorAll(".mcard").forEach(b=>b.onclick=()=>tap(+b.dataset.i,b));
@@ -3360,7 +3379,7 @@ GAMEFN.memoria=function(box){
     let earned=0,res=null;if(!paid){paid=true;earned=me.score*200+(iWon?1000:0)+200;G.earn(earned);
       res=G.gameDone("memoria",qOk+(iWon?1:0),qTot+1);G.P.stats.memGames=(G.P.stats.memGames||0)+1;if(iWon)G.P.stats.memWins=(G.P.stats.memWins||0)+1;G.save();SND.medal(iWon?"gold":me.score?"silver":"bronze");if(res&&res.up)SND.levelUp();if(iWon)FX.confetti(220)}
     const step=(p,place)=>p?`<div class="pod p${place}" style="--pc:${P_COL[p.i%8]}"><div class="pod-av">${avatarSVG(avOf(p),place===1?74:58,place===1?"jump":"wave",{mood:"happy"})}</div><b>${esc(p.name)}</b><span>${p.score} pareja${p.score===1?"":"s"}</span><div class="pod-block">${place}</div></div>`:"";
-    box.innerHTML=`<div class="mem-end mem-wrap" id="mEnd">${skyHTML()}${MUSIC.bar()}<h3>${iWon?"🏆 ¡Ganaste!":"¡Partida terminada!"}</h3><div class="podium">${step(ord[1],2)}${step(ord[0],1)}${step(ord[2],3)}</div>
+    box.innerHTML=`<div class="mem-end mem-wrap" id="mEnd">${skyHTML()}<h3>${iWon?"🏆 ¡Ganaste!":"¡Partida terminada!"}</h3><div class="podium">${step(ord[1],2)}${step(ord[0],1)}${step(ord[2],3)}</div>
       ${tie?`<p class="center note">Empataron en parejas: gana quien llegó primero a ese puntaje.</p>`:""}
       ${ord.slice(3).map((p,k)=>`<p class="center">${k+4}. ${esc(p.name)} · ${p.score}</p>`).join("")}
       ${earned?`<p class="center">Ganaste ${plus(earned)} · Comodines: ${qOk} de ${qTot} bien${res&&res.up?` · ⬆️ <b>¡Subiste al nivel ${res.lvl} de Memoria!</b>`:""}</p>`:""}
@@ -3370,7 +3389,7 @@ GAMEFN.memoria=function(box){
   }
   async function leave(){leaving=true;stop();if(NET.mode==="online"&&NET.code){try{await NET.call("leave")}catch(e){}}leaving=false;lastV=-1;menu()}
   menu();
-  return ()=>{stop();MUSIC.stop();document.querySelectorAll(".emo-pop").forEach(e=>e.remove());if(NET.mode==="online"&&NET.code&&view&&view.status!=="end"){NET.call("leave").catch(()=>{})}};
+  return ()=>{stop();document.querySelectorAll(".emo-pop").forEach(e=>e.remove());if(NET.mode==="online"&&NET.code&&view&&view.status!=="end"){NET.call("leave").catch(()=>{})}};
 };
 
 /* =====================================================================
