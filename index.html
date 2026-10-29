@@ -596,6 +596,26 @@ body{background:radial-gradient(1200px 600px at 10% -10%,#ddd6fe 0%,transparent 
 /* si el navegador no hace bien el giro 3D, igual se ve la cara correcta */
 .mcard.up .mc-back,.mcard.done .mc-back,.mcard.peek .mc-back{opacity:0;transition:opacity 0s .22s}
 .mcard.down:not(.peek) .mc-face{opacity:0;transition:opacity 0s .22s}
+/* ===== Ciudad vial: al volante ===== */
+.vial-menu{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.mem-act.carnet{border-color:#f59e0b;background:linear-gradient(135deg,#fffbeb,var(--surface))}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mem-act.carnet{background:linear-gradient(135deg,#3b2a0a,var(--surface))}}
+.drive{display:flex;flex-direction:column;gap:8px;align-items:center}
+.drive canvas{border-radius:20px;box-shadow:var(--lift);max-width:100%}
+.dash{display:flex;align-items:center;gap:12px;background:#1e1b4b;color:#fff;border-radius:22px;padding:8px 14px;box-shadow:var(--lift);width:min(100%,760px);justify-content:space-between}
+.drv-av svg.avatar{width:40px!important;height:auto}
+.speedo{display:flex;flex-direction:column;align-items:center;line-height:1;background:#0f172a;border:3px solid #22d3ee;border-radius:50%;width:76px;height:76px;justify-content:center;box-shadow:inset 0 0 12px #22d3ee66}
+.speedo b{font-family:var(--display);font-size:30px}.speedo small{font-size:11px;color:#a5f3fc}
+.speedo.over{border-color:#ef4444;box-shadow:inset 0 0 14px #ef4444aa;animation:shk .4s}
+.limit{width:52px;height:52px;border-radius:50%;background:#fff;border:6px solid #dc2626;display:grid;place-items:center;color:#111;font-weight:900;font-size:18px}
+.pedals{display:flex;gap:8px}.pedals .btn{font-size:26px;width:64px;height:58px;padding:0}
+.drv-bar{width:min(100%,760px);height:8px;border-radius:9px;background:var(--line);overflow:hidden}.drv-bar i{display:block;height:100%;background:linear-gradient(90deg,#7c3aed,#ec4899,#10b981)}
+.drv-msg{margin:0;text-align:center;font-weight:800;min-height:2.6em}
+@media (max-width:420px){.speedo{width:62px;height:62px}.speedo b{font-size:24px}.pedals .btn{width:54px;height:52px}.limit{width:44px;height:44px;font-size:15px}}
+.qpic{display:flex;flex-direction:column;align-items:center;gap:2px;margin:-4px 0 2px}
+.qpic small{font-weight:800;color:var(--muted)}
+.qpic-emo{font-size:52px;line-height:1.1}
+.blinkl{animation:blk .6s steps(2) infinite}@keyframes blk{50%{opacity:.15}}
 
 </style>
 </head>
@@ -763,7 +783,7 @@ const BANK = [
 ["civica",2,"¿Qué indican las señales rectangulares azules o verdes?",["Información: destinos, distancias y servicios","Prohibiciones","Peligros","Velocidad máxima"],"Por ejemplo: Hospital o Ruta Nacional."],
 ["civica",2,"¿Cuál es la velocidad máxima en una zona escolar?",["20 km/h","40 km/h","60 km/h","100 km/h"],"Es la más baja: hay chicos cruzando."],
 ["civica",3,"En una esquina sin semáforo, ¿quién tiene prioridad de paso?",["El vehículo que viene por la derecha","El que viene por la izquierda","El más grande","El más rápido"],"Es la regla de la derecha."],
-["civica",3,"¿Cuál de estas es una EXCEPCIÓN a la regla de la derecha?",["Una ambulancia con sirena encendida","Un auto rojo","Un colectivo vacío","Una moto"],"También tienen prioridad las avenidas y quienes ya están en la rotonda."],
+["civica",3,"¿Cuál de estas es una EXCEPCIÓN a la regla de la derecha?",["Una ambulancia con sirena encendida","Un auto rojo","Un colectivo vacío","Una moto"],"También pierden la prioridad de la derecha ante trenes, peatones, quienes ya están en la rotonda y quienes van por una semiautopista. Ser avenida NO da prioridad según la ley nacional."],
 ["civica",3,"¿Cuál es la velocidad máxima en calles urbanas?",["40 km/h","20 km/h","60 km/h","120 km/h"],"En avenidas es 60 km/h."],
 ["civica",3,"¿Qué hace el Poder Judicial?",["Hace cumplir las leyes y resuelve conflictos","Hace las leyes","Cobra impuestos","Maneja el tránsito"],"Lo forman la Corte Suprema y los jueces."],
 ["civica",3,"El día de la elección, ¿dónde se elige la boleta en secreto?",["En el cuarto oscuro","En la vereda","En la urna","En la mesa"],"Después se pone en el sobre y en la urna."],
@@ -940,12 +960,13 @@ const GEN=[
 let QUESTIONS=[];
 G.setQuestions=function(list){
   let src=(list&&list.length)?list:BANK;
-  src=src.filter(x=>!/por complementos|con el complemento de 5/.test(x[2]));   // reemplazadas por versiones con explicación
+  src=src.filter(x=>!/por complementos|con el complemento de 5/.test(x[2]));
+  src=src.map(x=>/tienen prioridad las avenidas/.test(x[4]||"")?x.slice(0,4).concat(["También pierden la prioridad de la derecha ante trenes, peatones, quienes ya están en la rotonda y quienes van por una semiautopista. Ser avenida NO da prioridad según la ley nacional."]):x);   // corrige la explicación vieja de la hoja   // reemplazadas por versiones con explicación
   QUESTIONS=src.map(x=>({id:"q."+hashStr(x[2]),s:x[0],l:+x[1],q:x[2],opts:x[3],e:x[4]}));
   QUESTIONS=QUESTIONS.concat(GEN.map(g=>({id:g.id,s:g.s,l:g.l,gen:g}))).concat((typeof DATA_GEN!=="undefined"?DATA_GEN:[]).map(g=>({id:g.id,s:g.s,l:g.l,gen:g})));
 };
 /* ---------- progreso ---------- */
-function newProgress(){return {v:1,updated:0,avatar:null,rewards:null,xp:0,level:1,gold:0,silver:0,cash:0,
+function newProgress(){return {v:1,updated:0,avatar:null,rewards:null,xp:0,level:1,gold:0,silver:0,cash:0,cashV:2,
   streak:{count:0,last:null,best:0,shields:0},skill:{},srs:{},games:{},medals:{bronze:0,silver:0,gold:0},
   trophies:{},badges:{},owned:[],stats:{answered:0,correct:0,daily:{}}}}
 function needFor(L){return 80+40*(L-1)}
@@ -953,6 +974,7 @@ function levelInfo(xp){let L=1,a=0;while(xp>=a+needFor(L)){a+=needFor(L);L++}ret
 G.P=null;G.user=null;
 G.load=function(user){G.user=user;let p=null;try{p=JSON.parse(localStorage.getItem("mj-prog-"+user))}catch(e){}G.P=G.fix(p)};
 G.fix=function(p){const n=newProgress();if(!p)return n;const o=Object.assign(n,p);if(p.cash==null)o.cash=(p.silver||0)*100+(p.gold||0)*2500;   // las monedas viejas pasan a pesos
+  if(o.cashV!==2){o.cash=Math.round((o.cash||0)*100);o.cashV=2}   // montos de hoy: todo lo ahorrado se multiplica por 100
   o.streak=Object.assign(newProgress().streak,p.streak||{});o.stats=Object.assign(newProgress().stats,p.stats||{});o.medals=Object.assign(newProgress().medals,p.medals||{});return o};
 G.merge=function(s){if(s&&s.updated&&(!G.P.updated||s.updated>G.P.updated)){G.P=G.fix(s);G.saveLocal()}};
 G.saveLocal=function(){try{localStorage.setItem("mj-prog-"+G.user,JSON.stringify(G.P))}catch(e){}};
@@ -1001,7 +1023,7 @@ G.answer=function(q,ok){
       if(s.due<=now||s.bx===0)s.bx=Math.min(5,s.bx+1);s.due=now+WAIT[s.bx]}
     else{s.wrong=(s.wrong||0)+1;s.fixed=false;s.bx=Math.max(0,s.bx-2);s.due=now+3*MIN}}
   if(q.l===3)p.stats.hardTried=(p.stats.hardTried||0)+1;
-  if(ok){p.stats.correct++;const c=G.earn((PAY.answer[q.l]||50)+(overcame?PAY.overcome:0));return {xp:6+q.l*2+(overcame?5:0),cents:c,overcame}}
+  if(ok){p.stats.correct++;const c=G.earn((PAY.answer[q.l]||2500)+(overcame?PAY.overcome:0));return {xp:6+q.l*2+(overcame?5:0),cents:c,overcame}}
   return {xp:1,cents:0,overcame:false};   // el costo en monedas lo cobra UI.miss
 };
 /* volver después de un día difícil (menos de la mitad bien) */
@@ -1030,7 +1052,7 @@ G.touchStreak=function(){
   else s.count=1;
   s.last=t;s.best=Math.max(s.best,s.count);
   if(s.count%7===0&&s.shields<2){s.shields++;setTimeout(()=>FX.toast("🛡️ ¡Ganaste un escudo de racha!"),1200)}
-  G.earn(Math.min(PAY.streakMax,s.count*100));
+  G.earn(Math.min(PAY.streakMax,s.count*10000));
 };
 G.streakNow=function(){const s=G.P.streak;if(!s.last)return 0;const t=today();if(s.last===t||s.last===dayBefore(t))return s.count;if(s.shields>0&&s.last===dayBefore(dayBefore(t)))return s.count;return 0};
 /* medalla por partida según porcentaje */
@@ -1157,7 +1179,7 @@ const FOOD_GROUPS=[
 const RIGHTS=[["Ir a la escuela","Derecho"],["Recibir atención de salud","Derecho"],["Expresar lo que pienso","Derecho"],["Tener un nombre y documento","Derecho"],["Jugar y descansar","Derecho"],["Vivir en un lugar seguro","Derecho"],["Ser tratado con igualdad","Derecho"],
  ["Respetar las leyes","Obligación"],["Cuidar el espacio público","Obligación"],["Pagar los impuestos (tributar)","Obligación"],["Respetar a los demás","Obligación"],["Votar desde los 18 años","Obligación"],["Cumplir las normas de tránsito","Obligación"]];
 const POWERS=[["Hace y aprueba las leyes","Legislativo"],["Lo forman Diputados y Senadores","Legislativo"],["Debate en el Congreso","Legislativo"],["Administra el país y los servicios públicos","Ejecutivo"],["Lo encabeza el Presidente","Ejecutivo"],["En la provincia lo encabeza el Gobernador","Ejecutivo"],["En el municipio lo encabeza el Intendente","Ejecutivo"],["Hace cumplir las leyes y juzga","Judicial"],["Lo forman la Corte Suprema y los jueces","Judicial"],["Resuelve conflictos entre personas","Judicial"]];
-const SPEEDS=[["calles urbanas","40 km/h"],["avenidas","60 km/h"],["zonas escolares","20 km/h"],["semiautopistas","100 a 110 km/h"],["autopistas","hasta 120 o 130 km/h"]];
+const SPEEDS=[["calles urbanas","40 km/h"],["avenidas","60 km/h"],["zonas escolares (en horario de clases)","20 km/h"],["encrucijadas urbanas sin semáforo","30 km/h"],["rutas (autos y motos)","110 km/h"],["semiautopistas (autos y motos)","120 km/h"],["autopistas (autos y motos)","130 km/h"]];
 const NEEDS=[["Útiles para la escuela","Necesidad"],["Abrigo para el invierno","Necesidad"],["Comida de todos los días","Necesidad"],["Remedios","Necesidad"],["Zapatillas para la escuela","Necesidad"],["Boleto de colectivo","Necesidad"],
  ["Figuritas","Deseo"],["Un juguete de moda","Deseo"],["Golosinas","Deseo"],["Un accesorio nuevo","Deseo"],["Un videojuego","Deseo"],["Una muñeca de colección","Deseo"]];
 const ONLINE=[["Un mensaje: «Te regalo monedas para el juego si me pasás tu contraseña»","Peligroso"],["Alguien que no conocés te pide fotos","Peligroso"],["Una página pide tu dirección para «ganar un premio»","Peligroso"],["Un video sorprendente sin fuente clara","Hay que verificar"],["Una noticia compartida solo por una cuenta desconocida","Hay que verificar"],["Buscar la noticia en dos sitios confiables","Seguro"],["Preguntarle a un adulto antes de descargar algo","Seguro"],["Usar una contraseña larga y no compartirla","Seguro"],["Publicar el nombre de tu escuela y tu dirección","Peligroso"],["Un link de un premio que nunca pediste","Peligroso"],["Contarle a un adulto si algo te incomoda","Seguro"],["Una foto con la ubicación activada","Hay que verificar"]];
@@ -1462,10 +1484,11 @@ function walletHTML(c,size=30){
 const iconFor=c=>moneySVG(breakdown(c)[0]?breakdown(c)[0][0]:100,16);
 const plus=c=>`<span class="plusm">+${fmtM(c)} ${iconFor(c)}</span>`;
 /* cuánto se gana y cuánto cuesta (en centavos) */
-const PAY={answer:[0,25,100,250],overcome:200,round:100,detective:100,medal:{gold:2000,silver:1000,bronze:500},level:5000,daily:2000,exam:500,revancha:100,streakMax:1000,station:10000,bigStation:50000};
+/* montos en centavos, en pesos de hoy: respuesta fácil $25, intermedia $100, difícil $250; medalla de oro $2.000 */
+const PAY={answer:[0,2500,10000,25000],overcome:20000,round:10000,detective:10000,medal:{gold:200000,silver:100000,bronze:50000},level:500000,daily:200000,exam:50000,revancha:10000,streakMax:100000,station:1000000,bigStation:5000000};
 /* pago por ronda de juego: más difícil = más plata. Los juegos complejos (robot, poleas) pagan más */
-const GAME_PAY={detective:100,tiro:100,kiosco:150,abaco:150,plato:100,vial:100,robot:500,ingles:125,tiempo:150,poleas:300};
-const roundPay=()=>{const c=UI.cur||{};const d=c.diff??G.gameLvl(c.id||"");const base=GAME_PAY[c.id]||100;return Math.max(25,Math.round(base*(1+0.4*(Math.max(1,d)-1))/25)*25)};
+const GAME_PAY={detective:10000,tiro:10000,kiosco:15000,abaco:15000,plato:10000,vial:10000,robot:50000,ingles:12500,tiempo:15000,poleas:30000};
+const roundPay=()=>{const c=UI.cur||{};const d=c.diff??G.gameLvl(c.id||"");const base=GAME_PAY[c.id]||100;return Math.max(2500,Math.round(base*(1+0.4*(Math.max(1,d)-1))/500)*500)};
 const diffTag=()=>{const c=UI.cur||{};const d=c.diff??G.gameLvl(c.id||"");return d>=3?` <span class="dtag">🔥 dificultad ${d}: paga más</span>`:""};
 G.cash=()=>G.P.cash||0;
 G.earn=c=>{G.P.cash=G.cash()+c;return c};
@@ -1536,8 +1559,8 @@ const SHOP=[
   ["gloves:box",{silver:220}],["gloves:ufc",{silver:220}],
   ["kind:jirafa",{silver:400}],["pet:perro",{silver:700}],["pet:gato",{silver:600}],["pet:conejo",{silver:550}],["pet:pollito",{silver:350}],["pet:caballo",{silver:1500}],
   ["petWear:collar",{silver:80}],["petWear:moño",{silver:80}],["petWear:bandana",{silver:100}],["petWear:sweater",{silver:180}],["petWear:capa",{silver:200}],["petWear:sombrerito",{silver:120}]
-].map(([id,price])=>({id,price:price.gold?price.gold*2500:price.silver*100}));   // precios en centavos
-const AV_CHANGE={base:20000,outfit:4000};   // centavos: cuerpo o pelo $200; ropa $40   // costo de guardar cambios después de creado
+].map(([id,price])=>({id,price:price.gold?price.gold*250000:price.silver*10000}));   // precios en centavos (pesos de hoy)
+const AV_CHANGE={base:2000000,outfit:400000};   // centavos: cuerpo o pelo $200; ropa $40   // costo de guardar cambios después de creado
 const EXCLUSIVE=["top:vestidoAtelier","head:tiaraAlpha","alt"];   // solo para Kendra
 /* prendas y accesorios solo para nenas (f) o solo para nenes (m) */
 const GENDER={"kind:jirafa":"f","top:vestido":"f","top:vestidoElegante":"f","top:vestidoAtelier":"f","bottom:pollera":"f","bottom:tutu":"f","shoes:guillerminas":"f","head:vincha":"f","head:moño":"f","head:tiaraAlpha":"f",
@@ -1833,11 +1856,12 @@ const LVL_NAME=["","Base","Intermedio","Desafío"];
 
 /* ---------- pregunta ---------- */
 UI.ask=function(q,opt={}){
+  UI.lastQ=q;
   return new Promise(res=>{
     const s=SUBJ_BY[q.s];
     const b=UI.modal(`<div class="qhead">${s?`<span class="chip" style="--c:${s.color}">${s.icon} ${s.name}</span>`:""}<span class="chip lv">${LVL_NAME[q.l]||""}</span>${q.review?`<span class="chip rev">🔁 Repaso</span>`:""}${opt.progress?`<span class="qprog">${opt.progress}</span>`:""}</div>
       ${opt.timer?`<div class="qtimer"><i id="qbar"></i></div>`:""}
-      <h3 class="qtext">${esc(q.q)}</h3><div class="qopts">${q.opts.map((o,i)=>`<button class="qopt" data-i="${i}" data-v="${esc(o)}" type="button">${esc(o)}</button>`).join("")}</div><div class="qtools" id="qtools"></div><div id="qfeed" class="qfeed"></div>`);
+      ${opt.pic?`<div class="qpic">${opt.pic}</div>`:""}<h3 class="qtext">${esc(q.q)}</h3><div class="qopts">${q.opts.map((o,i)=>`<button class="qopt" data-i="${i}" data-v="${esc(o)}" type="button">${esc(o)}</button>`).join("")}</div><div class="qtools" id="qtools"></div><div id="qfeed" class="qfeed"></div>`);
     let done=false,t0=performance.now(),raf;
     const hb=UI.helpBtn(b,q);if(hb){$("qtools").innerHTML=hb;$("qhelp").onclick=()=>{if(UI.useHelp(b,q.ans))$("qhelp").remove()}}
     const fin=i=>{if(done)return;done=true;cancelAnimationFrame(raf);const ok=i!=null&&q.opts[i]===q.ans;
@@ -1928,7 +1952,7 @@ UI.hud=function(){
 G.onChange=()=>UI.hud();
 document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#hudMoney"))UI.wallet()});
 UI.wallet=function(){UI.modal(`<h2 class="mtitle">💰 Mi billetera</h2><p class="bigscore"><b>${fmtM(G.cash())}</b></p><div class="walletbig">${walletHTML(G.cash(),44)}</div>
-  <p class="note">Ganás monedas de 25 y 50 centavos, de $1 y de $2 con cada respuesta correcta. Cuando juntás, se cambian por billetes: $10, $20, $50, $100, $200, $500, $1.000, $2.000, $10.000 y $20.000. Cada error cuesta ${fmtM(COST_WRONG)}.</p>
+  <p class="note">Cada respuesta correcta paga: fácil ${fmtM(PAY.answer[1])}, intermedia ${fmtM(PAY.answer[2])} y difícil ${fmtM(PAY.answer[3])}. Las medallas pagan más: oro ${fmtM(PAY.medal.gold)}. Cuando juntás, la plata se cambia sola por billetes de $1.000, $2.000, $10.000 y $20.000, como los de verdad. Cada error cuesta ${fmtM(COST_WRONG)}.</p>
   <div class="mactions"><button class="btn primary" type="button" onclick="UI.close()">Cerrar</button></div>`)};
 
 /* ---------- INICIO ---------- */
@@ -1964,7 +1988,7 @@ const GAMES=[
   {id:"kiosco",name:"El kiosco",icon:"🏪",s:"economia",desc:"¿Me alcanza?, vuelto con billetes, necesidad o deseo y el pack que conviene."},
   {id:"abaco",name:"Ábaco mágico",icon:"🧮",s:"mate",desc:"Soroban japonés: armá números, sumá con complementos y hacé cálculo mental relámpago."},
   {id:"plato",name:"Plato arcoíris",icon:"🥗",s:"salud",desc:"Armá un plato sano de muchos colores y ordená tu día: higiene, comida y sueño."},
-  {id:"vial",name:"Ciudad vial",icon:"🚦",s:"civica",desc:"Cruzá la calle con el semáforo, ordená señales y decidí quién pasa primero en la esquina."},
+  {id:"vial",name:"Ciudad vial",icon:"🚦",s:"civica",desc:"🚗 Al volante por la ciudad (semáforos, carteles, radares, esquinas), 🚶 a pie, y 🪪 modo carnet para grandes y chicos que se animan."},
   {id:"robot",name:"Robot programador",icon:"🤖",s:"ia",desc:"Programá al robot con bloques de avanzar, girar y repetir para llegar a la estrella."},
   {id:"ingles",name:"Viaje en inglés",icon:"✈️",s:"ingles",desc:"Escuchá, elegí la frase correcta y seguí indicaciones en un mapa: turn left, go straight."},
   {id:"tiempo",name:"Línea de tiempo",icon:"⏳",s:"historia",desc:"Ordená hechos de la historia del mundo y de Argentina, del más antiguo al más nuevo."},
@@ -2030,7 +2054,7 @@ UI.avatar=function(first){
     maquillaje:[["makeup","Maquillaje y detalles",AV.makeup,T(AV.makeupName),"multi"]]
   };
   const tabName={mascota:"Mascota",cuerpo:"Cuerpo",pelo:"Pelo",ropa:"Ropa",deporte:"Deporte",accesorios:"Accesorios",maquillaje:"Maquillaje"};
-  const extraHair={"#7c3aed":15000,"#ec4899":15000,"#14b8a6":15000};
+  const extraHair={"#7c3aed":1500000,"#ec4899":1500000,"#14b8a6":1500000};
   const BASE=["kind","skin","face","eyeColor","hair","hairColor","alt","height"];const orig=JSON.stringify(a);const hist=[];
   const costNow=()=>{if(first||!p.avatar)return null;const o=JSON.parse(orig);const same=k=>JSON.stringify(o[k])===JSON.stringify(a[k]);
     const kindOnly=k=>k==="kind"&&["nena","jirafa"].includes(o.kind)&&["nena","jirafa"].includes(a.kind);if(BASE.some(k=>!same(k)&&!kindOnly(k)))return AV_CHANGE.base;if(Object.keys(a).some(k=>!same(k)&&!kindOnly(k)))return AV_CHANGE.outfit;if(!same("kind"))return 0;return null};
@@ -2148,8 +2172,8 @@ UI.amigos=function(){
    ERRORES CON COSTO · CONSECUENCIA EN EL AVATAR · MONITO · BLOQUEOS
    CAMINO DE 800 PASOS · AYUDA PAGA
    ===================================================================== */
-const COST_WRONG=200;                   // centavos que cuesta cada error ($ 2)
-const HELP_COST=300;                    // centavos que cuesta pedir ayuda ($ 3)
+const COST_WRONG=20000;                 // centavos que cuesta cada error ($ 200)
+const HELP_COST=30000;                  // centavos que cuesta pedir ayuda ($ 300)
 const LOCK_MIN=[5,10,20,30,45,60];      // minutos de bloqueo: 1ª, 2ª, 3ª vez del día…
 const fem=()=>((G.P&&G.P.avatar)||{}).kind!=="nene";
 const ao=(f,m)=>fem()?f:m;
@@ -2187,6 +2211,7 @@ const CONSEQ={
   ingles:{mood:"worried",fx:["question","sweat"],txt:()=>`Nadie te entendió y quedaste ${ao("perdida","perdido")} en la ciudad.`},
   tiempo:{mood:"dizzy",fx:["question"],txt:()=>"¡La máquina del tiempo te mareó!"},
   poleas:{mood:"worried",fx:["bump","sweat"],txt:()=>"¡Se cortó la soga y la carga cayó al lado tuyo!"},
+  manejo:{mood:"worried",fx:["sweat","question"],txt:()=>"¡Bocinazos y una multa! Así no se maneja."},
   _:{mood:"sad",fx:["rain"],txt:()=>"Una nube de lluvia te sigue hasta que aciertes."}
 };
 /* plato arcoíris: etapas de salud (se guardan y se curan acertando) */
@@ -2230,7 +2255,7 @@ G.nextLockMin=id=>{const l=G.locks()[id];const n=l&&l.day===today()?l.n:0;return
 const fmtLeft=ms=>{const s=Math.ceil(ms/1000);return `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`};
 
 function missHTML(c,pay,stage,out,fast){
-  const k=CONSEQ[c.id]||CONSEQ._;
+  const k=CONSEQ[c.cq||c.id]||CONSEQ._;
   const fx=c.strikes>=2&&!k.fx.includes("tear")?k.fx.concat("tear"):k.fx;
   const pic=stage!=null?healthScene(stage,110):avatarSVG(G.P.avatar,64,"lament",{mood:"sad",fx:fx.concat(fx.includes("tear")?[]:["tear"])});
   const txt=stage!=null?`Comer mal te hace mal: ahora estás en la etapa «${HEALTH[stage].n()}».`:k.txt();
@@ -2284,7 +2309,7 @@ UI.kickOut=function(){
 UI.helpBtn=function(box,q,onUse){
   const wrongs=[...box.querySelectorAll(".qopt")].filter(b=>!b.disabled&&b.dataset.v!==q.ans);
   if(wrongs.length<2)return "";
-  return `<button class="btn small help" type="button" id="qhelp">💡 Ayuda: quitar ${wrongs.length>=3?2:1} opción${wrongs.length>=3?"es":""} (−${fmtM(HELP_COST)})</button>`;
+  return `<button class="btn small help" type="button" id="qhelp">💡 Ayuda: quitar ${wrongs.length>=3?2:1} ${wrongs.length>=3?"opciones":"opción"} (−${fmtM(HELP_COST)})</button>`;
 };
 UI.useHelpCash=function(){if(!G.spend(HELP_COST)){FX.toast(`Te faltan ${fmtM(HELP_COST-G.cash())} para pedir ayuda`);return false}G.P.stats.helps=(G.P.stats.helps||0)+1;G.save();FX.coin();return true};
 UI.useHelp=function(box,ans){
@@ -2596,7 +2621,7 @@ GAMEFN.detective=function(box,L){
       <h3 class="cap-title">🚓 ¡${F?"Atrapada":"Atrapado"}! ${esc(Thief)} quedó tras las rejas en ${esc(cur.n)}.</h3><p class="cap-sub">Recuperaste ${loot}. ${F?"¡Gran detective!":"¡Gran detective!"}</p></div>`;
     setTimeout(()=>{FX.tone(330,.15,"square",.06);FX.tone(260,.25,"square",.06,.15)},1500);
     setTimeout(()=>{FX.fanfare();FX.confetti(180)},2300);
-    caught.push(thief);const bounty=G.earn(1000*caught.length);G.save();SND.capture();
+    caught.push(thief);const bounty=G.earn(100000*caught.length);G.save();SND.capture();
     setTimeout(()=>{if(UI.ended)return;const ex=document.createElement("div");ex.className="cap-next";
       ex.innerHTML=`<p>Recompensa: ${plus(bounty)} · Villanos atrapados: <b>${caught.length}</b></p><p class="note">${VILL.length>caught.length?"¡Se escapó otro villano! El próximo es más difícil y paga más.":"¡Atrapaste a todos!"}</p><div class="mactions"><button class="btn" type="button" id="detEnd">🏁 Terminar</button><button class="btn primary" type="button" id="detNext">🕵️ Perseguir al próximo</button></div>`;
       box.appendChild(ex);ex.scrollIntoView({behavior:"smooth",block:"nearest"});
@@ -2733,7 +2758,7 @@ function shoot(box,L,M){
     book.unshift({n:shots,a,v,dist,res:h?"✅ "+h:near?"🟡 "+why+" · ¡casi! (medio punto)":"❌ "+why});
     if(h){const sb=G.P.stats.shotBook||(G.P.stats.shotBook={});const l=sb[M.id]||(sb[M.id]=[]);l.unshift({dist,a,v,w:wind||0,pl:planet?planet[0]:""});sb[M.id]=l.slice(0,8);G.save()}
     drawBook();
-    if(h){hits++;const w=G.earn(roundPay());G.save();msg=h+" +"+fmtM(w);FX.good();FX.sparkle(...cv.screen(X(T.x||T.net||0),Y(1)),"#facc15",26);FX.shake(box);if(/Centro|perfecto|Encestaste/.test(h))FX.confetti(60)}else if(near){const w=G.earn(Math.round(roundPay()/50)*25);G.save();msg=why+" · ¡Casi! +"+fmtM(w);FX.tone(520,.12,"triangle",.08)}else{msg=why;FX.bad();sadT=t+1.4}
+    if(h){hits++;const w=G.earn(roundPay());G.save();msg=h+" +"+fmtM(w);FX.good();FX.sparkle(...cv.screen(X(T.x||T.net||0),Y(1)),"#facc15",26);FX.shake(box);if(/Centro|perfecto|Encestaste/.test(h))FX.confetti(60)}else if(near){const w=G.earn(Math.round(roundPay()/1000)*500);G.save();msg=why+" · ¡Casi! +"+fmtM(w);FX.tone(520,.12,"triangle",.08)}else{msg=why;FX.bad();sadT=t+1.4}
     if(shots>=SHOTS){setTimeout(finish,900);return}
     if(shots%3===0){await new Promise(r=>setTimeout(r,800));const ok=await askQ(null);qTot++;if(ok)qOk++}
     if(h||M.id==="cohete")setup();
@@ -2970,7 +2995,7 @@ const SIGNS=[
   {n:"Ruta nacional",k:"info",svg:`<rect x="6" y="14" width="88" height="72" rx="6" fill="#16a34a"/><text x="50" y="60" font-size="22" fill="#fff" text-anchor="middle" font-weight="800">RN 40</text>`}
 ];
 const signSVG=(s,sz=64)=>`<svg width="${sz}" height="${sz}" viewBox="0 0 100 100" aria-label="${s.n}">${s.svg}</svg>`;
-GAMEFN.vial=function(box,L){
+function vialPie(box,L,extra){
   const cruce=async el=>{
     el.innerHTML=`<h3 class="qtext">Tenés que cruzar. ${L>=2?"Primero mirá: izquierda, derecha y otra vez izquierda.":""} Cruzá solo con el muñeco verde.</h3><div id="cv"></div><div class="vialbtns">${L>=2?`<button class="btn" type="button" data-l="i">👀 Izquierda</button><button class="btn" type="button" data-l="d">👀 Derecha</button>`:""}<button class="btn primary big" id="cross" type="button">🚶 Cruzar</button></div>`;
     const cv=makeCanvas($("cv"),0.5,640),ctx=cv.ctx;let t=0,phase="rojo",ph=0,raf,tP=performance.now(),looks=[],cars=[{x:-0.2,l:0},{x:1.2,l:1}];
@@ -3004,7 +3029,7 @@ GAMEFN.vial=function(box,L){
   const esquina=async el=>{
     const cases=[
       {a:"🚗 Auto que viene por tu derecha",b:"🚙 Auto que viene por tu izquierda",ans:"a",e:"Regla de la derecha: pasa el que viene por la derecha."},
-      {a:"🚗 Auto por la avenida",b:"🚙 Auto por una calle, desde la derecha",ans:"a",e:"Excepción: la avenida tiene prioridad sobre la calle."},
+      {a:"🚗 Auto que viene por una calle, desde tu derecha",b:"🚙 Vos, aunque vayas por la avenida",ans:"a",e:"La prioridad de quien viene por la derecha es la regla general de la ley nacional (Ley 24.449, art. 41): ir por una avenida no da prioridad."},
       {a:"🚑 Ambulancia con sirena, desde la izquierda",b:"🚗 Auto desde la derecha",ans:"a",e:"Los vehículos de emergencia con sirena siempre tienen prioridad."},
       {a:"🚗 Auto que ya está dentro de la rotonda",b:"🚙 Auto que quiere entrar, desde la derecha",ans:"a",e:"Tiene prioridad quien ya circula por la rotonda."},
       {a:"🚶 Peatón cruzando por la senda",b:"🚗 Auto que dobla",ans:"a",e:"En la senda peatonal, el peatón tiene prioridad."}
@@ -3013,7 +3038,7 @@ GAMEFN.vial=function(box,L){
     const a=await new Promise(r=>el.querySelectorAll(".qopt").forEach(b=>b.onclick=()=>r(b.dataset.x)));
     return feedback(el,a===c.ans,c.e);
   };
-  rounds(box,"vial",[cruce,senales,esquina,cruce,qRound("civica"),esquina,L>=2?senales:cruce,qRound("civica")]);
+  rounds(box,"vial",[cruce,senales,esquina,extra[0],cruce,extra[1],esquina,extra[2],L>=2?senales:cruce,extra[3]]);
 };
 
 /* ================= 7. ROBOT PROGRAMADOR ================= */
@@ -3060,6 +3085,249 @@ GAMEFN.robot=function(box,L){
   };
   rounds(box,"robot",[puzzle,puzzle,qRound("ia"),puzzle,puzzle,qRound("ia")]);
 };
+
+/* =====================================================================
+   6. CIUDAD VIAL: 🚶 A pie · 🚗 Al volante · 🪪 Modo carnet
+   Reglas tomadas de la Ley Nacional de Tránsito 24.449 (art. 41 prioridad,
+   art. 51 velocidades) y la Ley 27.714 de alcohol cero.
+   Formato: [nivel, pregunta, correcta, [incorrectas], explicación]
+   nivel 1 = reconocer · 2 = aplicar una regla · 3 = razonar varias cosas · 4 = carnet
+   ===================================================================== */
+const VQ={
+  /* ---- caminando ---- */
+  pie:[
+    [1,"¿Por dónde se cruza la calle?","Por la senda peatonal o la esquina",["Por la mitad de la cuadra","Entre dos autos estacionados","Por donde esté más cerca"],"La senda peatonal (las rayas blancas) es el lugar seguro: los conductores esperan ver peatones ahí."],
+    [1,"Antes de cruzar una calle sin semáforo, ¿qué hacés?","Miro a la izquierda, a la derecha y otra vez a la izquierda",["Corro rápido","Miro solo para un lado","Cruzo mirando el celular"],"Mirar dos veces el lado de donde vienen primero los autos te da tiempo de ver todo."],
+    [1,"El muñequito del semáforo peatonal está titilando. ¿Qué hacés?","Si no empecé a cruzar, espero al próximo verde",["Empiezo a cruzar corriendo","Me quedo en la mitad de la calle","Cruzo sin mirar"],"Titilando significa que está por cortarse: no se empieza a cruzar."],
+    [2,"Bajaste del colectivo y querés cruzar. ¿Qué es lo más seguro?","Esperar en la vereda a que el colectivo se vaya",["Cruzar por delante del colectivo","Cruzar por detrás del colectivo","Correr entre los autos"],"El colectivo tapa la vista: ni los autos te ven a vos ni vos los ves a ellos."],
+    [2,"Vas caminando por una ruta que no tiene vereda. ¿Por dónde caminás?","Por la banquina, de frente a los autos que vienen",["Por el medio del carril","De espaldas a los autos","Por la línea amarilla del centro"],"Caminando de frente al tránsito ves los vehículos que se acercan y podés apartarte."],
+    [2,"Es de noche y vas a caminar por una calle oscura. ¿Qué te conviene?","Ropa clara o con partes que reflejan la luz",["Ropa negra","Ir por el medio de la calle","Llevar los auriculares a todo volumen"],"Los conductores ven mucho antes a un peatón con ropa clara o reflectiva."],
+    [2,"Te bajás del auto de tu familia en la calle. ¿Por qué puerta?","Por la del lado de la vereda",["Por la del lado de la calle","Por la que esté más cerca","Por el baúl"],"Bajando del lado de la vereda no quedás expuesto a los autos que pasan."],
+    [3,"Un auto dobla en la esquina y vos estás cruzando por la senda con el muñeco verde. ¿Quién tiene prioridad?","Yo, el peatón",["El auto, porque es más grande","El que llegó primero","Nadie"],"Quien dobla debe ceder el paso a los peatones que cruzan (Ley 24.449)."],
+    [3,"Vas en bici. ¿Qué es lo correcto?","Ir por la derecha, con casco y luces si es de noche",["Ir por la vereda rápido","Ir de contramano para ver a los autos","Ir agarrada o agarrado de un camión"],"La bici es un vehículo: va en el sentido del tránsito, por la derecha, bien visible."],
+    [3,"Un paso a nivel tiene la barrera subiendo y no se ve el tren. ¿Qué hacés?","Espero a que la barrera termine de subir y miro a los dos lados antes de cruzar",["Paso por abajo de la barrera","Cruzo corriendo","Cruzo con el celular"],"Puede venir otro tren por la otra vía: hay que esperar y mirar."]
+  ],
+  /* ---- semáforos ---- */
+  light:{
+    verde:[[1,"El semáforo está en verde. ¿Qué hacés?","Sigo, prestando atención a peatones y a la esquina",["Freno de golpe","Acelero todo lo que puedo","Toco bocina"],"Verde es avanzar, pero con atención: puede haber peatones terminando de cruzar."]],
+    amarillo:[[1,"El semáforo pasó a amarillo y todavía estás lejos. ¿Qué hacés?","Freno con tiempo y me detengo",["Acelero para pasar","Sigo igual","Toco bocina"],"El amarillo avisa que viene el rojo: si se puede frenar con seguridad, hay que detenerse."],
+      [3,"Pasó a amarillo cuando ya estás entrando a la esquina y frenar de golpe sería peligroso. ¿Qué hacés?","Termino de cruzar con precaución, sin acelerar",["Freno en la mitad de la esquina","Doy marcha atrás","Acelero a fondo"],"El amarillo pide frenar si se puede hacer con seguridad; si ya estás encima, terminás de cruzar con cuidado."]],
+    rojo:[[1,"El semáforo está en rojo. ¿Qué hacés?","Me detengo antes de la senda peatonal",["Paso si no viene nadie","Me detengo arriba de la senda","Toco bocina para que cambie"],"Con rojo se espera detrás de la línea de detención, sin tapar la senda de los peatones."],
+      [2,"Rojo, y un agente de tránsito te hace señas de que avances. ¿A quién le hacés caso?","Al agente de tránsito",["Al semáforo","A ninguno","Al auto de adelante"],"Las indicaciones del agente están por encima de los semáforos y las señales."]],
+    amarilloInt:[[2,"El semáforo tiene la luz amarilla titilando. ¿Qué significa?","Precaución: crucé despacio y fijándome quién viene",["Que está roto y se cruza sin mirar","Que hay que acelerar","Que está prohibido pasar"],"Amarillo intermitente: no ordena frenar, pero exige ir despacio y respetar la prioridad de paso."]],
+    rojoInt:[[3,"La luz roja está titilando. ¿Qué hacés?","Me detengo como en un PARE y después avanzo si no viene nadie",["Espero hasta que se ponga verde","Paso sin frenar","Doy marcha atrás"],"Rojo intermitente vale como un cartel de PARE: detención total y después avanzar con cuidado."]]
+  },
+  /* ---- esquinas sin semáforo ---- */
+  corner:{
+    der:[[2,"Esquina sin semáforo: viene un auto por tu DERECHA. ¿Quién pasa primero?","El auto que viene por la derecha",["Yo","El más rápido","El que toca bocina"],"Regla general de la ley (art. 41): tiene prioridad quien viene por la derecha."],
+      [3,"Vas por una avenida y por una calle viene un auto desde tu derecha. ¿Quién pasa?","El que viene por la derecha",["Yo, porque voy por la avenida","El auto más grande","El que llegue primero a la mitad"],"La ley nacional no le da prioridad a las avenidas: la regla de la derecha sigue valiendo."]],
+    izq:[[2,"Esquina sin semáforo: viene un auto por tu IZQUIERDA. ¿Quién pasa primero?","Yo, porque el otro viene por mi izquierda",["El otro auto","Ninguno","El que toque bocina"],"Vos venís por la derecha del otro conductor: la prioridad es tuya. Igual, siempre con precaución."]],
+    giro:[[3,"Un auto viene por tu derecha pero tiene puesto el guiño para girar. Vos seguís derecho. ¿Qué es lo más seguro?","Esperar a ver qué hace y recién después pasar",["Pasar rápido porque va a girar","Tocar bocina","Frenar en la mitad de la esquina"],"Aunque ponga el guiño, no siempre gira: la prudencia evita choques."]],
+    rotonda:[[3,"Llegás a una rotonda y adentro viene un auto. ¿Quién tiene prioridad?","El que ya circula dentro de la rotonda",["Yo, porque vengo por la derecha","El más rápido","Nadie"],"En las rotondas tiene prioridad quien circula por ella sobre el que quiere entrar."]],
+    pare:[[1,"Hay un cartel de PARE en la esquina. ¿Qué hacés?","Me detengo del todo y miro antes de seguir",["Bajo un poco la velocidad","Sigo si no veo a nadie","Toco bocina"],"PARE obliga a detenerse completamente, aunque no venga nadie."]]
+  },
+  /* ---- adelantar (ruta o avenida) ---- */
+  overtake:{
+    bici:[[2,"Adelante va una bicicleta. ¿Cómo la pasás?","Por la izquierda, despacio y dejándole bastante espacio al costado",["Bien pegado para que se aparte","Tocando bocina fuerte","Por la derecha"],"La bici es frágil: se adelanta con mucho espacio lateral y sin asustarla."]],
+    camion:[[2,"Querés adelantar a un camión. ¿Qué hacés primero?","Pongo el guiño izquierdo y miro los espejos",["Acelero sin avisar","Lo paso por la derecha","Toco bocina varias veces"],"Avisar con la luz de giro y verificar que nadie te esté pasando a vos es lo primero."],
+      [3,"Querés adelantar al camión pero la línea del medio es doble amarilla continua. ¿Qué hacés?","No adelanto: espero a que la línea sea discontinua",["Adelanto rápido","Adelanto si no viene nadie","Adelanto por la banquina"],"La línea continua prohíbe adelantar: suele haber curva, loma o puente con poca visibilidad."],
+      [3,"Estás por adelantar en una curva y no ves si viene alguien. ¿Qué hacés?","Espero a tener una recta con buena visibilidad",["Adelanto rápido","Toco bocina y adelanto","Adelanto con las balizas"],"Está prohibido adelantar en curvas, puentes, cruces y pasos a nivel: no se ve lo que viene."]],
+    colectivo:[[2,"El colectivo frenó en la parada. ¿Qué tenés en cuenta para pasarlo?","Ir despacio: puede bajar o cruzar gente por delante",["Pasarlo rápido","Tocar bocina para que arranque","Pasarlo por la vereda"],"Detrás o delante de un colectivo parado puede aparecer un peatón de golpe."]],
+    moto:[[2,"Una moto va por tu carril. ¿Qué distancia le dejás?","La misma que a un auto: una moto ocupa un carril entero",["Me pego atrás","La paso por el mismo carril","Ninguna"],"Las motos frenan rápido y son más vulnerables: se les deja distancia como a cualquier vehículo."]],
+    tractor:[[3,"Vas por una ruta detrás de un tractor muy lento y la línea es discontinua, pero viene un auto de frente cerca. ¿Qué hacés?","Espero a que pase el auto y recién ahí adelanto",["Adelanto igual","Toco bocina al tractor","Me tiro a la banquina"],"Solo se adelanta con la vía libre adelante por una buena distancia."]]
+  },
+  crosswalk:[[1,"Hay un peatón cruzando por la senda peatonal. ¿Qué hacés?","Freno y lo dejo cruzar",["Le toco bocina","Paso por detrás de él","Acelero"],"En la senda peatonal el peatón tiene prioridad."],
+    [2,"Una señora con bastón cruza lento por la senda y tu semáforo se puso verde. ¿Qué hacés?","Espero tranquilo a que termine de cruzar",["Le toco bocina","Avanzo despacio para apurarla","Paso por al lado"],"Aunque tengas verde, quien ya está cruzando termina de cruzar."],
+    [3,"Hay un cartel de cruce escolar y chicos esperando en la esquina. ¿A cuánto vas como máximo?","A 20 km/h, atento a que crucen",["A 60 km/h","A 40 km/h sin mirar","A la velocidad de siempre"],"Cerca de escuelas, en horario de clases, el máximo es 20 km/h."]],
+  railway:[[2,"Llegás a un paso a nivel con las barreras bajas y la luz roja titilando. ¿Qué hacés?","Me detengo antes de la barrera y espero",["Paso por un costado","Cruzo rápido","Toco bocina al tren"],"El tren siempre tiene prioridad: nunca se cruza con barreras bajas o luces rojas."],
+    [3,"Paso a nivel sin barreras. ¿Cómo se cruza?","A no más de 20 km/h y solo después de mirar a los dos lados que no viene un tren",["Rápido para no quedarme","Sin frenar si no escucho nada","Por el costado de las vías"],"Sin barrera ni semáforo, el máximo es 20 km/h y hay que asegurarse de que no viene un tren."]],
+  ambulance:[[2,"Atrás viene una ambulancia con la sirena prendida. ¿Qué hacés?","Me corro a la derecha y la dejo pasar",["Acelero para que no me alcance","Freno de golpe en el medio","No hago nada"],"Los vehículos de emergencia con sirena y balizas tienen prioridad: hay que facilitarles el paso."]],
+  rain:[[2,"Empezó a llover fuerte. ¿Qué cambiás al manejar?","Bajo la velocidad y dejo más distancia con el de adelante",["Voy más rápido para llegar antes","Me pego al auto de adelante para ver sus luces","Apago las luces"],"Con lluvia se frena peor: más distancia (al menos 3 segundos) y menos velocidad."],
+    [3,"¿Qué luces llevás en una ruta nacional de día, con sol?","Las bajas encendidas",["Ninguna","Las altas","Las balizas"],"En rutas nacionales las luces bajas van encendidas siempre, de día y de noche."]],
+  tank:[[1,"🪖 ¡Un tanque de guerra cruza la avenida! (Es el desfile del 9 de Julio.) ¿Qué hacés?","Freno y espero tranquilo a que pase el desfile",["Le toco bocina al tanque","Le paso por al lado","Le hago carreras"],"Ante una situación especial, se sigue lo que indique el agente de tránsito y se espera con paciencia. ¡Y no se discute con un tanque! 😄"]],
+  /* señales: [tipo, significado correcto, incorrectas] */
+  signs:[["pare","Detenerse por completo",["Seguir despacio","Estacionar","Tocar bocina"]],["ceda","Ceder el paso a quien circula por la otra vía",["Prohibido pasar","Fin de la calle","Velocidad máxima"]],["contramano","Prohibido entrar: es contramano",["Calle sin salida","Hospital cerca","Estacionamiento"]],["noestacionar","Prohibido estacionar",["Estacionamiento libre","Escuela cerca","Peligro"]],["escuela","Cruce escolar: chicos cerca, ir muy despacio",["Plaza de juegos","Prohibido chicos","Fin de la ciudad"]],["curva","Curva peligrosa adelante",["Doblar a la derecha obligatorio","Rotonda","Prohibido doblar"]],["rotonda","Rotonda adelante",["Prohibido girar","Lavadero de autos","Calle cortada"]],["hospital","Hospital cerca: sin ruido y con precaución",["Prohibido pasar","Farmacia de turno","Velocidad máxima 80"]]],
+  /* ---- modo carnet: control de tránsito ---- */
+  control:[[4,"Control de tránsito: ¿qué documentación tiene que llevar el conductor?","Licencia de conducir, cédula del vehículo y comprobante del seguro obligatorio",["Solo el DNI","Solo la licencia","La factura del auto"],"Además, el vehículo tiene que tener la revisión técnica si corresponde y la patente colocada."],
+    [4,"¿Cuánto alcohol en sangre se permite para manejar en rutas nacionales?","Cero: alcohol cero",["Medio gramo por litro","Un vaso de cerveza","Depende del auto"],"La Ley 27.714 estableció alcohol cero para conducir."],
+    [4,"¿Dónde viajan los chicos menores de 10 años?","En el asiento de atrás, con su sistema de retención (sillita o booster)",["Adelante, con cinturón","A upa de un adulto","Donde quieran"],"Los menores de 10 años van atrás, con el sistema de retención infantil que corresponda a su tamaño."],
+    [4,"¿Quiénes tienen que usar el cinturón de seguridad?","Todos los ocupantes, adelante y atrás",["Solo el conductor","Solo los de adelante","Solo en ruta"],"El cinturón es obligatorio para todos y en cualquier trayecto."],
+    [4,"¿Se puede usar el celular con la mano mientras manejás?","No, está prohibido",["Sí, si es un mensaje corto","Sí, en los semáforos","Sí, si voy despacio"],"Distrae la vista y las manos: es una de las causas más comunes de choques."],
+    [4,"¿Con cuánta anticipación ponés el guiño antes de doblar?","Unos 30 metros antes",["Al llegar a la esquina","Después de doblar","No hace falta"],"La ley pide señalizar el giro con anticipación (30 metros) para que los demás puedan prever la maniobra."],
+    [4,"¿Cuándo se usa la bocina?","Solo para evitar un peligro",["Para saludar","Para apurar al de adelante","Cuando cambia el semáforo"],"Fuera del peligro inminente, la bocina está prohibida: genera ruido y estrés."],
+    [4,"¿Cuál es la velocidad máxima para un auto en una autopista?","130 km/h",["110 km/h","150 km/h","90 km/h"],"Autos y motos: 110 km/h en rutas, 120 en semiautopistas y 130 en autopistas (art. 51)."],
+    [4,"En una esquina urbana sin semáforo, ¿cuál es la velocidad máxima?","30 km/h",["40 km/h","60 km/h","20 km/h"],"La ley fija límites especiales: 30 km/h en encrucijadas urbanas sin semáforo."],
+    [4,"¿A qué edad se puede sacar la licencia para manejar un auto particular?","A los 17 años (con autorización si es menor de 18)",["A los 15","A los 21","A los 14"],"Para las clases de auto particular la edad mínima es 17 años; los menores de 18 necesitan autorización de sus padres o tutores."],
+    [4,"¿Qué elementos de seguridad tiene que llevar el auto?","Matafuego y balizas portátiles",["Una pelota","Un paraguas","Nada"],"Matafuego y balizas son obligatorios para actuar ante una emergencia."],
+    [4,"Las motos: ¿quién usa casco?","El conductor y el acompañante",["Solo el conductor","Solo en ruta","Nadie si va despacio"],"El casco es obligatorio para quien maneja y quien va atrás."]]
+};
+/* dibujos para mostrar dentro de la pregunta */
+function vSignSVG(t,v){const S={
+  speed:`<circle cx="50" cy="50" r="44" fill="#fff" stroke="#dc2626" stroke-width="10"/><text x="50" y="${v>99?62:64}" font-size="${v>99?30:38}" text-anchor="middle" font-weight="900" fill="#111">${v}</text>`,
+  pare:`<polygon points="30,4 70,4 96,30 96,70 70,96 30,96 4,70 4,30" fill="#dc2626" stroke="#fff" stroke-width="4"/><text x="50" y="60" font-size="24" fill="#fff" text-anchor="middle" font-weight="900">PARE</text>`,
+  ceda:`<polygon points="6,10 94,10 50,92" fill="#fff" stroke="#dc2626" stroke-width="10" stroke-linejoin="round"/>`,
+  contramano:`<circle cx="50" cy="50" r="44" fill="#dc2626"/><rect x="18" y="42" width="64" height="16" fill="#fff"/>`,
+  noestacionar:`<circle cx="50" cy="50" r="44" fill="#1d4ed8" stroke="#dc2626" stroke-width="9"/><text x="50" y="64" font-size="40" fill="#fff" text-anchor="middle" font-weight="900">E</text><line x1="20" y1="20" x2="80" y2="80" stroke="#dc2626" stroke-width="9"/>`,
+  escuela:`<polygon points="50,4 96,50 50,96 4,50" fill="#facc15" stroke="#1f2937" stroke-width="4"/><text x="50" y="62" font-size="32" text-anchor="middle">🚸</text>`,
+  curva:`<polygon points="50,4 96,50 50,96 4,50" fill="#facc15" stroke="#1f2937" stroke-width="4"/><path d="M40 72V52q0-12 14-14h6" stroke="#1f2937" stroke-width="7" fill="none"/><path d="M58 30l10 8-10 8z" fill="#1f2937"/>`,
+  rotonda:`<circle cx="50" cy="50" r="44" fill="#1d4ed8"/><path d="M50 26a24 24 0 1 1-20 11" stroke="#fff" stroke-width="7" fill="none"/><path d="M22 30l10 9 4-13z" fill="#fff"/>`,
+  hospital:`<rect x="6" y="14" width="88" height="72" rx="6" fill="#2563eb"/><rect x="30" y="26" width="40" height="48" fill="#fff"/><text x="50" y="62" font-size="30" fill="#dc2626" text-anchor="middle" font-weight="900">H</text>`};
+  return `<svg width="96" height="96" viewBox="0 0 100 100" aria-hidden="true">${S[t]||S.pare}</svg>`}
+function vLightSVG(st){const on={rojo:[1,0,0],amarillo:[0,1,0],verde:[0,0,1],amarilloInt:[0,1,0],rojoInt:[1,0,0]}[st]||[0,0,1];const blink=/Int/.test(st);
+  return `<svg width="54" height="120" viewBox="0 0 54 120" aria-hidden="true"><rect x="4" y="4" width="46" height="112" rx="10" fill="#111827"/>${["#ef4444","#facc15","#22c55e"].map((c,k)=>`<circle cx="27" cy="${24+k*36}" r="13" fill="${on[k]?c:"#374151"}" ${on[k]&&blink?'class="blinkl"':""}/>`).join("")}</svg>${blink?`<small>titilando</small>`:""}`}
+const vEmoji=(e,label)=>`<span class="qpic-emo">${e}</span>${label?`<small>${label}</small>`:""}`;
+/* arma una pregunta para UI.ask */
+const vMake=(r,tier)=>({q:r[1],opts:shuffle([r[2],...r[3]]),ans:r[2],e:r[4],s:"civica",l:Math.min(3,r[0]||tier)});
+const vPick=(list,tier)=>{const ok=list.filter(r=>r[0]<=tier);const top=ok.filter(r=>r[0]===Math.max(...ok.map(x=>x[0])));return pick((Math.random()<.65&&top.length)?top:(ok.length?ok:list))};
+
+/* ---------- menú ---------- */
+GAMEFN.vial=function(box,L){
+  box.innerHTML=`<div class="vial-menu">
+    <button class="mem-act" type="button" data-m="auto"><span>🚗</span><b>Al volante</b><small>Manejá por la ciudad: semáforos, carteles, esquinas, bicis, colectivos… y algún tanque 😄. Controlá la velocidad con ▲ ▼.</small></button>
+    <button class="mem-act" type="button" data-m="pie"><span>🚶</span><b>A pie</b><small>Cruzar bien, el semáforo peatonal, las señales y moverse seguro caminando o en bici.</small></button>
+    <button class="mem-act carnet" type="button" data-m="carnet"><span>🪪</span><b>Modo carnet</b><small>Preguntas del examen de manejo para chicos que se animan y para adultos que quieren repasar. <b>Más difícil: paga el doble.</b></small></button></div>`;
+  let stop=null;
+  box.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{const m=b.dataset.m;
+    if(m==="pie"){const ex=[0,1,2,3].map(k=>async el=>{const t=Math.min(3,1+k+(L>2?1:0));return (await UI.ask(vMake(vPick(VQ.pie,t),t),{})).ok});vialPie(box,L,ex)}
+    else stop=drive(box,L,m==="carnet")});
+  return ()=>{stop&&stop()};
+};
+
+/* ---------- simulador de manejo ---------- */
+function drive(box,L,carnet){
+  if(UI.cur)UI.cur.cq="manejo";
+  let dif=carnet?3:Math.min(3,L);const tier=()=>carnet?(dif>=6?4:Math.random()<.5?4:3):(dif<3?1:dif<5?2:3);
+  /* ruta: una lista de situaciones separadas por 140 a 200 m */
+  const urban=["speed","light","corner","bici","crosswalk","signq","colectivo","light","speed","tank","corner","ambulance","moto","railway","rain","camion","rotonda"];
+  let plan=carnet?shuffle(urban.concat(["control","control","control","tractor","speedRoute"])).slice(0,13):shuffle(urban).slice(0,10);
+  if(!plan.includes("tank")&&!carnet)plan[rnd(3,plan.length-1)]="tank";
+  let z=120;const evs=[];
+  plan.forEach(t=>{evs.push({t,z,done:false});if(t==="speed"||t==="speedRoute")evs.push({t:"radar",z:z+130,done:false});z+=rnd(150,210)});
+  evs.push({t:"finish",z:z+40,done:false});
+  box.innerHTML=`<div class="drive"><canvas id="dcv"></canvas>
+    <div class="dash"><div class="drv-av">${avatarSVG(G.P.avatar,40,"stand",{mood:"happy"})}</div>
+      <div class="speedo"><b id="dSpd">0</b><small>km/h</small></div><div class="limit" id="dLim"><span>40</span></div>
+      <div class="pedals"><button class="btn big" id="dDn" type="button" aria-label="Frenar">▼</button><button class="btn primary big" id="dUp" type="button" aria-label="Acelerar">▲</button></div></div>
+    <div class="drv-bar"><i id="dProg"></i></div><p class="drv-msg" id="dMsg">Tocá ▲ para arrancar. Respetá los carteles de velocidad: hay radares 📸.</p></div>`;
+  const cvs=$("dcv"),ctx=cvs.getContext("2d");let W=0,H=0;
+  const size=()=>{const w=Math.min(box.clientWidth,760),h=Math.round(w*0.62),r=devicePixelRatio||1;cvs.width=w*r;cvs.height=h*r;cvs.style.width=w+"px";cvs.style.height=h+"px";ctx.setTransform(r,0,0,r,0,0);W=w;H=h};size();addEventListener("resize",size);
+  let pos=0,spd=0,target=0,limit=40,paused=false,ok=0,tot=0,raf,tP=performance.now(),msgT=0,rainOn=false,anim=null,stopUntil=0,resumeTo=0,ended=false;
+  const say=(t,ms=2600)=>{$("dMsg").innerHTML=t;msgT=performance.now()+ms};
+  const setT=v=>{target=clamp(v,0,carnet?130:80);FX.tone(target>spd?700:400,.05,"triangle",.06)};
+  $("dUp").onclick=()=>setT(target+10);$("dDn").onclick=()=>setT(target-10);
+  const key=e=>{if(e.key==="ArrowUp"){e.preventDefault();setT(target+10)}if(e.key==="ArrowDown"){e.preventDefault();setT(target-10)}};addEventListener("keydown",key);
+  /* pregunta: pausa, responde, cobra según dificultad */
+  async function ask(r,t,pic){paused=true;tot++;const q=vMake(r,t);const res=await UI.ask(q,{progress:carnet?"🪪 Carnet":"🚗 Al volante",pic});
+    if(res.ok){ok++;dif++;let extra=r[0]>=4?PAY.answer[3]:0;if(carnet)extra+=PAY.answer[Math.min(3,r[0])];if(extra){G.earn(extra);G.save();FX.toast(`${carnet?"🪪 Modo carnet: paga el doble":"Pregunta de carnet"} +${fmtM(extra)}`)}}
+    paused=false;return res.ok}
+  async function miss(what,txt){paused=true;tot++;const m=UI.miss({what,ms:99999});FX.bad();
+    await new Promise(res=>{UI.modal(`<h2 class="mtitle">${txt}</h2>${m.html}<div class="mactions"><button class="btn primary" type="button" id="vOk">${m.out?"Salir del juego":"Seguir manejando"}</button></div>`);$("vOk").onclick=()=>{UI.close();if(m.out){UI.kickOut();return}res()}});paused=false}
+  const signQ=()=>{const s=pick(VQ.signs);return {s,r:[1,"¿Qué significa este cartel?",s[1],s[2],"Conocer las señales te dice qué hacer antes de llegar."]}};
+  async function handle(ev){
+    ev.done=true;const t=tier();
+    switch(ev.t){
+      case "speed":case "speedRoute":{const v=ev.t==="speedRoute"?pick([110,120,130]):pick(carnet?[40,60,30,20]:[40,60,20,40]);ev.v=v;limit=v;$("dLim").innerHTML=`<span>${v}</span>`;
+        say(`🛑 Cartel: velocidad máxima <b>${v} km/h</b>${v===20?" (zona escolar)":v===30?" (esquina sin semáforo)":""}. Más adelante hay un radar 📸.`,4000);
+        if(Math.random()<.4)await ask([t>=3?3:1,`Ves este cartel con el número ${v}. ¿Qué indica?`,`Que no podés ir a más de ${v} km/h`,[`Que tenés que ir exactamente a ${v} km/h`,`Que faltan ${v} metros`,`Que es la ruta número ${v}`],`Es la velocidad máxima. La mínima es la mitad de la máxima, para no entorpecer el tránsito.`],t,vSignSVG("speed",v));break}
+      case "radar":{if(spd>limit+4){await miss(`Exceso de velocidad: ${Math.round(spd)} km/h con máximo ${limit}`,`📸 ¡Fotomulta! Ibas a ${Math.round(spd)} km/h y el máximo era ${limit}.`);target=limit;spd=Math.min(spd,limit)}
+        else{tot++;ok++;const w=G.earn(roundPay());G.save();say(`📸 Radar: ibas a ${Math.round(spd)} km/h. ¡Velocidad correcta! +${fmtM(w)}`);FX.good()}break}
+      case "light":{const st=ev.st;const pool=VQ.light[st];const r=vPick(pool,t);const okA=await ask(r,t,vLightSVG(st));
+        if(st==="rojo"||st==="amarillo"||st==="rojoInt"){resumeTo=Math.max(target,20);spd=0;target=0;stopUntil=performance.now()+1600;ev.st="verde";say("Esperando… ¡verde! Arrancamos.",1800)}break}
+      case "corner":{const k=Math.random()<.5?"der":"izq";ev.side=k==="der"?1:-1;const r=vPick(VQ.corner[k].concat(t>=3?VQ.corner.giro:[]),t);await ask(r,t,vEmoji(k==="der"?"🚗➡️":"⬅️🚙",k==="der"?"viene por tu derecha":"viene por tu izquierda"));anim={k:"cross",t:0,side:ev.side,ev};resumeTo=Math.max(target,20);spd=0;target=0;stopUntil=performance.now()+1400;break}
+      case "rotonda":{{const r=vPick(VQ.corner.rotonda.concat(VQ.corner.pare),t);await ask(r,t,vSignSVG(/PARE/.test(r[1])?"pare":"rotonda"))}break}
+      case "bici":case "camion":case "colectivo":case "moto":case "tractor":{const r=vPick(VQ.overtake[ev.t],t);await ask(r,t,vEmoji({bici:"🚴",camion:"🚚",colectivo:"🚌",moto:"🏍️",tractor:"🚜"}[ev.t]));ev.gone=true;break}
+      case "crosswalk":{await ask(vPick(VQ.crosswalk,t),t,vEmoji(ev.who||"🚶","en la senda peatonal"));resumeTo=Math.max(target,20);spd=0;target=0;stopUntil=performance.now()+1600;anim={k:"walk",t:0,ev};break}
+      case "railway":{await ask(vPick(VQ.railway,t),t,vEmoji("🚧🚆","paso a nivel"));resumeTo=Math.max(target,20);spd=0;target=0;stopUntil=performance.now()+2200;anim={k:"train",t:0,ev};break}
+      case "ambulance":{say("🚑 ¡Sirena! Viene una ambulancia atrás.");FX.tone(960,.25,"square",.05);FX.tone(720,.25,"square",.05,.28);await ask(vPick(VQ.ambulance,t),t,vEmoji("🚑","con sirena"));anim={k:"amb",t:0};break}
+      case "rain":{rainOn=true;say("🌧️ Empezó a llover.");await ask(vPick(VQ.rain,t),t,vEmoji("🌧️"));break}
+      case "tank":{anim={k:"tank",t:0,ev};await ask(VQ.tank[0],t,vEmoji("🪖","¡un tanque!"));break}
+      case "signq":{const {s,r}=signQ();ev.sign=s[0];await ask(r,t,vSignSVG(s[0]));break}
+      case "control":{say("👮 Control de tránsito: el agente te hace una pregunta.");await ask(pick(VQ.control),4,vEmoji("👮🚓","control de tránsito"));break}
+      case "finish":{finish();break}
+    }
+  }
+  function finish(){if(ended)return;ended=true;cancelAnimationFrame(raf);FX.fanfare();
+    UI.gameEnd("vial",ok,Math.max(1,tot),[`${carnet?"🪪 Modo carnet":"🚗 Al volante"}: ${ok} de ${tot} bien.`])}
+  /* eventos con estado visible antes de llegar */
+  evs.forEach(e=>{if(e.t==="light")e.st=pick(carnet?["rojo","amarillo","verde","amarilloInt","rojoInt"]:["rojo","verde","amarillo","rojo","amarilloInt"]);if(e.t==="signq")e.sign=pick(VQ.signs)[0]});
+  /* ---------- dibujo en perspectiva ---------- */
+  const CAM=1.75,ppm=()=>W*0.16;
+  const P=(x,dz)=>{const s=1/(1+Math.max(0,dz)/18);const hz=H*0.36;return {x:W/2+(x-CAM)*ppm()*s,y:hz+(H*0.98-hz)*s,s}};
+  function quad(x1,z1,x2,z2,col){const a=P(x1,z1),b=P(x2,z1),c=P(x2,z2),d=P(x1,z2);ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.lineTo(c.x,c.y);ctx.lineTo(d.x,d.y);ctx.fill()}
+  const emo=(e,x,dz,sz,flip)=>{const p=P(x,dz);const f=Math.max(8,sz*1.5*ppm()*p.s);ctx.save();ctx.translate(p.x,p.y);if(flip)ctx.scale(-1,1);ctx.font=`${f}px ${EMOJI}`;ctx.textAlign="center";ctx.textBaseline="bottom";ctx.fillStyle="#000";ctx.fillText(e,0,0);ctx.restore()};
+  function sign(type,x,dz,v){const p=P(x,dz),m=ppm()*p.s;const top=p.y-3.6*m,r=Math.max(5,1.15*m);ctx.fillStyle="#6b7280";ctx.fillRect(p.x-Math.max(1,m*0.08),top,Math.max(2,m*0.16),3.6*m);
+    ctx.save();ctx.translate(p.x,top);ctx.lineWidth=Math.max(1.5,r*0.18);
+    const circ=(fill,stroke)=>{ctx.beginPath();ctx.arc(0,0,r,0,7);ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=r*0.22;ctx.stroke()}};
+    const txt=(t,c,f)=>{ctx.fillStyle=c;ctx.font=`900 ${r*f}px system-ui`;ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(t,0,r*0.05)};
+    const dia=(fill)=>{ctx.beginPath();ctx.moveTo(0,-r);ctx.lineTo(r,0);ctx.lineTo(0,r);ctx.lineTo(-r,0);ctx.closePath();ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle="#1f2937";ctx.lineWidth=r*0.1;ctx.stroke()};
+    if(type==="speed"){circ("#fff","#dc2626");txt(String(v),"#111",v>99?0.75:0.95)}
+    else if(type==="pare"){ctx.beginPath();for(let k=0;k<8;k++){const a=Math.PI/8+k*Math.PI/4;ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r)}ctx.closePath();ctx.fillStyle="#dc2626";ctx.fill();txt("PARE","#fff",0.5)}
+    else if(type==="ceda"){ctx.beginPath();ctx.moveTo(-r,-r*0.8);ctx.lineTo(r,-r*0.8);ctx.lineTo(0,r);ctx.closePath();ctx.fillStyle="#fff";ctx.fill();ctx.strokeStyle="#dc2626";ctx.lineWidth=r*0.25;ctx.stroke()}
+    else if(type==="contramano"){circ("#dc2626");ctx.fillStyle="#fff";ctx.fillRect(-r*0.65,-r*0.18,r*1.3,r*0.36)}
+    else if(type==="noestacionar"){circ("#1d4ed8","#dc2626");txt("E","#fff",1);ctx.strokeStyle="#dc2626";ctx.lineWidth=r*0.2;ctx.beginPath();ctx.moveTo(-r*0.7,-r*0.7);ctx.lineTo(r*0.7,r*0.7);ctx.stroke()}
+    else if(type==="escuela"){dia("#facc15");txt("🚸","#000",0.9)}
+    else if(type==="curva"){dia("#facc15");txt("↱","#111",1.1)}
+    else if(type==="rotonda"){circ("#1d4ed8");txt("⟳","#fff",1.2)}
+    else if(type==="hospital"){ctx.fillStyle="#1d4ed8";ctx.fillRect(-r,-r,2*r,2*r);txt("H","#fff",1.2)}
+    else if(type==="radar"){ctx.fillStyle="#1f2937";ctx.fillRect(-r*0.8,-r*0.6,r*1.6,r*1.2);txt("📸","#fff",0.9)}
+    ctx.restore()}
+  function light(x,dz,st,t){const p=P(x,dz),m=ppm()*p.s;const top=p.y-4.2*m;ctx.fillStyle="#374151";ctx.fillRect(p.x-m*0.1,top,m*0.2,4.2*m);const bw=m*1.1,bh=m*2.9;ctx.fillStyle="#111827";ctx.fillRect(p.x-bw/2,top-bh,bw,bh);
+    const blink=Math.floor(t*3)%2===0;const on={rojo:[1,0,0],amarillo:[0,1,0],verde:[0,0,1],amarilloInt:[0,blink?1:0,0],rojoInt:[blink?1:0,0,0]}[st]||[0,0,1];
+    ["#ef4444","#facc15","#22c55e"].forEach((c,k)=>{ctx.beginPath();ctx.arc(p.x,top-bh+bh*(k+0.5)/3,bw*0.32,0,7);ctx.fillStyle=on[k]?c:"#374151";ctx.fill();if(on[k]){ctx.shadowColor=c;ctx.shadowBlur=12;ctx.fill();ctx.shadowBlur=0}})}
+  function tank(x,dz){const p=P(x,dz),m=ppm()*p.s;ctx.save();ctx.translate(p.x,p.y);ctx.fillStyle="#4d7c0f";ctx.fillRect(-2.2*m,-1.4*m,4.4*m,0.9*m);ctx.fillStyle="#365314";ctx.fillRect(-2.4*m,-0.6*m,4.8*m,0.6*m);ctx.beginPath();ctx.arc(0,-1.4*m,0.9*m,Math.PI,0);ctx.fillStyle="#3f6212";ctx.fill();ctx.fillStyle="#365314";ctx.fillRect(0.5*m,-1.9*m,2.4*m,0.25*m);ctx.fillStyle="#a3e635";ctx.font=`900 ${Math.max(6,0.5*m)}px system-ui`;ctx.textAlign="center";ctx.fillText("★",-1.2*m,-0.75*m);ctx.restore()}
+  function draw(now){
+    const dt=Math.min(.05,Math.max(0,(now-tP)/1000));tP=now;const t=now/1000;
+    if(stopUntil&&now>stopUntil){stopUntil=0;target=resumeTo}
+    if(!paused&&!stopUntil){spd+=(target-spd)*Math.min(1,dt*1.6);if(Math.abs(target-spd)<.4)spd=target;pos+=spd/3.6*dt*2.4}
+    if(anim)anim.t+=dt;
+    // cielo y pasto
+    const g=ctx.createLinearGradient(0,0,0,H*0.36);g.addColorStop(0,rainOn?"#64748b":"#7dd3fc");g.addColorStop(1,rainOn?"#94a3b8":"#e0f2fe");ctx.fillStyle=g;ctx.fillRect(0,0,W,H*0.36);
+    ctx.fillStyle="#86efac";ctx.fillRect(0,H*0.36,W,H*0.64);
+    // ciudad al fondo
+    ctx.fillStyle="#cbd5e1";for(let k=0;k<12;k++){const bw=W/12;ctx.fillRect(k*bw,H*0.36-(20+((k*37)%40))*H/420,bw-2,(20+((k*37)%40))*H/420)}
+    // veredas, calle
+    quad(-9,0,9,300,"#d6d3d1");quad(-5.6,0,5.6,300,"#475569");
+    // bocacalles, sendas y vías de los eventos
+    evs.forEach(e=>{const dz=e.z-pos;if(dz<-8||dz>300)return;
+      if(["corner","light","rotonda","tank"].includes(e.t)){quad(-30,dz-6,30,dz+6,"#475569");quad(-5.6,dz+6,5.6,dz+8.5,"#f8fafc");for(let k=-5;k<5;k+=1.4)quad(k,dz+6.3,k+.7,dz+8.2,"#475569")}
+      if(e.t==="crosswalk"){for(let k=-5;k<5;k+=1.4)quad(k,dz-1.2,k+.7,dz+1.2,"#f8fafc")}
+      if(e.t==="railway"){quad(-30,dz-1.5,30,dz+1.5,"#78716c");quad(-30,dz-.8,30,dz-.6,"#9ca3af");quad(-30,dz+.6,30,dz+.8,"#9ca3af")}});
+    // líneas
+    const noPass=evs.some(e=>(e.t==="camion"||e.t==="tractor")&&e.z-pos>-10&&e.z-pos<120&&dif>=4);
+    for(let dz=0;dz<300;dz+=2){if(noPass){quad(-.12,dz,-.02,dz+2,"#facc15");quad(.02,dz,.12,dz+2,"#facc15")}else if(Math.floor((pos+dz)/5)%2===0)quad(-.08,dz,.08,dz+2,"#f8fafc")}
+    quad(5.3,0,5.45,300,"#f8fafc");quad(-5.45,0,-5.3,300,"#f8fafc");
+    // árboles y casas que pasan
+    const base=Math.floor(pos/22)*22;const deco=["🌳","🏠","🏢","🌳","🏪","🏫","🌳","🏥"];
+    for(let k=14;k>=0;k--){const wz=base+k*22,dz=wz-pos;if(dz<1)continue;const i=Math.abs(Math.round(wz/22))%deco.length;emo(deco[i],-11,dz,4);emo(deco[(i+3)%deco.length],12,dz,4)}
+    // objetos de cada evento (lo lejano primero)
+    evs.slice().sort((a,b)=>b.z-a.z).forEach(e=>{const dz=e.z-pos;if(dz<-6||dz>260)return;
+      if(e.t==="speed"||e.t==="speedRoute")sign("speed",6.4,dz,e.v||"?");
+      if(e.t==="radar")sign("radar",6.4,dz);
+      if(e.t==="light")light(6.3,dz+5,e.st,t);
+      if(e.t==="signq")sign(e.sign,6.4,dz);
+      if(e.t==="rotonda")sign("rotonda",6.4,dz);
+      if(e.t==="corner"){const ax=anim&&anim.ev===e?-e.side*anim.t*14:0;if(e.done||dz<60)emo(e.side>0?"🚗":"🚙",e.side*14+ax,dz-1,2.2,e.side<0)}
+      if(e.t==="crosswalk"){const wx=anim&&anim.ev===e?-4+anim.t*5:-6.5;emo(e.who||(e.who=pick(["🚶","🧑‍🦯","🚶‍♀️","👩‍🦽"])),Math.min(wx,7),dz,1.9)}
+      if(e.t==="railway"){emo("🚧",6.2,dz+2,1.6);if(anim&&anim.ev===e)emo("🚆",-30+anim.t*30,dz,3.4,true)}
+      if(["bici","camion","colectivo","moto","tractor"].includes(e.t)&&!e.gone){const em={bici:"🚴",camion:"🚚",colectivo:"🚌",moto:"🏍️",tractor:"🚜"}[e.t];emo(em,1.8,Math.max(dz,8),e.t==="camion"||e.t==="colectivo"?3:1.8)}
+      if(e.t==="tank"){const tx=anim&&anim.ev===e?-14+anim.t*9:-14;tank(tx,dz)}
+      if(e.t==="control"){emo("👮",5.2,dz,1.9);emo("🚓",8,dz+3,2.4)}
+      if(e.t==="finish"){quad(-5.6,dz,5.6,dz+1.5,"#111");for(let k=-5.6;k<5.6;k+=1.4)quad(k,dz,k+.7,dz+.75,"#fff");emo("🏁",6.4,dz,2.4)}});
+    if(anim&&anim.k==="amb"){emo("🚑",3.6,30-anim.t*10,2.4,true);if(anim.t>3)anim=null}
+    // lluvia
+    if(rainOn){ctx.strokeStyle="rgba(255,255,255,.45)";ctx.lineWidth=1;ctx.beginPath();for(let k=0;k<70;k++){const x=(k*97+t*400)%W,y=(k*53+t*700)%H;ctx.moveTo(x,y);ctx.lineTo(x-3,y+10)}ctx.stroke()}
+    // capó del auto
+    ctx.fillStyle="#6d28d9";ctx.beginPath();ctx.moveTo(W*0.12,H);ctx.quadraticCurveTo(W*0.5,H*0.86,W*0.88,H);ctx.fill();ctx.fillStyle="rgba(255,255,255,.25)";ctx.beginPath();ctx.moveTo(W*0.3,H);ctx.quadraticCurveTo(W*0.5,H*0.9,W*0.7,H);ctx.fill();
+    // velocímetro
+    $("dSpd").textContent=Math.round(spd);$("dSpd").parentElement.classList.toggle("over",spd>limit+4);$("dProg").style.width=Math.min(100,pos/evs[evs.length-1].z*100)+"%";
+    if(msgT&&now>msgT){msgT=0;$("dMsg").textContent=spd<1&&!paused&&!stopUntil?"Tocá ▲ para avanzar.":`Máximo ${limit} km/h · ▲ ▼ para cambiar la velocidad`}
+    // ¿llegamos a algo?
+    if(!paused&&!ended){const e=evs.find(x=>!x.done&&x.z-pos<({speed:30,speedRoute:30,radar:4,light:38,corner:30,crosswalk:22,railway:26,finish:0}[x.t]??26));if(e){handle(e)}}
+    raf=requestAnimationFrame(draw);
+  }
+  raf=requestAnimationFrame(draw);
+  return ()=>{ended=true;cancelAnimationFrame(raf);removeEventListener("keydown",key);removeEventListener("resize",size)};
+}
 
 /* =====================================================================
    JUEGOS (3): Viaje en inglés, Línea de tiempo, Poleas y palancas
@@ -3398,7 +3666,7 @@ GAMEFN.memoria=function(box){
     // desempate: gana quien llegó primero a ese puntaje
     const ord=v.players.map((p,i)=>Object.assign({i},p)).sort((a,b)=>b.score-a.score||(a.at||9e15)-(b.at||9e15));const me=v.players[v.me]||{score:0};
     const iWon=ord[0]&&ord[0].i===v.me&&me.score>0;const tie=ord[1]&&ord[1].score===ord[0].score;
-    let earned=0,res=null;if(!paid){paid=true;earned=me.score*200+(iWon?1000:0)+200;G.earn(earned);
+    let earned=0,res=null;if(!paid){paid=true;earned=me.score*20000+(iWon?100000:0)+20000;G.earn(earned);
       res=G.gameDone("memoria",qOk+(iWon?1:0),qTot+1);G.P.stats.memGames=(G.P.stats.memGames||0)+1;if(iWon)G.P.stats.memWins=(G.P.stats.memWins||0)+1;G.save();SND.medal(iWon?"gold":me.score?"silver":"bronze");if(res&&res.up)SND.levelUp();if(iWon)FX.confetti(220)}
     const step=(p,place)=>p?`<div class="pod p${place}" style="--pc:${P_COL[p.i%8]}"><div class="pod-av">${avatarSVG(avOf(p),place===1?74:58,place===1?"jump":"wave",{mood:"happy"})}</div><b>${esc(p.name)}</b><span>${p.score} pareja${p.score===1?"":"s"}</span><div class="pod-block">${place}</div></div>`:"";
     box.innerHTML=`<div class="mem-end mem-wrap" id="mEnd">${skyHTML()}<h3>${iWon?"🏆 ¡Ganaste!":"¡Partida terminada!"}</h3><div class="podium">${step(ord[1],2)}${step(ord[0],1)}${step(ord[2],3)}</div>
