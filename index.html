@@ -746,6 +746,52 @@ body{background:radial-gradient(1200px 600px at 10% -10%,#ddd6fe 0%,transparent 
 .tl2-node{flex-wrap:wrap}.tl2-node small{flex-basis:100%;padding-left:32px}
 .roce .lane span{right:auto!important;left:8px}.roce .lane i{left:128px}
 .fobj:disabled{opacity:1}
+/* volante y pedales */
+.dash{gap:8px;padding:8px 10px;user-select:none;-webkit-user-select:none}
+.wheel{flex:none;width:96px;display:flex;flex-direction:column;align-items:center;touch-action:none;cursor:grab}
+.wheel svg{width:88px;height:88px;transition:transform .05s linear;filter:drop-shadow(0 3px 2px rgba(0,0,0,.4))}
+.wheel circle:first-child{stroke:#e5e7eb}.wheel path{stroke:#e5e7eb}
+.wheel small{font-size:10px;color:#c4b5fd;font-weight:700}
+.dmid{display:flex;align-items:center;gap:8px}
+.pedals{display:flex;gap:8px;align-items:flex-end}
+.pedal{font:inherit;font-weight:900;font-size:12px;border:0;border-radius:14px 14px 10px 10px;width:68px;height:84px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#fff;cursor:pointer;touch-action:none;box-shadow:0 6px 0 rgba(0,0,0,.45);transition:transform .05s;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.pedal span{font-size:24px}
+.pedal.brake{background:linear-gradient(#ef4444,#b91c1c);height:72px}
+.pedal.gas{background:linear-gradient(#22c55e,#15803d)}
+.pedal.on{transform:translateY(5px) scale(.96);box-shadow:0 1px 0 rgba(0,0,0,.45);filter:brightness(1.15)}
+@media (max-width:420px){.wheel{width:78px}.wheel svg{width:72px;height:72px}.pedal{width:56px;height:74px}.pedal.brake{height:64px}.dmid{flex-direction:column;gap:4px}}
+@media (max-width:420px){.dash{padding:6px 8px}.wheel{width:70px}.wheel svg{width:64px;height:64px}.wheel small{display:none}.pedal{width:58px;height:66px;font-size:11px}.pedal.brake{height:58px}.pedal span{font-size:20px}.speedo{width:56px;height:56px}.speedo b{font-size:22px}.limit{width:40px;height:40px;font-size:14px;border-width:5px}}
+/* línea del tiempo horizontal */
+.tlh{overflow-x:auto;margin:8px -4px 12px;padding:4px 4px 10px;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+.tlh-row{display:flex;align-items:flex-end;gap:6px;position:relative;min-width:min-content;padding-bottom:6px}
+.tlh-row::before{content:"";position:absolute;left:30px;right:22px;bottom:16px;height:6px;border-radius:3px;background:linear-gradient(90deg,#c4b5fd,#7c3aed)}
+.tlh-row::after{content:"";position:absolute;right:12px;bottom:10px;border:9px solid transparent;border-left:14px solid #7c3aed;border-right:0}
+.tlh-end{flex:none;width:58px;display:flex;flex-direction:column;align-items:center;font-size:18px;padding-bottom:30px;text-align:center}
+.tlh-end b{font-size:11px;color:#6d28d9}.tlh-end small{font-size:10px;color:var(--muted)}
+.tlh-slot{flex:1 0 104px;max-width:150px;display:flex;flex-direction:column;align-items:center;gap:6px;scroll-snap-align:center;position:relative;z-index:1}
+.tlh-card{width:100%;min-height:78px;box-sizing:border-box;font:inherit;font-size:13px;font-weight:700;border-radius:12px;padding:8px;display:flex;align-items:center;justify-content:center;text-align:center;position:relative}
+.tlh-card.empty{border:2px dashed var(--line);color:var(--muted)}
+.tlh-card.on{background:color-mix(in srgb,#7c3aed 12%,var(--surface));border:2px solid #7c3aed;color:var(--ink);cursor:pointer}
+.tlh-card.on i{position:absolute;top:-8px;right:-6px;font-style:normal;font-size:11px;background:#ef4444;color:#fff;border-radius:50%;width:18px;height:18px;display:grid;place-items:center}
+.tlh-dot{width:26px;height:26px;border-radius:50%;background:#7c3aed;color:#fff;font-weight:900;font-size:12px;display:grid;place-items:center;border:3px solid var(--surface);margin-bottom:2px}
+.tlh-real{position:relative;height:250px}
+.tlh-axis{position:absolute;left:10px;right:0;top:124px;height:6px;border-radius:3px;background:linear-gradient(90deg,#c4b5fd,#7c3aed)}
+.tlh-axis::after{content:"";position:absolute;right:-12px;top:-7px;border:10px solid transparent;border-left:14px solid #7c3aed;border-right:0}
+.tlh-lab{position:absolute;top:100px;font-size:11px;font-weight:800;color:#6d28d9}.tlh-lab.l{left:8px}.tlh-lab.r{right:4px}
+.tlh-node{position:absolute;top:0;width:108px;margin-left:-54px;height:250px}
+.tlh-ev{position:absolute;bottom:136px;left:0;right:0;font-size:12px;font-weight:700;text-align:center;background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:5px}
+.tlh-node.down .tlh-ev{bottom:auto;top:162px}
+.tlh-node.down b{top:136px}
+.tlh-ev small{display:block;color:var(--muted);font-weight:600}
+.tlh-node.ok .tlh-ev{border-color:#16a34a}.tlh-node.no .tlh-ev{border-color:#ef4444}
+.tlh-pt{position:absolute;top:114px;left:50%;margin-left:-13px;width:26px;height:26px;border-radius:50%;color:#fff;font-weight:900;display:grid;place-items:center;border:3px solid var(--surface)}
+.tlh-node.ok .tlh-pt{background:#16a34a}.tlh-node.no .tlh-pt{background:#ef4444}
+.tlh-node b{position:absolute;top:144px;left:0;right:0;text-align:center;color:#6d28d9;font-size:13px}
+.tlh-node.down b{top:100px}
+.tlh-gap{position:absolute;top:132px;transform:translateX(-50%);font-size:10px;font-weight:800;color:var(--muted);background:var(--bg);padding:0 4px;border-radius:6px;white-space:nowrap}
+.tlh-hint{margin:6px 0 0;font-weight:800;color:#6d28d9}
+.drive{padding-bottom:96px;scroll-margin-top:6px}
+.tlh-lab{top:150px}.tlh-lab.r{right:2px}
 
 </style>
 </head>
@@ -3408,7 +3454,7 @@ const vPick=(list,tier)=>{const ok=list.filter(r=>r[0]<=tier);const top=ok.filte
 /* ---------- menú ---------- */
 GAMEFN.vial=function(box,L){
   box.innerHTML=`<div class="vial-menu">
-    <button class="mem-act" type="button" data-m="auto"><span>🚗</span><b>Al volante</b><small>Manejá por la ciudad: semáforos, carteles, esquinas, bicis, colectivos… y algún tanque 😄. Controlá la velocidad con ▲ ▼.</small></button>
+    <button class="mem-act" type="button" data-m="auto"><span>🚗</span><b>Al volante</b><small>Manejá por la ciudad: semáforos, carteles, esquinas, bicis, colectivos… y algún tanque 😄. Acelerá y frená con los pedales y doblá con el volante.</small></button>
     <button class="mem-act" type="button" data-m="pie"><span>🚶</span><b>A pie</b><small>Cruzar bien, el semáforo peatonal, las señales y moverse seguro caminando o en bici.</small></button>
     <button class="mem-act carnet" type="button" data-m="carnet"><span>🪪</span><b>Modo carnet</b><small>Preguntas del examen de manejo para chicos que se animan y para adultos que quieren repasar. <b>Más difícil: paga el doble.</b></small></button></div>`;
   let stop=null;
@@ -3424,23 +3470,32 @@ function drive(box,L,carnet){
   let dif=carnet?3:Math.min(3,L);const tier=()=>carnet?(dif>=6?4:Math.random()<.5?4:3):(dif<3?1:dif<5?2:3);
   /* ruta: una lista de situaciones separadas por 140 a 200 m */
   const urban=["speed","light","corner","bici","crosswalk","signq","colectivo","light","speed","tank","corner","ambulance","moto","railway","rain","camion","rotonda"];
-  let plan=carnet?shuffle(urban.concat(["control","control","control","tractor","speedRoute"])).slice(0,13):shuffle(urban).slice(0,10);
+  let plan=carnet?shuffle(urban.concat(["control","control","control","tractor","speedRoute"])).slice(0,11):shuffle(urban).slice(0,8);
   if(!plan.includes("tank")&&!carnet)plan[rnd(3,plan.length-1)]="tank";
   let z=120;const evs=[];
-  plan.forEach(t=>{evs.push({t,z,done:false});if(t==="speed"||t==="speedRoute")evs.push({t:"radar",z:z+130,done:false});z+=rnd(150,210)});
+  plan.forEach(t=>{evs.push({t,z,done:false});if(t==="speed"||t==="speedRoute")evs.push({t:"radar",z:z+130,done:false});z+=rnd(120,170)});
   evs.push({t:"finish",z:z+40,done:false});
   box.innerHTML=`<div class="drive"><canvas id="dcv"></canvas>
-    <div class="dash"><div class="drv-av">${avatarSVG(G.P.avatar,40,"stand",{mood:"happy"})}</div>
-      <div class="speedo"><b id="dSpd">0</b><small>km/h</small></div><div class="limit" id="dLim"><span>40</span></div>
-      <div class="pedals"><button class="btn big" id="dDn" type="button" aria-label="Frenar">▼</button><button class="btn primary big" id="dUp" type="button" aria-label="Acelerar">▲</button></div></div>
-    <div class="drv-bar"><i id="dProg"></i></div><p class="drv-msg" id="dMsg">Tocá ▲ para arrancar. Respetá los carteles de velocidad: hay radares 📸.</p></div>`;
+    <div class="dash"><div class="wheel" id="dWheel" role="slider" aria-label="Volante: arrastrá para doblar" tabindex="0"><svg viewBox="0 0 100 100" id="dWsvg"><circle cx="50" cy="50" r="44" fill="none" stroke="#1f2937" stroke-width="10"/><circle cx="50" cy="50" r="44" fill="none" stroke="#475569" stroke-width="3"/><path d="M8 50 H36 M64 50 H92 M50 64 V92" stroke="#1f2937" stroke-width="9" stroke-linecap="round"/><circle cx="50" cy="50" r="15" fill="#7c3aed" stroke="#1f2937" stroke-width="3"/><text x="50" y="55" font-size="13" text-anchor="middle" fill="#fff" font-weight="900">A</text><rect x="46" y="3" width="8" height="10" rx="2" fill="#facc15"/></svg><small>↔ arrastrá</small></div>
+      <div class="dmid"><div class="speedo"><b id="dSpd">0</b><small>km/h</small></div><div class="limit" id="dLim"><span>40</span></div></div>
+      <div class="pedals"><button class="pedal brake" id="dDn" type="button" aria-label="Freno (mantené apretado)"><span>🛑</span>Freno</button><button class="pedal gas" id="dUp" type="button" aria-label="Acelerador (mantené apretado)"><span>⚡</span>Acelerar</button></div></div>
+    <div class="drv-bar"><i id="dProg"></i></div><p class="drv-msg" id="dMsg">Mantené apretado <b>Acelerar</b> para arrancar y soltalo cuando llegues a la velocidad. Doblá con el volante. Hay radares 📸.</p></div>`;
   const cvs=$("dcv"),ctx=cvs.getContext("2d");let W=0,H=0;
-  const size=()=>{const w=Math.min(box.clientWidth,760),h=Math.round(w*0.62),r=devicePixelRatio||1;cvs.width=w*r;cvs.height=h*r;cvs.style.width=w+"px";cvs.style.height=h+"px";ctx.setTransform(r,0,0,r,0,0);W=w;H=h};size();addEventListener("resize",size);
+  setTimeout(()=>{const d=box.querySelector(".drive");if(d)d.scrollIntoView({block:"start",behavior:"smooth"})},150);
+  const size=()=>{const w=Math.min(box.clientWidth,760),h=Math.round(Math.min(w*(w<500?0.56:0.62),Math.max(180,innerHeight*0.42))),r=devicePixelRatio||1;cvs.width=w*r;cvs.height=h*r;cvs.style.width=w+"px";cvs.style.height=h+"px";ctx.setTransform(r,0,0,r,0,0);W=w;H=h};size();addEventListener("resize",size);
   let pos=0,spd=0,target=0,limit=40,paused=false,ok=0,tot=0,raf,tP=performance.now(),msgT=0,rainOn=false,anim=null,stopUntil=0,resumeTo=0,ended=false;
   const say=(t,ms=2600)=>{$("dMsg").innerHTML=t;msgT=performance.now()+ms};
-  const setT=v=>{target=clamp(v,0,carnet?130:80);FX.tone(target>spd?700:400,.05,"triangle",.06)};
-  $("dUp").onclick=()=>setT(target+10);$("dDn").onclick=()=>setT(target-10);
-  const key=e=>{if(e.key==="ArrowUp"){e.preventDefault();setT(target+10)}if(e.key==="ArrowDown"){e.preventDefault();setT(target-10)}};addEventListener("keydown",key);
+  /* pedales: se mantienen apretados (como en un auto de verdad). Volante: se arrastra y vuelve solo al centro */
+  let gas=false,brake=false,wheel=0,dragX=null,carX=1.75,laneMsgT=0;const VMAX=carnet?130:80;
+  const hold=(id,set)=>{const b=$(id);const on=e=>{e.preventDefault();set(true);b.classList.add("on");try{b.setPointerCapture(e.pointerId)}catch(_){}};const off=()=>{set(false);b.classList.remove("on")};
+    b.addEventListener("pointerdown",on);["pointerup","pointercancel","lostpointercapture"].forEach(k=>b.addEventListener(k,off));b.oncontextmenu=e=>e.preventDefault()};
+  hold("dUp",v=>gas=v);hold("dDn",v=>brake=v);
+  const wh=$("dWheel");wh.addEventListener("pointerdown",e=>{e.preventDefault();dragX=e.clientX-wheel/1.3;try{wh.setPointerCapture(e.pointerId)}catch(_){}});
+  wh.addEventListener("pointermove",e=>{if(dragX!=null)wheel=clamp((e.clientX-dragX)*1.3,-110,110)});
+  ["pointerup","pointercancel","lostpointercapture"].forEach(k=>wh.addEventListener(k,()=>{dragX=null}));
+  let keyL=false,keyR=false;
+  const key=e=>{const d=e.type==="keydown";if(e.key==="ArrowUp"){e.preventDefault();gas=d}if(e.key==="ArrowDown"){e.preventDefault();brake=d}if(e.key==="ArrowLeft"){e.preventDefault();keyL=d}if(e.key==="ArrowRight"){e.preventDefault();keyR=d}};
+  addEventListener("keydown",key);addEventListener("keyup",key);
   /* pregunta: pausa, responde, cobra según dificultad */
   async function ask(r,t,pic){paused=true;tot++;const q=vMake(r,t);const res=await UI.ask(q,{progress:carnet?"🪪 Carnet":"🚗 Al volante",pic});
     if(res.ok){ok++;dif++;let extra=r[0]>=4?PAY.answer[3]:0;if(carnet)extra+=PAY.answer[Math.min(3,r[0])];if(extra){G.earn(extra);G.save();FX.toast(`${carnet?"🪪 Modo carnet: paga el doble":"Pregunta de carnet"} +${fmtM(extra)}`)}}
@@ -3454,15 +3509,15 @@ function drive(box,L,carnet){
       case "speed":case "speedRoute":{const v=ev.t==="speedRoute"?pick([110,120,130]):pick(carnet?[40,60,30,20]:[40,60,20,40]);ev.v=v;limit=v;$("dLim").innerHTML=`<span>${v}</span>`;
         say(`🛑 Cartel: velocidad máxima <b>${v} km/h</b>${v===20?" (zona escolar)":v===30?" (esquina sin semáforo)":""}. Más adelante hay un radar 📸.`,4000);
         if(Math.random()<.4)await ask([t>=3?3:1,`Ves este cartel con el número ${v}. ¿Qué indica?`,`Que no podés ir a más de ${v} km/h`,[`Que tenés que ir exactamente a ${v} km/h`,`Que faltan ${v} metros`,`Que es la ruta número ${v}`],`Es la velocidad máxima. La mínima es la mitad de la máxima, para no entorpecer el tránsito.`],t,vSignSVG("speed",v));break}
-      case "radar":{if(spd>limit+4){await miss(`Exceso de velocidad: ${Math.round(spd)} km/h con máximo ${limit}`,`📸 ¡Fotomulta! Ibas a ${Math.round(spd)} km/h y el máximo era ${limit}.`);target=limit;spd=Math.min(spd,limit)}
+      case "radar":{if(spd>limit+4){await miss(`Exceso de velocidad: ${Math.round(spd)} km/h con máximo ${limit}`,`📸 ¡Fotomulta! Ibas a ${Math.round(spd)} km/h y el máximo era ${limit}.`);spd=Math.min(spd,limit)}
         else{tot++;ok++;const w=G.earn(roundPay());G.save();say(`📸 Radar: ibas a ${Math.round(spd)} km/h. ¡Velocidad correcta! +${fmtM(w)}`);FX.good()}break}
       case "light":{const st=ev.st;const pool=VQ.light[st];const r=vPick(pool,t);const okA=await ask(r,t,vLightSVG(st));
-        if(st==="rojo"||st==="amarillo"||st==="rojoInt"){resumeTo=Math.max(target,20);spd=0;target=0;stopUntil=performance.now()+1600;ev.st="verde";say("Esperando… ¡verde! Arrancamos.",1800)}break}
+        if(st==="rojo"||st==="amarillo"||st==="rojoInt"){spd=0;stopUntil=performance.now()+1600;ev.st="verde";say("Esperando… ¡verde! Pisá el acelerador.",2400)}break}
       case "corner":{const k=Math.random()<.5?"der":"izq";ev.side=k==="der"?1:-1;const r=vPick(VQ.corner[k].concat(t>=3?VQ.corner.giro:[]),t);await ask(r,t,vEmoji(k==="der"?"🚗➡️":"⬅️🚙",k==="der"?"viene por tu derecha":"viene por tu izquierda"));anim={k:"cross",t:0,side:ev.side,ev};resumeTo=Math.max(target,20);spd=0;target=0;stopUntil=performance.now()+1400;break}
       case "rotonda":{{const r=vPick(VQ.corner.rotonda.concat(VQ.corner.pare),t);await ask(r,t,vSignSVG(/PARE/.test(r[1])?"pare":"rotonda"))}break}
       case "bici":case "camion":case "colectivo":case "moto":case "tractor":{const r=vPick(VQ.overtake[ev.t],t);await ask(r,t,vEmoji({bici:"🚴",camion:"🚚",colectivo:"🚌",moto:"🏍️",tractor:"🚜"}[ev.t]));ev.gone=true;break}
-      case "crosswalk":{await ask(vPick(VQ.crosswalk,t),t,vEmoji(ev.who||"🚶","en la senda peatonal"));resumeTo=Math.max(target,20);spd=0;target=0;stopUntil=performance.now()+1600;anim={k:"walk",t:0,ev};break}
-      case "railway":{await ask(vPick(VQ.railway,t),t,vEmoji("🚧🚆","paso a nivel"));resumeTo=Math.max(target,20);spd=0;target=0;stopUntil=performance.now()+2200;anim={k:"train",t:0,ev};break}
+      case "crosswalk":{await ask(vPick(VQ.crosswalk,t),t,vEmoji(ev.who||"🚶","en la senda peatonal"));spd=0;stopUntil=performance.now()+1600;anim={k:"walk",t:0,ev};break}
+      case "railway":{await ask(vPick(VQ.railway,t),t,vEmoji("🚧🚆","paso a nivel"));spd=0;stopUntil=performance.now()+2200;anim={k:"train",t:0,ev};break}
       case "ambulance":{say("🚑 ¡Sirena! Viene una ambulancia atrás.");FX.tone(960,.25,"square",.05);FX.tone(720,.25,"square",.05,.28);await ask(vPick(VQ.ambulance,t),t,vEmoji("🚑","con sirena"));anim={k:"amb",t:0};break}
       case "rain":{rainOn=true;say("🌧️ Empezó a llover.");await ask(vPick(VQ.rain,t),t,vEmoji("🌧️"));break}
       case "tank":{anim={k:"tank",t:0,ev};await ask(VQ.tank[0],t,vEmoji("🪖","¡un tanque!"));break}
@@ -3476,7 +3531,7 @@ function drive(box,L,carnet){
   /* eventos con estado visible antes de llegar */
   evs.forEach(e=>{if(e.t==="light")e.st=pick(carnet?["rojo","amarillo","verde","amarilloInt","rojoInt"]:["rojo","verde","amarillo","rojo","amarilloInt"]);if(e.t==="signq")e.sign=pick(VQ.signs)[0]});
   /* ---------- dibujo en perspectiva ---------- */
-  let camOff=0;const CAM=()=>1.75+camOff,ppm=()=>W*0.16;
+  const CAM=()=>carX,ppm=()=>W*0.16;
   const VEH=["bici","camion","colectivo","moto","tractor"];
   const VSPD={bici:14,moto:28,colectivo:24,camion:24,tractor:14};   // km/h: van hacia adelante, más despacio que vos
   const P=(x,dz)=>{const s=1/(1+Math.max(0,dz)/18);const hz=H*0.36;return {x:W/2+(x-CAM())*ppm()*s,y:hz+(H*0.98-hz)*s,s}};
@@ -3520,10 +3575,20 @@ function drive(box,L,carnet){
   function tank(x,dz){const p=P(x,dz),m=ppm()*p.s;ctx.save();ctx.translate(p.x,p.y);ctx.fillStyle="#4d7c0f";ctx.fillRect(-2.2*m,-1.4*m,4.4*m,0.9*m);ctx.fillStyle="#365314";ctx.fillRect(-2.4*m,-0.6*m,4.8*m,0.6*m);ctx.beginPath();ctx.arc(0,-1.4*m,0.9*m,Math.PI,0);ctx.fillStyle="#3f6212";ctx.fill();ctx.fillStyle="#365314";ctx.fillRect(0.5*m,-1.9*m,2.4*m,0.25*m);ctx.fillStyle="#a3e635";ctx.font=`900 ${Math.max(6,0.5*m)}px system-ui`;ctx.textAlign="center";ctx.fillText("★",-1.2*m,-0.75*m);ctx.restore()}
   function draw(now){
     const dt=Math.min(.05,Math.max(0,(now-tP)/1000));tP=now;const t=now/1000;
-    if(stopUntil&&now>stopUntil){stopUntil=0;target=resumeTo}
-    if(!paused&&!stopUntil){spd+=(target-spd)*Math.min(1,dt*1.6);if(Math.abs(target-spd)<.4)spd=target;pos+=spd/3.6*dt*2.4}
-    if(!paused)evs.forEach(e=>{if(!VEH.includes(e.t))return;if(e.done&&!e.slow){e.slow=1;e.v0=Math.min(VSPD[e.t],Math.max(4,spd*0.45))}e.z+=(e.done?e.v0:Math.min(VSPD[e.t],spd*0.6))/3.6*dt*2.4});
-    {const pass=evs.some(e=>VEH.includes(e.t)&&e.done&&e.z-pos>-9&&e.z-pos<40);const goal=pass?-3.5:0;camOff+=(goal-camOff)*Math.min(1,dt*1.8)}
+    if(stopUntil&&now>stopUntil){stopUntil=0}
+    if(!paused&&!stopUntil){if(gas)spd=Math.min(VMAX,spd+24*dt);if(brake)spd=Math.max(0,spd-48*dt);
+      /* volante: mueve el auto de costado (más rápido cuanto más rápido vas) */
+      if(dragX==null){wheel=keyL?Math.max(-90,wheel-260*dt):keyR?Math.min(90,wheel+260*dt):wheel*(1-Math.min(1,dt*5))}
+      carX=clamp(carX+wheel/90*Math.min(1,spd/25)*4.2*dt,-4.6,4.6);
+      /* si hay un vehículo lento adelante en tu carril, no lo podés atravesar: vas detrás */
+      const ahead=evs.find(e=>VEH.includes(e.t)&&Math.abs(carX-1.8)<1.7&&e.z-pos>0&&e.z-pos<9);
+      if(ahead){const v=ahead.done?ahead.v0:VSPD[ahead.t];if(spd>v){spd=v;if(now>laneMsgT){say("Vas detrás de un vehículo lento: girá el volante a la izquierda para pasarlo.",2600);laneMsgT=now+3000}}}
+      if(Math.abs(carX)>4.3&&now>laneMsgT){say("¡Cuidado! Te estás yendo de la calle.",1800);laneMsgT=now+2000;FX.bad()}
+      else if(carX<0&&!evs.some(e=>VEH.includes(e.t)&&e.z-pos>-10&&e.z-pos<30)&&now>laneMsgT){say("Ya pasaste: volvé a tu carril, a la derecha 👉",2200);laneMsgT=now+2600}
+      pos+=spd/3.6*dt*3.4}
+    $("dWsvg").style.transform=`rotate(${wheel}deg)`;
+    if(!paused)evs.forEach(e=>{if(!VEH.includes(e.t))return;if(e.done&&!e.slow){e.slow=1;e.v0=Math.min(VSPD[e.t],Math.max(4,spd*0.45))}e.z+=(e.done?e.v0:Math.min(VSPD[e.t],spd*0.6))/3.6*dt*3.4});
+
     if(anim)anim.t+=dt;
     // cielo y pasto
     const g=ctx.createLinearGradient(0,0,0,H*0.36);g.addColorStop(0,rainOn?"#64748b":"#7dd3fc");g.addColorStop(1,rainOn?"#94a3b8":"#e0f2fe");ctx.fillStyle=g;ctx.fillRect(0,0,W,H*0.36);
@@ -3542,8 +3607,8 @@ function drive(box,L,carnet){
     for(let dz=0;dz<300;dz+=2){if(noPass){quad(-.12,dz,-.02,dz+2,"#facc15");quad(.02,dz,.12,dz+2,"#facc15")}else if(Math.floor((pos+dz)/5)%2===0)quad(-.08,dz,.08,dz+2,"#f8fafc")}
     quad(5.3,0,5.45,300,"#f8fafc");quad(-5.45,0,-5.3,300,"#f8fafc");
     // árboles y casas que pasan
-    const base=Math.floor(pos/22)*22;const deco=["🌳","🏠","🏢","🌳","🏪","🏫","🌳","🏥"];
-    for(let k=14;k>=0;k--){const wz=base+k*22,dz=wz-pos;if(dz<1)continue;const i=Math.abs(Math.round(wz/22))%deco.length;emo(deco[i],-11,dz,4);emo(deco[(i+3)%deco.length],12,dz,4)}
+    const base=Math.floor(pos/14)*14;const deco=["🌳","🏠","🏢","🌳","🏪","🏫","🌳","🏥"];
+    for(let k=20;k>=0;k--){const wz=base+k*14,dz=wz-pos;if(dz<1)continue;const i=Math.abs(Math.round(wz/14))%deco.length;emo(deco[i],-11,dz,4);emo(deco[(i+3)%deco.length],12,dz,4)}
     // objetos de cada evento (lo lejano primero)
     evs.slice().sort((a,b)=>b.z-a.z).forEach(e=>{const dz=e.z-pos;if(dz<-6||dz>260)return;
       if(e.t==="speed"||e.t==="speedRoute")sign("speed",6.4,dz,e.v||"?");
@@ -3559,13 +3624,16 @@ function drive(box,L,carnet){
       if(e.t==="control"){emo("👮",5.2,dz,1.9);emo("🚓",8,dz+3,2.4)}
       if(e.t==="finish"){quad(-5.6,dz,5.6,dz+1.5,"#111");for(let k=-5.6;k<5.6;k+=1.4)quad(k,dz,k+.7,dz+.75,"#fff");emo("🏁",6.4,dz,2.4)}});
     if(anim&&anim.k==="amb"){rear("amb",-1.8,-3+anim.t*16,t);if(anim.t>4)anim=null}
+    // sensación de velocidad: rayas que pasan a los costados y el auto que vibra
+    if(spd>20&&!paused){const n=Math.round((spd-20)/6),a=Math.min(.55,(spd-20)/90);ctx.strokeStyle=`rgba(255,255,255,${a})`;ctx.lineWidth=2;ctx.beginPath();
+      for(let k=0;k<n;k++){const side=k%2?1:-1,ph=((t*spd/18+k*0.37)%1),yy=H*0.42+ph*H*0.5,xx=W/2+side*(W*0.32+ph*W*0.3+(k*13)%30);ctx.moveTo(xx,yy);ctx.lineTo(xx+side*ph*W*0.12,yy+ph*H*0.08)}ctx.stroke()}
     // lluvia
     if(rainOn){ctx.strokeStyle="rgba(255,255,255,.45)";ctx.lineWidth=1;ctx.beginPath();for(let k=0;k<70;k++){const x=(k*97+t*400)%W,y=(k*53+t*700)%H;ctx.moveTo(x,y);ctx.lineTo(x-3,y+10)}ctx.stroke()}
-    // capó del auto
-    ctx.fillStyle="#6d28d9";ctx.beginPath();ctx.moveTo(W*0.12,H);ctx.quadraticCurveTo(W*0.5,H*0.86,W*0.88,H);ctx.fill();ctx.fillStyle="rgba(255,255,255,.25)";ctx.beginPath();ctx.moveTo(W*0.3,H);ctx.quadraticCurveTo(W*0.5,H*0.9,W*0.7,H);ctx.fill();
+    // capó del auto (vibra un poco según la velocidad)
+    ctx.save();ctx.translate(0,Math.sin(t*40)*Math.min(2,spd/45));ctx.fillStyle="#6d28d9";ctx.beginPath();ctx.moveTo(W*0.12,H);ctx.quadraticCurveTo(W*0.5,H*0.86,W*0.88,H);ctx.fill();ctx.fillStyle="rgba(255,255,255,.25)";ctx.beginPath();ctx.moveTo(W*0.3,H);ctx.quadraticCurveTo(W*0.5,H*0.9,W*0.7,H);ctx.fill();ctx.restore();
     // velocímetro
     $("dSpd").textContent=Math.round(spd);$("dSpd").parentElement.classList.toggle("over",spd>limit+4);$("dProg").style.width=Math.min(100,pos/evs[evs.length-1].z*100)+"%";
-    if(msgT&&now>msgT){msgT=0;$("dMsg").textContent=spd<1&&!paused&&!stopUntil?"Tocá ▲ para avanzar.":`Máximo ${limit} km/h · ▲ ▼ para cambiar la velocidad`}
+    if(msgT&&now>msgT){msgT=0;$("dMsg").textContent=spd<1&&!paused&&!stopUntil?"Mantené apretado Acelerar para avanzar.":`Máximo ${limit} km/h · mantené apretado Acelerar o Freno`}
     // ¿llegamos a algo?
     if(!paused&&!ended){const e=evs.find(x=>!x.done&&x.z-pos<({speed:30,speedRoute:30,radar:4,light:38,corner:30,crosswalk:22,railway:26,finish:0}[x.t]??26));if(e){handle(e)}}
     raf=requestAnimationFrame(draw);
@@ -4085,22 +4153,28 @@ GAMEFN.tiempo=function(box,L){
     const EV=typeof BIG_EVENTS!=="undefined"?BIG_EVENTS:EVENTS;let ev=shuffle(EV).slice(0,n);
     if(L>=4){const base=pick(EV);ev=shuffle(EV.filter(e=>Math.abs(e[0]-base[0])<300)).slice(0,n);if(ev.length<n)ev=shuffle(EV).slice(0,n)}
     const sorted=ev.slice().sort((a,b)=>a[0]-b[0]);const slot=Array(ev.length).fill(null);const cards=shuffle(ev);
-    el.innerHTML=`<h3 class="qtext">Ubicá los hechos en la línea del tiempo: arriba lo que pasó <b>antes</b>, abajo lo que pasó <b>después</b>.</h3>
-      <p class="note">Tocá un hecho y va al primer lugar libre. ¿Te equivocaste? Tocá el hecho en la línea para sacarlo.</p>
-      <div class="tl2"><div class="tl2-end">⏪ ANTES (más antiguo)</div><ol class="tl2-line" id="tl"></ol><div class="tl2-end">⏩ DESPUÉS (más nuevo)</div></div>
+    el.innerHTML=`<h3 class="qtext">Ubicá los hechos en la línea del tiempo: a la <b>izquierda</b> lo que pasó <b>antes</b> y a la <b>derecha</b> lo que pasó <b>después</b>.</h3>
+      <p class="note">Tocá un hecho y va al primer lugar libre (de izquierda a derecha). ¿Te equivocaste? Tocá el hecho en la línea para sacarlo.</p>
+      <div class="tlh" id="tlbox"><div class="tlh-row" id="tl"></div></div>
       <div class="seqcards" id="tlc"></div>`;
-    const draw=()=>{$("tl").innerHTML=slot.map((e,i)=>`<li><span class="tl2-dot">${i+1}</span>${e?`<button type="button" class="tl2-ev" data-i="${i}">${esc(e[1])} <i>✕</i></button>`:`<span class="tl2-empty">lugar ${i+1}</span>`}</li>`).join("");
+    const draw=()=>{$("tl").innerHTML=`<div class="tlh-end">⏪<b>ANTES</b><small>pasado</small></div>${slot.map((e,i)=>`<div class="tlh-slot">${e?`<button type="button" class="tlh-card on" data-i="${i}">${esc(e[1])}<i>✕</i></button>`:`<div class="tlh-card empty">lugar ${i+1}</div>`}<span class="tlh-dot">${i+1}</span></div>`).join("")}<div class="tlh-end">⏩<b>DESPUÉS</b><small>más nuevo</small></div>`;
       $("tlc").innerHTML=cards.map((e,k)=>slot.includes(e)?"":`<button type="button" class="seqc" data-k="${k}">${esc(e[1])}</button>`).join("");
-      el.querySelectorAll(".tl2-ev").forEach(b=>b.onclick=()=>{slot[+b.dataset.i]=null;FX.pop();draw()});
-      el.querySelectorAll(".seqc").forEach(b=>b.onclick=()=>{const i=slot.indexOf(null);if(i<0)return;slot[i]=cards[+b.dataset.k];FX.pop();draw()})};
+      el.querySelectorAll(".tlh-card.on").forEach(b=>b.onclick=()=>{slot[+b.dataset.i]=null;FX.pop();draw()});
+      el.querySelectorAll(".seqc").forEach(b=>b.onclick=()=>{const i=slot.indexOf(null);if(i<0)return;slot[i]=cards[+b.dataset.k];FX.pop();draw();
+        const sl=$("tl").querySelectorAll(".tlh-slot")[i];if(sl)sl.scrollIntoView({block:"nearest",inline:"center",behavior:"smooth"})})};
     draw();
     await checkBtn(el,"Ver las fechas",()=>slot.every(Boolean)?true:(FX.toast("Ubicá todos los hechos en la línea"),null));
     const ok=slot.every((p,i)=>p[0]===sorted[i][0]);
-    /* resultado: la línea real, con el espacio entre hechos según los años que pasaron */
-    const span=Math.max(1,sorted[sorted.length-1][0]-sorted[0][0]);
-    $("tl").outerHTML=`<div class="tl2-real">${sorted.map((e,i)=>{const mine=slot.indexOf(e);const gap=i?e[0]-sorted[i-1][0]:0;
-      return `${i?`<div class="tl2-gap" style="height:${Math.round(14+60*gap/span)}px"><span>⏱️ ${gap.toLocaleString("es-AR")} año${gap===1?"":"s"} después</span></div>`:""}<div class="tl2-node ${mine===i?"ok":"no"}"><span class="tl2-dot">${mine===i?"✓":"✗"}</span><b>${yr(e[0])}</b> ${esc(e[1])}${mine!==i?` <small>(lo pusiste en el lugar ${mine+1})</small>`:""}</div>`}).join("")}</div>`;
-    return feedback(el,ok,ok?"¡Todo en orden en la línea del tiempo!":"Mirá la línea: arriba lo más antiguo y abajo lo más nuevo. El espacio muestra cuánto tiempo pasó entre un hecho y otro.");
+    /* resultado: la línea real, horizontal, con la distancia según los años que pasaron */
+    const y0=sorted[0][0],span=Math.max(1,sorted[sorted.length-1][0]-y0),MIN=118,BASE=Math.max(sorted.length*MIN,520);
+    const xs=[];sorted.forEach((e,i)=>{let x=70+(e[0]-y0)/span*BASE;if(i&&x<xs[i-1]+MIN)x=xs[i-1]+MIN;xs.push(x)});const Wd=xs[xs.length-1]+90;
+    $("tlbox").innerHTML=`<div class="tlh-real" style="width:${Wd}px"><div class="tlh-axis"></div><span class="tlh-lab l">⏪ antes</span><span class="tlh-lab r">después ⏩</span>
+      ${sorted.map((e,i)=>{const mine=slot.indexOf(e),good=mine===i;const gap=i?e[0]-sorted[i-1][0]:0;
+        return `${i?`<span class="tlh-gap" style="left:${(xs[i]+xs[i-1])/2}px">${gap.toLocaleString("es-AR")} año${gap===1?"":"s"}</span>`:""}<div class="tlh-node ${good?"ok":"no"} ${i%2?"down":""}" style="left:${xs[i]}px"><div class="tlh-ev">${esc(e[1])}${good?"":`<small>lo pusiste ${mine+1}.º</small>`}</div><span class="tlh-pt">${good?"✓":"✗"}</span><b>${yr(e[0])}</b></div>`}).join("")}</div>`;
+    {const bx=$("tlbox");bx.scrollLeft=0;if(bx.scrollWidth>bx.clientWidth+10){bx.insertAdjacentHTML("beforebegin",`<p class="note center tlh-hint">↔ Deslizá la línea para verla completa</p>`);
+      const max=bx.scrollWidth-bx.clientWidth;let t0=null;const pan=ts=>{if(t0==null)t0=ts;const k=(ts-t0)/3500;if(k>1.6||!bx.isConnected)return;bx.scrollLeft=max*(k<1?k:Math.max(0,1-(k-1)/0.6));requestAnimationFrame(pan)};setTimeout(()=>requestAnimationFrame(pan),500);
+      bx.addEventListener("pointerdown",()=>{t0=-1e9},{once:true})}}
+    return feedback(el,ok,ok?"¡Todo en orden en la línea del tiempo!":"Mirá la línea: a la izquierda lo más antiguo y a la derecha lo más nuevo. La distancia muestra cuántos años pasaron entre un hecho y otro.");
   };
   const fuente=async el=>{
     const F=[["Una carta escrita por un soldado en 1817","primaria"],["Un libro de 2020 sobre la Revolución de Mayo","secundaria"],["Una foto tomada el día de la llegada a la Luna","primaria"],["Un video de YouTube que explica las pirámides","secundaria"],["El diario de viaje de Colón","primaria"],["Una enciclopedia escolar","secundaria"],["La Constitución original de 1853","primaria"],["Un dibujo actual que imagina la vida en Roma","secundaria"]];
