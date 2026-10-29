@@ -616,6 +616,85 @@ body{background:radial-gradient(1200px 600px at 10% -10%,#ddd6fe 0%,transparent 
 .qpic small{font-weight:800;color:var(--muted)}
 .qpic-emo{font-size:52px;line-height:1.1}
 .blinkl{animation:blk .6s steps(2) infinite}@keyframes blk{50%{opacity:.15}}
+/* ===== Robot programador: camino del programador ===== */
+.rb-maphead{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.rb-maphead h3{margin:0;font-family:var(--display)}.rb-maptools{display:flex;gap:6px;flex-wrap:wrap}
+.rb-trail{display:grid;gap:14px;position:relative}
+.rb-trail::before{content:"";position:absolute;left:34px;top:20px;bottom:20px;border-left:4px dashed var(--line)}
+.rb-world{position:relative;display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:3px solid var(--wc);border-radius:20px;padding:12px;box-shadow:0 5px 0 color-mix(in srgb,var(--wc) 45%,transparent)}
+.rb-world.lock{border-color:var(--line);box-shadow:none;opacity:.7}
+.rb-wicon{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:26px;background:color-mix(in srgb,var(--wc) 22%,var(--surface));border:3px solid var(--wc);z-index:1}
+.rb-wicon.big{width:76px;height:76px;font-size:44px;margin:0 auto 6px}
+.rb-winfo{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.rb-winfo small{color:var(--muted);font-weight:700}.rb-winfo b{font-family:var(--display);font-size:19px}.rb-wst{font-size:13px;font-weight:800;color:var(--muted)}
+.rb-lvls{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:6px}
+.rb-lv{font:inherit;border:3px solid var(--wc);background:var(--surface);color:var(--ink);border-radius:14px;padding:6px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;min-height:54px}
+.rb-lv b{font-size:18px}.rb-lv small{font-size:10px;letter-spacing:-1px;white-space:nowrap}
+.rb-lv.boss{background:color-mix(in srgb,var(--wc) 15%,var(--surface))}
+.rb-lv.next{animation:rbPulse 1.2s ease-in-out infinite;background:color-mix(in srgb,var(--wc) 30%,var(--surface))}
+.rb-lv:disabled{border-color:var(--line);cursor:not-allowed;opacity:.6}
+@keyframes rbPulse{50%{transform:scale(1.08)}}
+.rb-off{opacity:.35}
+.rb-guide{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.rb-gb{font:inherit;font-weight:800;border:0;border-radius:12px;padding:9px 12px;cursor:pointer;color:#fff}
+.rb-gb i{font-style:normal;background:#fff;color:#111;border-radius:50%;width:18px;height:18px;display:inline-grid;place-items:center;font-size:12px;margin-left:4px}
+.rb-intro{text-align:center}.rb-intro h3{margin:2px 0;font-family:var(--display);font-size:24px}.rb-intro p{text-align:left}
+.rb-concept{text-align:center!important;font-weight:800;color:var(--wc)}
+/* colores de bloques */
+.k-mv{--bk:#3b82f6}.k-lp{--bk:#f59e0b}.k-cd{--bk:#8b5cf6}.k-fn{--bk:#ec4899}
+.rb-gb.k-mv,.rb-gb.k-lp,.rb-gb.k-cd,.rb-gb.k-fn{background:var(--bk)}.rb-gb.k-lp{color:#422006}
+/* nivel */
+.rb-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.rb-top b{font-family:var(--display);font-size:18px;flex:1}
+.rb-goal{margin:6px 0 10px;font-weight:600}.rb-par{display:inline-block;font-size:13px;font-weight:800;background:color-mix(in srgb,var(--wc) 18%,var(--surface));border-radius:10px;padding:2px 8px}
+.rb-main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:14px;align-items:start}
+@media (max-width:700px){.rb-main{grid-template-columns:1fr}}
+.rb-board{display:flex;flex-direction:column;align-items:center;gap:8px}
+.rb-tabs{display:flex;gap:6px}.rb-tabs button{font:inherit;font-weight:800;border:2px solid var(--wc);background:var(--surface);color:var(--ink);border-radius:10px;padding:4px 10px;cursor:pointer}
+.rb-tabs button.on{background:var(--wc);color:#fff}
+.rgrid{--cs:min(48px,calc((100vw - 56px)/var(--w)),calc(300px/var(--h)));display:grid;grid-template-columns:repeat(var(--w),var(--cs));grid-auto-rows:var(--cs);gap:3px;background:#94a3b8;padding:4px;border-radius:12px}
+.rb-demo .rgrid{--cs:min(40px,calc(160px/var(--h)))}
+.rgrid span{background:#f1f5f9;border-radius:6px;display:grid;place-items:center;font-size:calc(var(--cs)*.6);position:relative;line-height:1}
+.rgrid span.w{background:#475569;background-image:linear-gradient(90deg,transparent 48%,#334155 48% 52%,transparent 52%),linear-gradient(transparent 48%,#334155 48% 52%,transparent 52%)}
+.rgrid span.tr{background:#ddd6fe}.rgrid span.bad{background:#fecaca}
+.rbot{position:relative;display:grid;place-items:center;width:100%;height:100%;transition:transform .2s}
+.rbot i{font-style:normal}.rbot.jump{animation:rbJump .4s ease-out}
+.rbot em{position:absolute;font-style:normal;font-size:calc(var(--cs)*.32);color:#7c3aed;font-weight:900;line-height:1;text-shadow:0 0 2px #fff,0 0 2px #fff}
+.rbot em.d0{top:-2px;left:50%;transform:translateX(-50%)}.rbot em.d1{right:-1px;top:50%;transform:translateY(-50%)}
+.rbot em.d2{bottom:-2px;left:50%;transform:translateX(-50%)}.rbot em.d3{left:-1px;top:50%;transform:translateY(-50%)}
+.rbot small{position:absolute;right:0;bottom:0;font-size:calc(var(--cs)*.3)}
+@keyframes rbJump{40%{transform:translateY(-35%) scale(1.15)}}
+.rb-msg{min-height:2.6em;margin:0;text-align:center;font-weight:700;padding:6px 10px;border-radius:12px;background:var(--surface);border:2px solid var(--line);width:100%;box-sizing:border-box}
+.rb-msg.ok{border-color:#22c55e;background:color-mix(in srgb,#22c55e 12%,var(--surface))}
+.rb-msg.bad{border-color:#ef4444;background:color-mix(in srgb,#ef4444 10%,var(--surface))}
+.rb-msg.tip{border-color:#f59e0b;background:color-mix(in srgb,#f59e0b 12%,var(--surface))}
+.rb-run,.rb-edit,.rb-help-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.rb-pal{display:flex;flex-wrap:wrap;gap:6px}
+.rb-pb{display:inline-flex;border-radius:12px;overflow:hidden;background:var(--bk);box-shadow:0 3px 0 color-mix(in srgb,var(--bk) 60%,#000)}
+.rb-pb button{font:inherit;font-weight:800;border:0;background:transparent;color:#fff;cursor:pointer;padding:9px 10px}
+.rb-pb.k-lp button{color:#422006}
+.rb-pb .q{padding:9px 9px;background:rgba(255,255,255,.28);font-weight:900;border-left:1px solid rgba(0,0,0,.15)}
+.rb-ptitle{display:flex;justify-content:space-between;align-items:center;margin:10px 0 4px;gap:6px}
+#rbCnt{font-size:13px;font-weight:800}#rbCnt.ok{color:#16a34a}#rbCnt.over{color:#d97706}
+.rb-prog{list-style:none;margin:0;padding:8px;background:#1e1b4b;border-radius:14px;min-height:56px;cursor:pointer;display:flex;flex-direction:column;gap:4px;counter-reset:rb}
+.rb-prog.fn{background:#500724}
+.rb-prog ol{list-style:none;margin:4px 0 2px 14px;padding:4px 0 4px 8px;border-left:4px solid var(--bk);display:flex;flex-direction:column;gap:4px}
+.rb-prog li{color:#fff;font-weight:800}
+.rb-b,.rb-h{background:var(--bk);border-radius:10px;padding:7px 10px;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.k-lp>.rb-h,.rb-b.k-lp{color:#422006}
+.rb-h2{color:#c4b5fd;font-weight:800;padding:2px 4px}
+.rb-n,.rb-cnd{font:inherit;font-weight:900;border:2px solid rgba(0,0,0,.25);background:#fff;color:#111;border-radius:8px;padding:1px 8px;cursor:pointer}
+.rb-prog.ro .rb-n,.rb-prog.ro .rb-cnd{display:inline-block}
+.rb-caret{color:#c4b5fd!important;font-size:13px;border:2px dashed #a78bfa;border-radius:10px;padding:4px 8px;animation:rbBlink 1s steps(2) infinite}
+@keyframes rbBlink{50%{opacity:.55}}
+.rb-slot{color:#a5b4fc!important;font-size:13px;opacity:.75;padding:2px 8px;border-radius:8px;border:1px dashed #6366f1;align-self:flex-start}
+.hi{outline:4px solid #facc15;outline-offset:1px}.hib{outline:4px solid #ef4444;outline-offset:1px;background:#ef4444!important;color:#fff!important}
+.rb-lvl.running .rb-pal,.rb-lvl.running .rb-edit{opacity:.45;pointer-events:none}
+.rb-tipline{margin:6px 0 0;font-size:13px}
+.rb-prog.ro{cursor:default;min-height:0}
+.rb-help h3{font-family:var(--display);margin:0 0 6px}.rb-how{margin:0 0 8px;padding-left:22px}.rb-how li{margin:3px 0}
+.rb-cmp{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}.rb-cmp small{display:block;font-weight:800;margin-bottom:4px}
+.rb-demo{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;justify-content:center}.rb-demo>div:last-child{flex:1;min-width:150px}
+.rb-win{text-align:center}.rb-bigstars{font-size:44px;letter-spacing:4px}.rb-medal{display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800}
 
 </style>
 </head>
@@ -1989,7 +2068,7 @@ const GAMES=[
   {id:"abaco",name:"Ábaco mágico",icon:"🧮",s:"mate",desc:"Soroban japonés: armá números, sumá con complementos y hacé cálculo mental relámpago."},
   {id:"plato",name:"Plato arcoíris",icon:"🥗",s:"salud",desc:"Armá un plato sano de muchos colores y ordená tu día: higiene, comida y sueño."},
   {id:"vial",name:"Ciudad vial",icon:"🚦",s:"civica",desc:"🚗 Al volante por la ciudad (semáforos, carteles, radares, esquinas), 🚶 a pie, y 🪪 modo carnet para grandes y chicos que se animan."},
-  {id:"robot",name:"Robot programador",icon:"🤖",s:"ia",desc:"Programá al robot con bloques de avanzar, girar y repetir para llegar a la estrella."},
+  {id:"robot",name:"Robot programador",icon:"🤖",s:"ia",desc:"Aprendé a programar en 7 mundos: algoritmos, bugs, bucles, sensores, robots autónomos y tus propios bloques."},
   {id:"ingles",name:"Viaje en inglés",icon:"✈️",s:"ingles",desc:"Escuchá, elegí la frase correcta y seguí indicaciones en un mapa: turn left, go straight."},
   {id:"tiempo",name:"Línea de tiempo",icon:"⏳",s:"historia",desc:"Ordená hechos de la historia del mundo y de Argentina, del más antiguo al más nuevo."},
   {id:"memoria",name:"Memoria en equipo",icon:"🃏",s:"geografia",desc:"¡Online! Cada uno desde su casa, por turnos: da vuelta cartas y encontrá parejas de países, inglés, historia y tablas. También con robots."},
@@ -3042,7 +3121,7 @@ function vialPie(box,L,extra){
 };
 
 /* ================= 7. ROBOT PROGRAMADOR ================= */
-GAMEFN.robot=function(box,L){
+function robotLibre(box,L){
   const N=Math.min(7,5+Math.floor((L-1)/2));
   function maze(){
     for(let tries=0;tries<200;tries++){
@@ -3327,6 +3406,445 @@ function drive(box,L,carnet){
   }
   raf=requestAnimationFrame(draw);
   return ()=>{ended=true;cancelAnimationFrame(raf);removeEventListener("keydown",key);removeEventListener("resize",size)};
+}
+
+/* =====================================================================
+   ROBOT PROGRAMADOR — motor (sin pantalla): mapas, programas y ejecución
+   Un programa es una lista de bloques:
+     {t:"F"} avanzar · {t:"L"} girar izq. · {t:"R"} girar der. · {t:"J"} saltar
+     {t:"rep",n,body} repetir n veces · {t:"until",body} repetir hasta llegar
+     {t:"if",c,body,els} si / si no · {t:"M"} usar «Mi bloque»
+   Texto corto (para niveles y pruebas): F L R J M · 3[ ... ] · U[ ... ] · ?pared[ ... ][ ... ]
+   Mapa: . piso · # pared · X caja · o pozo · k llave · D puerta · g gema · * estrella · ^ > v < robot
+   ===================================================================== */
+const RB={DIR:[[0,-1],[1,0],[0,1],[-1,0]],ARROW:["▲","▶","▼","◀"],MAXSTEPS:400};
+RB.COND={
+  pared:{txt:"hay pared adelante",i:"🧱"},
+  pozo:{txt:"hay un pozo adelante",i:"🕳️"},
+  der:{txt:"hay camino a la derecha",i:"➡️"},
+  izq:{txt:"hay camino a la izquierda",i:"⬅️"}
+};
+RB.parse=function(src){
+  const tk=src.replace(/\[/g," [ ").replace(/\]/g," ] ").trim().split(/\s+/).filter(Boolean);let i=0;
+  const list=()=>{const out=[];while(i<tk.length&&tk[i]!=="]"){out.push(one())}return out};
+  const grp=()=>{if(tk[i]!=="[")throw new Error("falta [ en "+src);i++;const b=list();i++;return b};
+  const one=()=>{const t=tk[i++];
+    if(/^\d+$/.test(t))return {t:"rep",n:+t,body:grp()};
+    if(t==="U")return {t:"until",body:grp()};
+    if(t[0]==="?"){const c=t.slice(1);const body=grp();const els=tk[i]==="["?grp():[];return {t:"if",c,body,els}}
+    if("FLRJM".includes(t))return {t};
+    throw new Error("bloque desconocido "+t)};
+  return list();
+};
+RB.text=p=>p.map(b=>b.t==="rep"?`${b.n}[ ${RB.text(b.body)} ]`:b.t==="until"?`U[ ${RB.text(b.body)} ]`:b.t==="if"?`?${b.c}[ ${RB.text(b.body)} ][ ${RB.text(b.els)} ]`:b.t).join(" ");
+RB.count=p=>p.reduce((a,b)=>a+1+(b.body?RB.count(b.body):0)+(b.els?RB.count(b.els):0),0);
+/* estado inicial de un mapa */
+RB.load=function(rows){
+  const g=rows.map(r=>r.split(""));let x=0,y=0,d=0;
+  g.forEach((r,j)=>r.forEach((c,i)=>{const k="^>v<".indexOf(c);if(k>=0){x=i;y=j;d=k;r[i]="."}}));
+  return {g,w:g[0].length,h:g.length,x,y,d,key:0,gems:0,steps:0,won:false,path:[[x,y]]};
+};
+RB.cell=(s,x,y)=>(x<0||y<0||x>=s.w||y>=s.h)?"#":s.g[y][x];
+RB.solid=c=>c==="#"||c==="X";
+RB.ahead=(s,k=1,dd=s.d)=>{const [dx,dy]=RB.DIR[dd];return [s.x+dx*k,s.y+dy*k]};
+RB.test=function(s,c){
+  if(c==="pared"){const [x,y]=RB.ahead(s);const v=RB.cell(s,x,y);return RB.solid(v)||(v==="D"&&!s.key)}
+  if(c==="pozo"){const [x,y]=RB.ahead(s);return RB.cell(s,x,y)==="o"}
+  const dd=c==="der"?(s.d+1)%4:(s.d+3)%4;const [x,y]=RB.ahead(s,1,dd);const v=RB.cell(s,x,y);return !RB.solid(v)&&v!=="o"&&!(v==="D"&&!s.key);
+};
+/* pisar una casilla: junta llave/gema, abre puerta, llega a la estrella */
+RB.enter=function(s,x,y){
+  const v=RB.cell(s,x,y);
+  if(RB.solid(v))return {err:"crash",msg:v==="X"?"Chocó contra una caja.":"Chocó contra la pared."};
+  if(v==="o")return {err:"fall",msg:"¡Se cayó al pozo! Para pasar un pozo hay que saltar."};
+  if(v==="D"){if(!s.key)return {err:"door",msg:"La puerta está cerrada: primero hay que buscar la llave 🔑."};s.key--;s.g[y][x]=".";s.opened=[x,y]}
+  s.x=x;s.y=y;s.path.push([x,y]);
+  if(v==="k"){s.key++;s.g[y][x]=".";s.got="k"}
+  if(v==="g"){s.gems++;s.g[y][x]=".";s.got="g"}
+  if(v==="*")s.won=true;
+  return {};
+};
+RB.act=function(s,t){
+  s.steps++;s.got=null;s.opened=null;
+  if(t==="L"){s.d=(s.d+3)%4;return {}}
+  if(t==="R"){s.d=(s.d+1)%4;return {}}
+  if(t==="F"){const [x,y]=RB.ahead(s);return RB.enter(s,x,y)}
+  if(t==="J"){const [mx,my]=RB.ahead(s);const m=RB.cell(s,mx,my);
+    if(RB.solid(m)||m==="D")return {err:"crash",msg:"No se puede saltar eso: es muy alto. Solo se saltan pozos y casillas vacías."};
+    const [x,y]=RB.ahead(s,2);return RB.enter(s,x,y)}
+  return {};
+};
+/* ejecución paso a paso: cada paso dice qué bloque se está usando */
+RB.run=function*(prog,fn,s){
+  const lim=()=>s.steps>RB.MAXSTEPS;
+  function* go(list,depth){
+    for(const b of list){
+      if(s.won)return;if(lim())return;
+      if(b.t==="rep"){for(let k=0;k<b.n;k++){yield {b,info:`vuelta ${k+1} de ${b.n}`};s.steps++;yield* go(b.body,depth);if(s.won||s.err||lim())return}}
+      else if(b.t==="until"){let k=0;while(!s.won){if(lim()){s.err={err:"loop",msg:"El robot dio vueltas y vueltas sin llegar: ¡un bucle infinito! Revisá las condiciones."};yield {b,err:s.err};return}
+          k++;yield {b,info:`vuelta ${k}: ¿llegó? no → sigue`};s.steps++;const before=s.steps;yield* go(b.body,depth);if(s.err)return;if(s.steps===before)s.steps+=40}}
+      else if(b.t==="if"){const r=RB.test(s,b.c);s.steps++;yield {b,info:`¿${RB.COND[b.c].txt}? → ${r?"sí":"no"}`,cond:r};yield* go(r?b.body:b.els,depth);if(s.err)return}
+      else if(b.t==="M"){if(depth>6){s.err={err:"loop",msg:"«Mi bloque» se usa a sí mismo sin parar."};yield {b,err:s.err};return}yield {b,info:"usa «Mi bloque»"};yield* go(fn||[],depth+1);if(s.err)return}
+      else{const r=RB.act(s,b.t);if(r.err){s.err=r;yield {b,err:r};return}yield {b,moved:true}}
+    }
+  }
+  yield* go(prog,0);
+  if(!s.won&&!s.err&&lim()){s.err={err:"loop",msg:"El programa es demasiado largo: el robot se cansó. ¿Hay un bucle que no termina?"};yield {err:s.err}}
+};
+/* prueba rápida (sin animación) */
+RB.check=function(prog,fn,rows){const s=RB.load(rows);for(const st of RB.run(prog,fn,s)){if(s.won)break}return s};
+/* fabrica un mapa a partir de un recorrido (lo usan algunos niveles):
+   F J L R mueven; x pone una caja adelante; o pone un pozo adelante (sin moverse); k/g/D marcan la casilla actual */
+RB.gen=function(path,o={}){
+  const m={},put=(x,y,c)=>{m[x+","+y]=c};let x=0,y=0,d=o.d||0;put(0,0,"S");
+  for(const t of path.split(/\s+/).filter(Boolean)){const [dx,dy]=RB.DIR[d];
+    if(t==="L")d=(d+3)%4;else if(t==="R")d=(d+1)%4;
+    else if(t==="F"){x+=dx;y+=dy;if(!m[x+","+y]||m[x+","+y]==="#")put(x,y,".")}
+    else if(t==="J"){put(x+dx,y+dy,"o");x+=2*dx;y+=2*dy;put(x,y,".")}
+    else if(t==="x")put(x+dx,y+dy,"X");else if(t==="o")put(x+dx,y+dy,"o");
+    else if("kgD".includes(t))put(x,y,t)}
+  put(x,y,"*");
+  const ks=Object.keys(m).map(k=>k.split(",").map(Number));const xs=ks.map(k=>k[0]),ys=ks.map(k=>k[1]);
+  const x0=Math.min(...xs)-(o.pad||0),x1=Math.max(...xs)+(o.pad||0),y0=Math.min(...ys)-(o.pad||0),y1=Math.max(...ys)+(o.pad||0);
+  const rows=[];for(let j=y0;j<=y1;j++){let r="";for(let i=x0;i<=x1;i++){const c=m[i+","+j];r+=c==="S"?"^>v<"[o.d||0]:c||(o.fill||"#")}rows.push(r)}
+  return rows;
+};
+if(typeof module!=="undefined")module.exports=RB;
+
+/* =====================================================================
+   ROBOT PROGRAMADOR — los 7 mundos y sus niveles
+   sol: una solución de referencia (define la meta de bloques para ⭐⭐⭐)
+   given: programa que ya viene escrito (con errores para arreglar)
+   maps: varios mapas que el MISMO programa tiene que resolver
+   ===================================================================== */
+const RWORLDS=[
+ {id:1,name:"Villa Algoritmo",icon:"🧭",color:"#22c55e",blocks:"FLR",concept:"Algoritmo y secuencia",
+  intro:"Un <b>algoritmo</b> es una lista de pasos, en orden, para resolver algo. Una receta de cocina es un algoritmo. El GPS que calcula por dónde ir, también. El robot hace <b>exactamente</b> lo que le decís, en el orden en que lo ponés: ni más, ni menos.",
+  q:[["¿Qué es un algoritmo?","Una lista de pasos ordenados para resolver algo",["Un robot muy inteligente","Un tipo de computadora","Un juego de la tablet"],"Un algoritmo es como una receta: pasos en orden. Si cambiás el orden, cambia el resultado."],
+     ["Si le pedís al robot «girar, avanzar» en vez de «avanzar, girar», ¿qué pasa?","Hace otra cosa, porque el orden importa",["Hace lo mismo","Se da cuenta y lo corrige solo","Se apaga"],"La computadora sigue los pasos en el orden exacto: no adivina lo que quisiste decir."]]},
+ {id:2,name:"Pantano de los Bugs",icon:"🐞",color:"#a16207",blocks:"FLR",concept:"Bugs y depuración",
+  intro:"Un <b>bug</b> (bicho, en inglés) es un error en un programa. Se llama así porque en 1947 encontraron una polilla atrapada dentro de una computadora que fallaba. <b>Depurar</b> es buscar el error y arreglarlo. ¡Todos los programadores lo hacen todos los días! Usá <b>👣 Paso a paso</b> para ver en qué bloque se equivoca el robot.",
+  q:[["¿Qué es un «bug» en programación?","Un error en el programa",["Un virus que te roba datos","Un bicho que vive en la compu","Una tecla rota"],"Bug es «bicho» en inglés: así se le dice a un error en un programa. Arreglarlo se llama depurar."],
+     ["El robot choca en el paso 4. ¿Qué conviene hacer?","Revisar el paso 4 y los anteriores, y corregir solo lo que falla",["Borrar todo y empezar de cero","Apretar Probar muchas veces hasta que ande","Rendirse"],"Depurar es encontrar exactamente dónde está el error. El paso a paso ayuda mucho."]]},
+ {id:3,name:"Estación de Comandos",icon:"🛰️",color:"#0ea5e9",blocks:"FLRJ",concept:"Comandos nuevos y caminos alternativos",
+  intro:"Los robots y las apps tienen <b>comandos</b>: órdenes que saben cumplir. Acá aprendés uno nuevo: <b>🦘 Saltar</b>, para pasar pozos. También hay <b>llaves 🔑</b> que abren <b>puertas 🚪</b> (¡primero la llave!) y <b>gemas 💎</b> que dan plata extra si elegís el camino más largo.",
+  q:[["El robot tiene que abrir una puerta y la llave está en otro pasillo. ¿Qué hace primero?","Va a buscar la llave",["Va directo a la puerta","Salta la puerta","Gira tres veces"],"Hay pasos que dependen de otros: sin la llave, la puerta no se abre. El orden importa."],
+     ["¿Qué es un comando?","Una orden que la máquina sabe cumplir",["Un control remoto","Una contraseña","Un tipo de cable"],"Avanzar, girar y saltar son comandos del robot. Las apps también tienen comandos, como «enviar» o «guardar»."]]},
+ {id:4,name:"Fábrica de Bucles",icon:"🔁",color:"#f59e0b",blocks:"FLRJr",concept:"Bucles (repetir)",
+  intro:"Un <b>bucle</b> (o <i>loop</i>) repite unos bloques varias veces, así no tenés que escribirlos de nuevo. Los videojuegos usan bucles todo el tiempo: el juego se dibuja de nuevo muchas veces por segundo. Poné los bloques que se repiten <b>adentro</b> de 🔁 Repetir y elegí cuántas veces.",
+  q:[["¿Para qué sirve un bucle (repetir)?","Para hacer muchas veces lo mismo sin escribirlo cada vez",["Para que el robot vaya más rápido","Para borrar el programa","Para girar"],"Repetir 6 veces «Avanzar» es 2 bloques en lugar de 6."],
+     ["«Repetir 3: Avanzar, Girar a la derecha». ¿Cuántas veces avanza?","3",["1","6","2"],"Todo lo de adentro se hace 3 veces: avanza 3 veces y gira 3 veces."]]},
+ {id:5,name:"Laboratorio de Sensores",icon:"📡",color:"#8b5cf6",blocks:"FLRJri",conds:["pozo","pared","der","izq"],concept:"Sensores y condiciones (si… si no)",
+  intro:"Los <b>sensores</b> le dicen a una máquina qué hay a su alrededor. Una puerta automática «ve» que llegás; un celular sabe si lo giraste. Con <b>📡 Si… / Si no</b> el robot mira y decide: <i>si</i> hay un pozo, salta; <i>si no</i>, avanza. Ojo: acá el mismo programa tiene que funcionar en <b>varios mapas</b> distintos.",
+  q:[["«Si hay pozo adelante: Saltar. Si no: Avanzar». Si NO hay pozo, ¿qué hace?","Avanza",["Salta","No hace nada","Gira"],"Cuando la condición no se cumple, se hace la parte del «si no»."],
+     ["¿Cuál de estas cosas usa un sensor?","Una canilla que se abre sola al poner las manos",["Un lápiz","Una silla","Un libro de papel"],"La canilla automática tiene un sensor que detecta las manos y decide abrir el agua."]]},
+ {id:6,name:"Zona Autónoma",icon:"🚘",color:"#ef4444",blocks:"FLRJriu",conds:["pozo","pared","der","izq"],concept:"Robots autónomos (repetir hasta…)",
+  intro:"Un robot <b>autónomo</b> decide solo qué hacer, como las aspiradoras robot o los autos que se manejan solos. El truco: <b>🔄 Repetir hasta llegar</b> + <b>📡 sensores</b>. El robot mira, decide, da un paso… y repite hasta llegar. Cuidado con los <b>bucles infinitos</b>: si nunca llega, ¡da vueltas para siempre!",
+  q:[["¿Qué es un bucle infinito?","Un bucle que nunca termina",["Un bucle muy corto","Un robot con forma de 8","Un error de ortografía"],"Si la condición para terminar nunca se cumple, el programa se repite para siempre."],
+     ["¿Qué necesita una aspiradora robot para no chocar con los muebles?","Sensores y un programa que decida qué hacer",["Un control remoto todo el tiempo","Ruedas más grandes","Música"],"Mira con sensores y decide: si hay algo adelante, gira. Igual que tu robot."]]},
+ {id:7,name:"Estudio de Apps",icon:"🧩",color:"#ec4899",blocks:"FLRJriuf",conds:["pozo","pared","der","izq"],concept:"Funciones (mis propios bloques)",
+  intro:"Las apps se arman con piezas que se usan muchas veces. A esas piezas se les dice <b>funciones</b>. En <b>🧩 Mi bloque</b> armás tu propia pieza (por ejemplo «esquivar una caja») y después la usás donde quieras con un solo bloque. ¡Así programan los que hacen juegos y apps!",
+  q:[["¿Para qué sirve crear «Mi bloque» (una función)?","Para armar algo una vez y usarlo muchas veces",["Para que el robot salte más alto","Para borrar errores","Para cambiar de color"],"Si cambiás «Mi bloque», cambia en todos los lugares donde lo usaste."],
+     ["Una app tiene un botón «compartir» en muchas pantallas. ¿Cómo lo programan mejor?","Una función «compartir» que se usa en todas",["Copiando todo el código en cada pantalla","Con un bucle infinito","Dibujando el botón a mano"],"Una función bien hecha se arma una vez y se reutiliza: menos errores y menos trabajo."]]}
+];
+const RLEVELS={
+ 1:[
+  {t:"Derecho a la estrella",g:["#*#","#.#","#.#","#^#"],sol:"F F F",tip:"El robot mira hacia arriba (▲). ¿Cuántas casillas tiene que avanzar?"},
+  {t:"Primera curva",g:["...*",".###",".###","^###"],sol:"F F F R F F F",tip:"Subí hasta arriba de todo y después girá a la derecha."},
+  {t:"¿Hacia dónde mira?",g:["#..*","#.##","#.##",">.##"],sol:"F L F F F R F F",tip:"Este robot empieza mirando a la derecha (▶). Fijate la flechita."},
+  {t:"Zigzag",g:["...#",".#.#",".#.*","^#.."],sol:"F F F R F F R F F L F",tip:"Cuando el robot mira hacia abajo, su «izquierda» es tu derecha. Probá girar tu cabeza como él."},
+  {t:"Desafío: media vuelta",g:["*..#","##.#","...<"],sol:"F R F F L F F",tip:"Empieza mirando a la izquierda (◀). Avanzá uno y después subí."}
+ ],
+ 2:[
+  {t:"El giro equivocado",g:["*...","###.","###.","###^"],sol:"F F F L F F F",given:"F F F R F F F",tip:"Usá 👣 Paso a paso: ¿en qué bloque choca? ¿Para qué lado tenía que girar?"},
+  {t:"Falta un paso",g:["....*",".####","^####"],sol:"F F R F F F F",given:"F R F F F F",tip:"Contá las casillas que tiene que subir antes de girar."},
+  {t:"Un paso de más",g:["###*","#...","#.##",">.##"],sol:"F L F F R F F L F",given:"F L F F F R F F L F",tip:"Hay un «Avanzar» que sobra. Tocalo y borralo con ⌫."},
+  {t:"Orden cambiado",g:["..*",".##","^##"],sol:"F F R F F",given:"F R F F F",tip:"Los bloques están bien, pero uno está en el lugar equivocado."},
+  {t:"Desafío: dos bugs",g:["#....","#.##*","#.###",">.###"],sol:"F L F F F R F F F R F",given:"F R F F F R F F R F",tip:"Hay dos errores: un giro al revés y un avance que falta."}
+ ],
+ 3:[
+  {t:"¡A saltar!",g:["#*#","#.#","#o#","#^#"],sol:"J F",tip:"Si avanza, se cae al pozo. 🦘 Saltar pasa por encima y cae dos casillas más adelante."},
+  {t:"Pozos en fila",g:["#######",">.o.o.*","#######"],sol:"F J J F",tip:"Avanzá uno y saltá cada pozo."},
+  {t:"La llave y la puerta",g:["k..D*",".####","^####"],sol:"F F R F F F F",tip:"Pasá por la llave 🔑 antes de llegar a la puerta 🚪: el robot la junta solo."},
+  {t:"Rápido o con tesoro",g:["g...",".##.",".##.","^..*"],sol:"R F F F",gems:1,tip:"Hay dos caminos: uno corto y uno largo con una gema 💎. La gema da plata extra; el corto da la tercera estrella."},
+  {t:"Desafío: llave, pozo y puerta",g:["#k###","#.#*#","#.#D#",">.o.."],sol:"F L F F F R R F F F L J L F F",tip:"Primero la llave (arriba). Después volvé, saltá el pozo y entrá por la puerta."}
+ ],
+ 4:[
+  {t:"Pasillo largo",g:["#*#","#.#","#.#","#.#","#.#","#.#","#^#"],sol:"6[ F ]",tip:"Poné 🔁 Repetir, elegí 6 y meté adentro un solo ⬆️ Avanzar."},
+  {t:"La escalera",g:["###.*","##..#","#..##","..###","^####"],sol:"4[ F R F L ]",tip:"Mirá qué se repite en cada escalón: avanzar, girar, avanzar, girar."},
+  {t:"Pozo, pozo, pozo",g:["#########",">.o.o.o.*","#########"],sol:"F 3[ J ] F",tip:"Hay tres pozos seguidos: un repetir con «Saltar» adentro."},
+  {t:"Serpiente",g:RB.gen("R F F F F F L F F L F F F F F R F F",{}),sol:"R 5[ F ] L 2[ F ] L 5[ F ] R 2[ F ]",tip:"Usá un repetir para cada tramo recto."},
+  {t:"Desafío: escalera de pozos",g:["####.o*","####o##","##.o.##","##o####",".o.####","o######","^######"],sol:"3[ J R J L ]",tip:"Cada escalón: saltar, girar a la derecha, saltar, girar a la izquierda."}
+ ],
+ 5:[
+  {t:"Pozos sorpresa",maps:[["#######",">o.o..*","#######"],["#######",">..o.o*","#######"]],sol:"6[ ?pozo[ J ][ F ] ]",tip:"En cada mapa los pozos están en otro lugar. Dentro de un repetir: si hay pozo → saltar; si no → avanzar."},
+  {t:"Pared a la vista",maps:[["...*",".###","^###"],[".*",".#",".#",".#","^#"]],sol:"7[ ?pared[ R ][ F ] ]",tip:"Si hay pared adelante, girá a la derecha. Si no, avanzá. Repetilo varias veces."},
+  {t:"¿Derecha o izquierda?",maps:[["###*","###.","#...","#.##","#^##"],["*###",".###","...#","##.#","##^#"]],sol:"9[ ?pared[ ?der[ R ][ L ] ][ F ] ]",tip:"Cuando hay pared, preguntá otra vez: ¿hay camino a la derecha? Un «si» dentro de otro «si»."},
+  {t:"Pozos y paredes",maps:[["....*",".####","o####",".####","^####"],[".o..*",".####",".####",".####","^####"]],sol:"9[ ?pozo[ J ][ ?pared[ R ][ F ] ] ]",tip:"Primero fijate si hay pozo. Si no hay, fijate si hay pared."},
+  {t:"Desafío: tres mapas",maps:[["###*","###.","#...","#o##","#^##"],["*###",".###",".o.#","##.#","##^#"],["....*",".####","o####",".####","^####"]],sol:"12[ ?pozo[ J ][ ?pared[ ?der[ R ][ L ] ][ F ] ] ]",tip:"Juntá todo: pozo → saltar; pared → mirar para qué lado girar; si no → avanzar."}
+ ],
+ 6:[
+  {t:"Hasta llegar",maps:[RB.gen("F F",{pad:1}),RB.gen("F F F F",{pad:1}),RB.gen("F F F F F F",{pad:1})],sol:"U[ F ]",tip:"🔄 Repetir hasta llegar con un «Avanzar» adentro sirve para cualquier largo."},
+  {t:"Esquinas automáticas",maps:[RB.gen("F F R F F F R F",{}),RB.gen("F R F F F F R F F",{}),RB.gen("F F F F R F R F F F",{})],sol:"U[ ?pared[ R ][ F ] ]",tip:"Si hay pared, girá a la derecha. Si no, avanzá. Hasta llegar."},
+  {t:"Pozos al azar",maps:[RB.gen("F J F J",{pad:1}),RB.gen("J J F",{pad:1}),RB.gen("F F J J",{pad:1})],sol:"U[ ?pozo[ J ][ F ] ]",tip:"Igual que en el Laboratorio, pero sin contar las vueltas."},
+  {t:"Laberinto: mano derecha",maps:[RB.gen("F F R F F L F F L F R F F R F",{}),RB.gen("F R F F F L F F R F L F F",{}),RB.gen("F F F L F F R F R F F L F L F F",{})],sol:"U[ ?der[ R F ][ ?pared[ L ][ F ] ] ]",tip:"Truco de los laberintos: si hay camino a la derecha, girá y avanzá. Si no, y hay pared, girá a la izquierda. Si no, avanzá."},
+  {t:"Desafío: auto sin conductor",maps:[RB.gen("F J R F F L F J F R F",{}),RB.gen("J F L F J F R F F",{}),RB.gen("F F R F J L F F J R F",{})],sol:"U[ ?pozo[ J ][ ?der[ R F ][ ?pared[ L ][ F ] ] ] ]",tip:"Mano derecha + saltar pozos: el pozo se revisa primero."}
+ ],
+ 7:[
+  {t:"Mi bloque: esquivar",g:RB.gen("F x R F L F F L F R x R F L F F L F R F F x R F L F F L F R",{}),sol:"F M M F F M",fn:"R F L F F L F R",tip:"En 🧩 Mi bloque armá «esquivar una caja»: derecha, avanzar, izquierda, avanzar, avanzar, izquierda, avanzar, derecha. Después usalo 3 veces."},
+  {t:"Saltar y avanzar",g:RB.gen("J F R J F L J F R F F J F",{}),sol:"M R M L M R F F M",fn:"J F",tip:"Mi bloque = saltar y avanzar. Fijate en qué lugares se usa."},
+  {t:"Escalones",g:RB.gen("F R F L F R F L J F R F L F R F L",{}),sol:"2[ M ] J 2[ M ]",fn:"F R F L",tip:"Un escalón = avanzar, derecha, avanzar, izquierda. ¿Cuántos escalones hay antes y después del pozo?"},
+  {t:"Función con sensor",maps:[RB.gen("F J F R F F J L F",{}),RB.gen("J F F R J F F L F",{})],sol:"3[ M ] R 3[ M ] L M",fn:"?pozo[ J ][ F ]",tip:"Mi bloque = «paso seguro»: si hay pozo salta, si no avanza. Cada tramo tiene el mismo largo en los dos mapas."},
+  {t:"Desafío final: la app del robot",g:RB.gen("F x R F L F F L F R J R F F x R F L F F L F R",{}),sol:"F M J R F F M",fn:"R F L F F L F R",tip:"Usá tu bloque «esquivar» cada vez que haya una caja 📦."}
+ ]
+};
+
+/* =====================================================================
+   ROBOT PROGRAMADOR — Camino del programador (7 mundos)
+   ===================================================================== */
+const RBLK={
+ F:{i:"⬆️",n:"Avanzar",k:"mv",
+   what:"Mueve al robot <b>una casilla</b> hacia donde mira. La flechita al lado del robot (▲ ▶ ▼ ◀) te dice hacia dónde mira.",
+   when:"Cuando adelante está libre. Si hay pared o caja, choca. Si hay un pozo, se cae.",ex:{g:["#*#","#.#","#^#"],p:"F F"}},
+ L:{i:"↪️",n:"Girar a la izquierda",k:"mv",
+   what:"El robot gira un cuarto de vuelta hacia <b>su</b> izquierda. No se mueve de la casilla: solo cambia hacia dónde mira.",
+   when:"Para cambiar de dirección. Truco: imaginate que sos el robot. Si mira hacia abajo, su izquierda es tu derecha.",ex:{g:["*.","#^"],p:"F L F"}},
+ R:{i:"↩️",n:"Girar a la derecha",k:"mv",
+   what:"El robot gira un cuarto de vuelta hacia <b>su</b> derecha, sin moverse de la casilla.",
+   when:"Para cambiar de dirección. Dos giros iguales = media vuelta.",ex:{g:[".*","^#"],p:"F R F"}},
+ J:{i:"🦘",n:"Saltar",k:"mv",
+   what:"Salta por encima de <b>una</b> casilla y cae dos casillas más adelante.",
+   when:"Para pasar pozos 🕳️. Las paredes 🧱, las cajas 📦 y las puertas 🚪 no se pueden saltar: son muy altas.",ex:{g:["#*#","#o#","#^#"],p:"J"}},
+ rep:{i:"🔁",n:"Repetir",k:"lp",
+   what:"Repite los bloques que pongas <b>adentro</b>, la cantidad de veces que elijas.",
+   when:"Cuando tendrías que poner los mismos bloques varias veces seguidas. Primero buscá el <b>patrón</b>: ¿qué se repite?",
+   how:["Tocá <b>🔁 Repetir</b>: aparece en el programa.","Los bloques que toques ahora van <b>adentro</b> (se ven corridos a la derecha, con borde naranja).","Tocá el <b>número</b> para elegir cuántas veces (de 2 a 12).","Tocá <b>⏎ Salir del bloque</b> para volver a poner bloques afuera."],
+   cmp:["F F F F","4[ F ]"],ex:{g:["#*#","#.#","#.#","#.#","#^#"],p:"4[ F ]"}},
+ if:{i:"📡",n:"Si… / Si no",k:"cd",
+   what:"El robot usa un <b>sensor</b> para mirar. <b>Si</b> lo que pregunta es verdad, hace los bloques de arriba. <b>Si no</b>, hace los de abajo.",
+   when:"Cuando el camino cambia y el robot tiene que decidir solo. Casi siempre va <b>adentro de un Repetir</b>, así mira antes de cada paso.",
+   how:["Tocá <b>📡 Si</b>: los bloques que toques van a la parte de arriba (cuando es verdad).","Tocá el <b>＋</b> que está debajo de «Si no» para poner lo que hace cuando no es verdad.","Tocá la <b>pregunta</b> (🧱 🕳️ ➡️ ⬅️) para cambiarla."],
+   ex:{g:["#######",">.o.o.*","#######"],p:"6[ ?pozo[ J ][ F ] ]"}},
+ until:{i:"🔄",n:"Repetir hasta llegar",k:"lp",
+   what:"Repite lo de adentro una y otra vez, <b>hasta que el robot llega a la estrella</b>. No hace falta contar las vueltas.",
+   when:"Cuando no sabés cuántas vueltas hacen falta o el mismo programa tiene que andar en caminos de distinto largo. Cuidado: si el robot nunca llega, es un <b>bucle infinito</b>.",
+   ex:{g:["#*#","#.#","#.#","#.#","#.#","#^#"],p:"U[ F ]"}},
+ M:{i:"🧩",n:"Mi bloque",k:"fn",
+   what:"Un bloque que inventás vos. Todo lo que armes en la caja <b>«🧩 Mi bloque =»</b> se hace cada vez que uses este bloque.",
+   when:"Cuando un grupo de bloques aparece en varios lugares del programa, como «esquivar una caja».",
+   how:["Tocá el <b>＋</b> de la caja «🧩 Mi bloque =» y poné ahí los bloques.","Volvé a tocar el <b>＋</b> del programa y usá <b>🧩 Mi bloque</b> donde lo necesites."],
+   ex:{g:RB.gen("F x R F L F F L F R F"),p:"F M F",fn:"R F L F F L F R"}}
+};
+const RB_PAL={F:"F",L:"L",R:"R",J:"J",r:"rep",i:"if",u:"until",f:"M"};
+const rbStarPay=w=>10000+5000*(w-1);   // por cada estrella nueva: $100 en el mundo 1 … $400 en el 7
+const RB_GEM=5000;
+const rbStars=n=>"⭐".repeat(n)+`<span class="rb-off">${"☆".repeat(3-n)}</span>`;
+
+/* ---------- dibujo del tablero ---------- */
+const RB_CELL={"#":"","X":"📦","o":"🕳️","k":"🔑","D":"🚪","g":"💎","*":"⭐",".":""};
+function rbBoard(s,id,fx={}){
+  const trail=new Set((s.path||[]).map(p=>p+""));
+  let h="";for(let y=0;y<s.h;y++)for(let x=0;x<s.w;x++){const c=s.g[y][x];const here=x===s.x&&y===s.y;
+    h+=`<span class="${c==="#"?"w":""} ${trail.has(x+","+y)?"tr":""} ${here&&fx.bad?"bad":""}">${here?`<b class="rbot ${fx.jump?"jump":""}"><i>🤖</i><em class="d${s.d}">${RB.ARROW[s.d]}</em>${s.key?`<small>🔑</small>`:""}</b>`:RB_CELL[c]||""}</span>`}
+  return `<div class="rgrid" ${id?`id="${id}"`:""} style="--w:${s.w};--h:${s.h}">${h}</div>`;
+}
+/* programa en solo lectura (para la ayuda) */
+function rbStatic(p){return `<ol class="rb-prog ro">${p.map(b=>{const B=RBLK[b.t];
+  if(b.t==="rep")return `<li class="rb-c k-lp"><div class="rb-h">🔁 Repetir <span class="rb-n">${b.n}</span> veces</div>${rbStatic(b.body)}</li>`;
+  if(b.t==="until")return `<li class="rb-c k-lp"><div class="rb-h">🔄 Repetir hasta llegar a ⭐</div>${rbStatic(b.body)}</li>`;
+  if(b.t==="if")return `<li class="rb-c k-cd"><div class="rb-h">📡 Si <span class="rb-cnd">${RB.COND[b.c].i} ${RB.COND[b.c].txt}</span></div>${rbStatic(b.body)}<div class="rb-h2">Si no:</div>${rbStatic(b.els)}</li>`;
+  return `<li class="rb-b k-${B.k}">${B.i} ${B.n}</li>`}).join("")}</ol>`}
+
+/* ---------- ayuda de un bloque (el botón «?») ---------- */
+function rbHelp(t){
+  const B=RBLK[t];const ex=B.ex;const prog=RB.parse(ex.p),fn=ex.fn?RB.parse(ex.fn):null;
+  const b=UI.modal(`<div class="rb-help"><h3>${B.i} ${B.n}</h3>
+    <p><b>¿Qué hace?</b> ${B.what}</p><p><b>¿Cuándo lo uso?</b> ${B.when}</p>
+    ${B.how?`<p><b>¿Cómo se arma?</b></p><ol class="rb-how">${B.how.map(x=>`<li>${x}</li>`).join("")}</ol>`:""}
+    ${B.cmp?`<div class="rb-cmp"><div><small>Sin repetir: ${RB.count(RB.parse(B.cmp[0]))} bloques</small>${rbStatic(RB.parse(B.cmp[0]))}</div><div><small>Con repetir: ${RB.count(RB.parse(B.cmp[1]))} bloques</small>${rbStatic(RB.parse(B.cmp[1]))}</div></div>`:""}
+    <p><b>Ejemplo:</b></p><div class="rb-demo"><div id="hBoard"></div><div>${rbStatic(prog)}${fn?`<p class="note">🧩 Mi bloque =</p>${rbStatic(fn)}`:""}</div></div>
+    <div class="mactions"><button class="btn" type="button" id="hPlay">▶️ Ver el ejemplo</button><button class="btn primary" type="button" id="hOk">¡Entendido!</button></div></div>`,true);
+  let s=RB.load(ex.g),alive=true;const draw=(fx)=>{$("hBoard").innerHTML=rbBoard(s,null,fx)};draw();
+  $("hOk").onclick=()=>{alive=false;UI.close()};
+  $("hPlay").onclick=async()=>{$("hPlay").disabled=true;s=RB.load(ex.g);draw();
+    for(const st of RB.run(prog,fn,s)){if(!alive)return;await sleep(420);draw({jump:st.b&&st.b.t==="J"});if(st.moved)FX.pop();if(s.won)break}
+    if(alive){if(s.won){FX.good();FX.confetti(20)}$("hPlay").disabled=false;$("hPlay").textContent="🔁 Ver otra vez"}};
+}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+/* ---------- progreso guardado ---------- */
+const rbP=()=>{const p=G.P;if(!p.robo)p.robo={s:{},g:{},q:{},seen:{},done:{}};return p.robo};
+const rbKey=(w,i)=>w+"-"+(i+1);
+const rbOpen=(w,i)=>{const r=rbP();if(w>1&&!(r.s[rbKey(w-1,4)]>0))return false;return i===0||r.s[rbKey(w,i-1)]>0};
+const rbWorldStars=w=>RLEVELS[w].reduce((a,_,i)=>a+(rbP().s[rbKey(w,i)]||0),0);
+
+/* ================= MAPA DE MUNDOS ================= */
+GAMEFN.robot=function(box,L){
+  let stop=null;
+  const map=()=>{stop&&stop();stop=null;const r=rbP();const tot=RWORLDS.reduce((a,w)=>a+rbWorldStars(w.id),0);
+    let next=null;RWORLDS.forEach(w=>RLEVELS[w.id].forEach((_,i)=>{if(!next&&rbOpen(w.id,i)&&!r.s[rbKey(w.id,i)])next=rbKey(w.id,i)}));
+    box.innerHTML=`<div class="rb-maphead"><div><h3>🤖 Camino del programador</h3><p class="note">7 mundos para aprender a programar. Cada mundo enseña una idea nueva. ⭐ ${tot} de ${RWORLDS.length*15} estrellas</p></div>
+      <div class="rb-maptools"><button class="btn small" type="button" id="rbGuide">📖 Guía de bloques</button><button class="btn small" type="button" id="rbFree">🎲 Laberintos al azar</button></div></div>
+      <div class="rb-trail">${RWORLDS.map(w=>{const open=rbOpen(w.id,0);const st=rbWorldStars(w.id);
+        return `<section class="rb-world ${open?"":"lock"}" style="--wc:${w.color}"><div class="rb-wicon">${open?w.icon:"🔒"}</div>
+          <div class="rb-winfo"><small>Mundo ${w.id} · ${esc(w.concept)}</small><b>${esc(w.name)}</b><span class="rb-wst">⭐ ${st}/15${r.done[w.id]?" · ✅ completo":""}</span>
+          <div class="rb-lvls">${RLEVELS[w.id].map((lv,i)=>{const k=rbKey(w.id,i),ok=rbOpen(w.id,i),n=r.s[k]||0;
+            return `<button type="button" class="rb-lv ${i===4?"boss":""} ${k===next?"next":""}" data-w="${w.id}" data-i="${i}" ${ok?"":"disabled"} title="${esc(lv.t)}"><b>${ok?(i===4?"🏆":i+1):"🔒"}</b><small>${ok?rbStars(n):""}</small></button>`}).join("")}</div></div></section>`}).join("")}</div>`;
+    box.querySelectorAll(".rb-lv").forEach(b=>b.onclick=()=>enter(+b.dataset.w,+b.dataset.i));
+    $("rbGuide").onclick=guide;$("rbFree").onclick=()=>robotLibre(box,L);
+    const nb=box.querySelector(".rb-lv.next");if(nb)setTimeout(()=>nb.scrollIntoView({block:"center",behavior:"smooth"}),150);
+  };
+  const guide=()=>{const all=["F","L","R","J","rep","if","until","M"];
+    const b=UI.modal(`<h3>📖 Guía de bloques</h3><p class="note">Tocá un bloque para ver qué hace, cuándo usarlo y un ejemplo.</p><div class="rb-guide">${all.map(t=>`<button class="rb-gb k-${RBLK[t].k}" type="button" data-t="${t}">${RBLK[t].i} ${RBLK[t].n}</button>`).join("")}</div><div class="mactions"><button class="btn primary" type="button" id="gOk">Cerrar</button></div>`);
+    b.querySelectorAll(".rb-gb").forEach(x=>x.onclick=()=>rbHelp(x.dataset.t));$("gOk").onclick=UI.close};
+  const enter=async(w,i)=>{const r=rbP();const W=RWORLDS[w-1];
+    if(!r.seen[w]){await new Promise(res=>{UI.modal(`<div class="rb-intro" style="--wc:${W.color}"><div class="rb-wicon big">${W.icon}</div><small>Mundo ${w}</small><h3>${esc(W.name)}</h3><p class="rb-concept">💡 ${esc(W.concept)}</p><p>${W.intro}</p>
+      ${newBlocks(w).length?`<p><b>Bloques nuevos:</b></p><div class="rb-guide">${newBlocks(w).map(t=>`<button class="rb-gb k-${RBLK[t].k}" type="button" data-t="${t}">${RBLK[t].i} ${RBLK[t].n} <i>?</i></button>`).join("")}</div>`:""}
+      <div class="mactions"><button class="btn primary" type="button" id="iOk">¡Vamos!</button></div></div>`,true);
+      document.querySelectorAll("#modalBox .rb-gb").forEach(x=>x.onclick=()=>{rbHelp(x.dataset.t);const ok=$("hOk");ok.onclick=()=>{UI.close();res()}});
+      $("iOk").onclick=()=>{UI.close();res()}});r.seen[w]=1;G.save()}
+    if(i===4&&!r.q[w]){const Q=pick(W.q);
+      FX.toast("🏆 Antes del desafío: una pregunta del mundo");
+      const res=await UI.ask({q:Q[0],opts:shuffle([Q[1],...Q[2]]),ans:Q[1],e:Q[3],s:"ia",l:2},{progress:`${W.icon} ${W.name}`});
+      if(!res.ok){map();return}r.q[w]=1;G.earn(PAY.answer[2]);G.save()}
+    stop=level(box,w,i,{map,next:()=>{const n=i<4?[w,i+1]:w<7?[w+1,0]:null;if(n&&rbOpen(...n))enter(...n);else map()}});
+  };
+  const newBlocks=w=>{const prev=w>1?RWORLDS[w-2].blocks:"";return RWORLDS[w-1].blocks.split("").filter(c=>!prev.includes(c)).map(c=>RB_PAL[c])};
+  map();
+  return ()=>{stop&&stop()};
+};
+
+/* ================= UN NIVEL ================= */
+function level(box,w,li,nav){
+  const W=RWORLDS[w-1],LV=RLEVELS[w][li],key=rbKey(w,li),r=rbP();
+  const maps=LV.maps||[LV.g];const par=RB.count(RB.parse(LV.sol))+(LV.fn?RB.count(RB.parse(LV.fn)):0);
+  const hasFn=W.blocks.includes("f");const conds=W.conds||["pozo","pared"];
+  let main=LV.given?RB.parse(LV.given):[],fn=[];let caret={l:main,i:main.length};
+  let fails=0,usedSol=false,busy=false,alive=true,run=null,mapK=0;const speed=window.RB_FAST?30:420;
+  const best=r.s[key]||0;
+  box.innerHTML=`<div class="rb-lvl" style="--wc:${W.color}">
+    <div class="rb-top"><button class="btn small" type="button" id="rbBack">🗺️ Mapa</button><b>${W.icon} ${w}-${li+1} · ${esc(LV.t)}</b><span class="rb-best">${best?rbStars(best):""}</span></div>
+    <p class="rb-goal">${LV.given?"🐞 Este programa tiene un error. Encontralo y arreglalo para que el robot llegue a la ⭐.":maps.length>1?`📡 El <b>mismo programa</b> tiene que llevar al robot a la ⭐ en los ${maps.length} mapas.`:"Llevá al robot hasta la ⭐."} <span class="rb-par">⭐⭐⭐ con ${par} bloques o menos${LV.gems?" · 💎 la gema da plata extra":""}</span></p>
+    <div class="rb-main"><div class="rb-board">
+      ${maps.length>1?`<div class="rb-tabs">${maps.map((_,k)=>`<button type="button" data-k="${k}" class="${k?"":"on"}">Mapa ${k+1}</button>`).join("")}</div>`:""}
+      <div id="rbB"></div><p class="rb-msg" id="rbMsg" aria-live="polite">El robot 🤖 mira hacia donde apunta la flechita.</p>
+      <div class="rb-run"><button class="btn primary" type="button" id="rbGo">▶️ Probar</button><button class="btn" type="button" id="rbStep">👣 Paso a paso</button><button class="btn small" type="button" id="rbReset" title="Volver al inicio">↺</button></div>
+      <div class="rb-help-row" id="rbHelps"></div></div>
+    <div class="rb-code">
+      <div class="rb-pal">${W.blocks.split("").map(c=>{const t=RB_PAL[c];return `<span class="rb-pb k-${RBLK[t].k}"><button type="button" class="add" data-t="${t}">${RBLK[t].i} ${RBLK[t].n}</button><button type="button" class="q" data-q="${t}" aria-label="¿Qué hace ${RBLK[t].n}?">?</button></span>`}).join("")}</div>
+      <div class="rb-ptitle"><b>Mi programa</b><span id="rbCnt"></span></div>
+      <ol class="rb-prog" id="rbProg"></ol>
+      ${hasFn?`<div class="rb-ptitle"><b>🧩 Mi bloque =</b></div><ol class="rb-prog fn" id="rbFn"></ol>`:""}
+      <div class="rb-edit"><button class="btn small" type="button" id="rbDel">⌫ Borrar</button><button class="btn small" type="button" id="rbOut">⏎ Salir del bloque</button><button class="btn small" type="button" id="rbClr">🗑️ ${LV.given?"Volver al original":"Borrar todo"}</button></div>
+      <p class="note rb-tipline">Tocá un bloque del programa para elegir dónde agregar (la línea violeta ▸). ⌫ borra el bloque tocado.</p>
+    </div></div></div>`;
+  $("rbBack").onclick=()=>{alive=false;nav.map()};
+  const msg=(t,cls="")=>{const m=$("rbMsg");m.className="rb-msg "+cls;m.innerHTML=t};
+  let st=RB.load(maps[0]);
+  const showMap=(k,fx)=>{mapK=k;box.querySelectorAll(".rb-tabs button").forEach(b=>b.classList.toggle("on",+b.dataset.k===k));$("rbB").innerHTML=rbBoard(st,"rbGrid",fx)};
+  const resetRun=()=>{run=null;st=RB.load(maps[mapK]);showMap(mapK);clearHi()};
+  box.querySelectorAll(".rb-tabs button").forEach(b=>b.onclick=()=>{if(busy)return;mapK=+b.dataset.k;resetRun()});
+  showMap(0);
+
+  /* ----- editor ----- */
+  let REG=[],nid=0;
+  const reg=l=>{let k=REG.indexOf(l);if(k<0){REG.push(l);k=REG.length-1}return k};
+  const caretLi=`<li class="rb-caret">▸ los bloques nuevos van acá</li>`;
+  const html=(list,top)=>{let h="";list.forEach((b,i)=>{if(caret.l===list&&caret.i===i)h+=caretLi;h+=one(b,list,i)});
+    if(caret.l===list&&caret.i===list.length)h+=caretLi;else h+=`<li class="rb-slot" data-into="${reg(list)}">＋${top?"":" adentro"}</li>`;return h};
+  const one=(b,list,i)=>{b._id=b._id||++nid;const B=RBLK[b.t],at=`data-l="${reg(list)}" data-i="${i}" data-id="${b._id}"`;
+    if(b.t==="rep")return `<li class="rb-c k-lp" data-id="${b._id}"><div class="rb-h" ${at}>🔁 Repetir <button type="button" class="rb-n" data-n="${b._id}">${b.n}</button> veces</div><ol>${html(b.body)}</ol></li>`;
+    if(b.t==="until")return `<li class="rb-c k-lp" data-id="${b._id}"><div class="rb-h" ${at}>🔄 Repetir hasta llegar a ⭐</div><ol>${html(b.body)}</ol></li>`;
+    if(b.t==="if")return `<li class="rb-c k-cd" data-id="${b._id}"><div class="rb-h" ${at}>📡 Si <button type="button" class="rb-cnd" data-c="${b._id}">${RB.COND[b.c].i} ${RB.COND[b.c].txt}</button></div><ol>${html(b.body)}</ol><div class="rb-h2">Si no:</div><ol>${html(b.els)}</ol></li>`;
+    return `<li class="rb-b k-${B.k}" ${at}>${B.i} ${B.n}</li>`};
+  const all=()=>{const out=[];const walk=l=>l.forEach(b=>{out.push(b);if(b.body)walk(b.body);if(b.els)walk(b.els)});walk(main);walk(fn);return out};
+  const parentOf=l=>{let res=null;const walk=(list)=>list.forEach((b,i)=>{if(b.body===l||b.els===l)res={l:list,i};if(b.body)walk(b.body);if(b.els)walk(b.els)});walk(main);walk(fn);return res};
+  const inFn=l=>{if(l===fn)return true;const p=parentOf(l);return p?inFn(p.l):false};
+  const render=()=>{REG=[];$("rbProg").innerHTML=html(main,true);if(hasFn)$("rbFn").innerHTML=html(fn,true);
+    const n=RB.count(main)+RB.count(fn);$("rbCnt").innerHTML=`${n} bloque${n===1?"":"s"} · meta ⭐⭐⭐: ${par}`;$("rbCnt").className=n<=par?"ok":"over";
+    box.querySelectorAll("[data-l]").forEach(e=>e.onclick=ev=>{ev.stopPropagation();if(busy)return;caret={l:REG[+e.dataset.l],i:+e.dataset.i+1};FX.pop();render()});
+    box.querySelectorAll("[data-into]").forEach(e=>e.onclick=ev=>{ev.stopPropagation();if(busy)return;const l=REG[+e.dataset.into];caret={l,i:l.length};FX.pop();render()});
+    box.querySelectorAll(".rb-n").forEach(e=>e.onclick=ev=>{ev.stopPropagation();if(busy)return;const b=all().find(x=>x._id==e.dataset.n);b.n=b.n>=12?2:b.n+1;edited();render()});
+    box.querySelectorAll(".rb-cnd").forEach(e=>e.onclick=ev=>{ev.stopPropagation();if(busy)return;const b=all().find(x=>x._id==e.dataset.c);b.c=conds[(conds.indexOf(b.c)+1)%conds.length];edited();render()});
+    const c=box.querySelector(".rb-caret");if(c&&!busy)c.scrollIntoView({block:"nearest"})};
+  $("rbProg").onclick=()=>{if(busy)return;caret={l:main,i:main.length};render()};
+  if(hasFn)$("rbFn").onclick=()=>{if(busy)return;caret={l:fn,i:fn.length};render()};
+  const edited=()=>{if(run)resetRun()};
+  box.querySelectorAll(".rb-pal .add").forEach(b=>b.onclick=()=>{if(busy)return;const t=b.dataset.t;
+    if(t==="M"&&inFn(caret.l)){FX.toast("«Mi bloque» no puede usarse adentro de sí mismo. Tocá el ＋ de «Mi programa».");return}
+    const nb=t==="rep"?{t,n:2,body:[]}:t==="until"?{t,body:[]}:t==="if"?{t,c:conds[0],body:[],els:[]}:{t};
+    caret.l.splice(caret.i,0,nb);
+    if(nb.body){caret={l:nb.body,i:0};if((rbP().tips=(rbP().tips||0)+1)<=4)FX.toast(t==="if"?"Ahora los bloques van en «Si». Para «Si no», tocá su ＋.":"Ahora los bloques van ADENTRO. Tocá ⏎ Salir del bloque para seguir afuera.")}else caret.i++;
+    FX.pop();edited();render()});
+  box.querySelectorAll(".rb-pal .q").forEach(b=>b.onclick=()=>rbHelp(b.dataset.q));
+  $("rbDel").onclick=()=>{if(busy)return;if(caret.i>0){caret.l.splice(caret.i-1,1);caret.i--;edited();render()}else FX.toast("Tocá el bloque que querés borrar y después ⌫.")};
+  $("rbOut").onclick=()=>{if(busy)return;const p=parentOf(caret.l);if(p){caret={l:p.l,i:p.i+1};render()}else FX.toast("Ya estás afuera de los bloques.")};
+  $("rbClr").onclick=()=>{if(busy)return;main.length=0;if(LV.given)RB.parse(LV.given).forEach(b=>main.push(b));fn.length=0;caret={l:main,i:main.length};edited();render()};
+  render();
+
+  /* ----- ejecución ----- */
+  const clearHi=()=>box.querySelectorAll(".hi,.hib").forEach(e=>e.classList.remove("hi","hib"));
+  const hi=(b,bad)=>{clearHi();if(!b)return;const e=box.querySelector(`[data-id="${b._id}"]`);if(!e)return;const t=e.classList.contains("rb-c")?e.querySelector(".rb-h"):e;t.classList.add(bad?"hib":"hi");if(bad||matchMedia("(min-width:701px)").matches)t.scrollIntoView({block:"nearest"})};
+  const prog=()=>main,fnl=()=>hasFn?fn:null;
+  /* avanza un paso; devuelve {done, win, fail} */
+  function next(){
+    if(!run){mapK=run?mapK:0;st=RB.load(maps[0]);run={k:0,gen:RB.run(prog(),fnl(),st)};showMap(0);msg(maps.length>1?"Mapa 1: ¡arranca!":"¡Arranca!");return {}}
+    const it=run.gen.next();
+    if(it.done||st.won){
+      if(st.won){if(run.k<maps.length-1){run.k++;st=RB.load(maps[run.k]);run.gen=RB.run(prog(),fnl(),st);showMap(run.k);msg(`✅ ¡Mapa ${run.k} listo! Ahora el mismo programa en el mapa ${run.k+1}…`,"ok");return {}}
+        return {done:true,win:true}}
+      const n=RB.count(main);return {done:true,fail:{msg:n?"Se terminaron los bloques y el robot no llegó a la ⭐. ¿Falta algún paso?":"El programa está vacío: agregá bloques."}}}
+    const s=it.value;hi(s.b,!!s.err);
+    showMap(run.k,{jump:s.b&&s.b.t==="J",bad:!!s.err});if(s.moved){if(st.got==="k"){FX.good();msg("🔑 ¡Juntó la llave!","ok")}else if(st.got==="g"){FX.good();msg("💎 ¡Una gema!","ok")}else if(st.opened){FX.pop();msg("🚪 Abrió la puerta con la llave.","ok")}else{FX.pop();msg(`${RBLK[s.b.t].i} ${RBLK[s.b.t].n}`)}}
+    if(s.info)msg(`${s.b?RBLK[s.b.t].i:""} ${esc(s.info)}`);
+    if(s.err)return {done:true,fail:s.err,b:s.b};
+    if(st.won&&run.k<maps.length-1)return next();
+    if(st.won)return {done:true,win:true};
+    return {}}
+  const lock=v=>{busy=v;box.querySelector(".rb-lvl").classList.toggle("running",v);["rbGo","rbStep","rbReset"].forEach(id=>$(id).disabled=v&&id!=="rbGo");$("rbGo").textContent=v?"⏸️ Pausa":"▶️ Probar"};
+  let auto=false;
+  async function play(){
+    if(auto){auto=false;return}
+    if(!RB.count(main)){FX.toast("Primero armá el programa con los bloques.");return}
+    if(run&&run.over)resetRun();
+    auto=true;lock(true);$("rbB").scrollIntoView({block:"nearest",behavior:"smooth"});
+    while(auto&&alive){const r=next();if(r.done){auto=false;lock(false);end(r);return}await sleep(speed)}
+    lock(false);if(alive)msg("⏸️ En pausa. Seguí con 👣 o ▶️.")}
+  function stepOnce(){if(busy)return;if(!RB.count(main)){FX.toast("Primero armá el programa con los bloques.");return}
+    if(run&&run.over)resetRun();const r=next();if(r.done)end(r)}
+  $("rbGo").onclick=play;$("rbStep").onclick=stepOnce;$("rbReset").onclick=()=>{if(busy)return;resetRun();msg("El robot volvió al inicio.")};
+  function end(r){if(!alive)return;run.over=true;
+    if(r.fail){fails++;FX.bad();FX.shake($("rbB"));
+      msg(`❌ ${esc(r.fail.msg)}${r.b?" <br><small>El bloque en rojo es donde pasó. Corregí el programa y probá otra vez (probar es gratis).</small>":""}`,"bad");
+      const hp=$("rbHelps");let h="";
+      if(fails>=2)h+=`<button class="btn small" type="button" id="rbTip">💡 Pista</button>`;
+      if(fails>=4&&!usedSol)h+=`<button class="btn small" type="button" id="rbSol">👀 Ver una solución (−${fmtM(HELP_COST)})</button>`;
+      hp.innerHTML=h;
+      if($("rbTip"))$("rbTip").onclick=()=>msg("💡 "+esc(LV.tip),"tip");
+      if($("rbSol"))$("rbSol").onclick=()=>{if(!G.spend(HELP_COST)){FX.toast("No te alcanza la plata para esta ayuda.");return}G.save();usedSol=true;
+        main.length=0;RB.parse(LV.sol).forEach(b=>main.push(b));fn.length=0;if(LV.fn)RB.parse(LV.fn).forEach(b=>fn.push(b));caret={l:main,i:main.length};resetRun();render();$("rbHelps").innerHTML="";
+        msg("👀 Esta es una solución posible. Miralo con 👣 Paso a paso para entenderla. (Con ayuda, el nivel da 1 estrella.)","tip")};
+      return}
+    win()}
+  function win(){
+    const n=RB.count(main)+RB.count(fn);const stars=usedSol?1:1+(fails<2?1:0)+(n<=par?1:0);
+    const old=r.s[key]||0;let pay=0;const lines=[];
+    if(stars>old){pay+=G.earn(rbStarPay(w)*(stars-old));r.s[key]=stars}
+    const gems=st.gems;if(gems&&!r.g[key]){r.g[key]=1;pay+=G.earn(RB_GEM*gems);lines.push(`💎 Gema: ${plus(RB_GEM*gems)}`)}
+    if(stars>old)G.addXP(4*(stars-old),0);
+    let medal="";
+    if(li===4&&!r.done[w]){r.done[w]=1;const res=G.gameDone("robot",rbWorldStars(w),15,{allowDown:false});if(res.medal)medal=`<p class="rb-medal">${R.medal(res.medal,48)} ¡Mundo completo! ${esc(R.medalName(res.medal))} ${plus(res.cents)}</p>`;else medal=`<p class="rb-medal">✅ ¡Mundo ${w} completo!</p>`;pay+=res.cents}
+    G.save();FX.good();FX.confetti(stars*30);
+    const why=[];if(!usedSol){if(fails>=2)why.push("⭐⭐ se gana llegando en 1 o 2 intentos");if(n>par)why.push(`⭐⭐⭐ se gana con ${par} bloques o menos (usaste ${n})`)}
+    UI.modal(`<div class="rb-win"><div class="rb-bigstars">${rbStars(stars)}</div><h3>${stars===3?"¡Perfecto!":"¡Llegó a la estrella!"}</h3>
+      <p>${stars>old?`Estrellas nuevas: ${plus(rbStarPay(w)*(stars-old))}`:old?`Ya tenías ${old} ⭐ en este nivel.`:""}</p>${lines.map(l=>`<p>${l}</p>`).join("")}${medal}
+      ${why.length?`<p class="note">Para mejorar: ${why.join(" · ")}</p>`:""}
+      <div class="mactions"><button class="btn" type="button" id="wMap">🗺️ Mapa</button>${stars<3?`<button class="btn" type="button" id="wAgain">🔁 Mejorar</button>`:""}<button class="btn primary" type="button" id="wNext">Siguiente ▶</button></div></div>`);
+    $("wMap").onclick=()=>{UI.close();alive=false;nav.map()};
+    if($("wAgain"))$("wAgain").onclick=()=>{UI.close();fails=0;resetRun();msg("¡A mejorarlo! Intentá con menos bloques o sin chocar.")};
+    $("wNext").onclick=()=>{UI.close();alive=false;nav.next()};
+  }
+  return ()=>{alive=false;auto=false};
 }
 
 /* =====================================================================
