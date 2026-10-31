@@ -792,6 +792,29 @@ body{background:radial-gradient(1200px 600px at 10% -10%,#ddd6fe 0%,transparent 
 .tlh-hint{margin:6px 0 0;font-weight:800;color:#6d28d9}
 .drive{padding-bottom:96px;scroll-margin-top:6px}
 .tlh-lab{top:150px}.tlh-lab.r{right:2px}
+.cruce-st{font-weight:800;margin:6px 0;padding:6px 10px;border-radius:12px}
+.cruce-st.rojo{background:color-mix(in srgb,#ef4444 14%,var(--surface));color:#b91c1c}
+.cruce-st.verde{background:color-mix(in srgb,#22c55e 16%,var(--surface));color:#15803d}
+.cruce-st.titila{background:color-mix(in srgb,#f59e0b 16%,var(--surface));color:#b45309}
+/* conectados y mensajes */
+.hchip.live{display:inline-flex;align-items:center;gap:5px;cursor:pointer;font:inherit;font-weight:800}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#9ca3af}.dot.on{background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.25)}
+.livebox{background:var(--surface);border:3px solid #22c55e;border-radius:20px;padding:12px;margin-bottom:14px;box-shadow:var(--lift)}
+.live-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.live-head h3{margin:0;font-family:var(--display)}
+.dnd{font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px;cursor:pointer}
+.live-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:10px}
+.live-p{font:inherit;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:16px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.live-p:not(:disabled):hover{border-color:#22c55e}.live-p:disabled{opacity:.6;cursor:default}
+.live-p small{color:var(--muted);font-size:12px;text-align:center}.lp-av{position:relative}.lp-av .dot{position:absolute;right:0;bottom:4px;border:2px solid var(--surface)}
+.lp-send{font-size:12px;font-weight:800;color:#15803d}
+.live-in{margin-top:10px}.live-in summary{cursor:pointer;font-weight:800}.live-in ul{margin:6px 0 0;padding-left:18px}
+.lpick .lp-emos{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:10px 0}
+.lp-emos button{font-size:28px;background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:6px 0;cursor:pointer}
+.lp-frases{display:flex;flex-direction:column;gap:6px}.lp-frases .btn{text-align:left}
+.livemsg{position:fixed;left:50%;bottom:86px;transform:translate(-50%,140%);z-index:60;display:flex;gap:10px;align-items:flex-start;background:var(--surface);color:var(--ink);border:3px solid #22c55e;border-radius:18px;padding:10px 12px;box-shadow:0 12px 30px rgba(0,0,0,.25);width:min(92vw,420px);transition:transform .3s}
+.livemsg.in{transform:translate(-50%,0)}
+.lm-body{flex:1;min-width:0}.lm-body>div{margin:2px 0 6px;font-weight:700}.lm-emo{font-size:34px;line-height:1}
+.lm-btns{display:flex;gap:6px;flex-wrap:wrap}
 
 </style>
 </head>
@@ -2123,7 +2146,7 @@ UI.show=function(v){
 };
 UI.hud=function(){
   if(!G.P||!G.P.avatar)return;const li=levelInfo(G.P.xp);
-  $("hud").innerHTML=`<span class="hchip">Nv ${li.level}</span><button type="button" class="hchip money" id="hudMoney" aria-label="Ver mi billetera">${moneySVG(G.cash()>=1000?breakdown(G.cash())[0][0]:100,20)} ${fmtM(G.cash())}</button><span class="hchip ${G.streakNow()?"fire":""}">🔥 ${G.streakNow()}${G.P.streak.shields?` 🛡️${G.P.streak.shields}`:""}</span>`;
+  $("hud").innerHTML=`<span class="hchip">Nv ${li.level}</span><button type="button" class="hchip money" id="hudMoney" aria-label="Ver mi billetera">${moneySVG(G.cash()>=1000?breakdown(G.cash())[0][0]:100,20)} ${fmtM(G.cash())}</button><span class="hchip ${G.streakNow()?"fire":""}">🔥 ${G.streakNow()}${G.P.streak.shields?` 🛡️${G.P.streak.shields}`:""}</span>`;;if(typeof PRES!=="undefined")PRES.hud()
 };
 G.onChange=()=>UI.hud();
 document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#hudMoney"))UI.wallet()});
@@ -2340,8 +2363,8 @@ UI.taller=function(){
 /* ---------- AMIGOS ---------- */
 UI.amigos=function(){
   const f=MJ.friends||[];
-  $("v-amigos").innerHTML=`<header class="vhead"><h2>Amigos</h2><p class="note">Para sumar a un compañero o compañera, pedile a un adulto que le cree un usuario en la hoja.</p></header>
-   ${f.length?`<div class="friends">${f.map((x,i)=>`<div class="friend ${x.name===MJ.name?"me":""}"><span class="pos">${i+1}</span><span class="favw">${avatarSVG(x.avatar&&x.avatar.kind?x.avatar:defaultAvatar("nena"),34)}</span><b>${esc(x.name)}</b><span>Nivel ${x.level}</span><span>🔥 ${x.streak}</span><span>💰 ${fmtM((x.gold||0)*100)}</span></div>`).join("")}</div>`:`<p class="note">Todavía no hay nadie más.</p>`}`;
+  $("v-amigos").innerHTML=`<header class="vhead"><h2>Amigos</h2><p class="note">Para sumar a un compañero o compañera, pedile a un adulto que le cree un usuario en la hoja.</p></header><section id="liveBox" class="livebox"></section>
+   ${f.length?`<div class="friends">${f.map((x,i)=>`<div class="friend ${x.name===MJ.name?"me":""}"><span class="pos">${i+1}</span><span class="favw">${avatarSVG(x.avatar&&x.avatar.kind?x.avatar:defaultAvatar("nena"),34)}</span><b>${esc(x.name)}</b><span>Nivel ${x.level}</span><span>🔥 ${x.streak}</span><span>💰 ${fmtM((x.gold||0)*100)}</span></div>`).join("")}</div>`:`<p class="note">Todavía no hay nadie más.</p>`}`;;UI.liveBox();PRES.schedule()
 };
 
 /* =====================================================================
@@ -2631,6 +2654,62 @@ var ROOM = {
   }
 };
 if (typeof module !== 'undefined') module.exports = ROOM;
+
+/* =====================================================================
+   CONECTADOS Y MENSAJES — reglas compartidas
+   El mismo código corre en la hoja de Google (Codigo.gs) y en el juego
+   (en «Probar sin hoja», con amigos robot).
+   Para cuidar a los chicos NO hay texto libre: solo emojis y frases fijas.
+   ===================================================================== */
+var LIVE = {
+  ONLINE_MS: 75000, MSG_MS: 6 * 3600 * 1000, MAXMSG: 300, GAP_MS: 2500,
+  EMOJIS: ['👋', '😀', '😂', '🥳', '👏', '💪', '⭐', '❤️', '🔥', '😮', '👍', '🎉'],
+  PHRASES: ['Sí', 'No', '¿Estás juntando dinero para mejorar tu avatar?', '¿Jugamos Memoria?', '¡Holaaa!', '¡Te vi!'],
+  PLACES: ['inicio', 'juegos', 'premios', 'avatar', 'amigos', 'detective', 'tiro', 'kiosco', 'abaco', 'plato', 'vial', 'robot', 'ingles', 'tiempo', 'memoria', 'poleas', 'quiz'],
+  err: function (m) { var e = new Error(m); e.live = true; throw e; },
+  empty: function () { return { p: {}, m: [], seq: 0 }; },
+  clean: function (st, now) {
+    for (var u in st.p) if (now - st.p[u].t > 15 * 60000) delete st.p[u];
+    st.m = st.m.filter(function (x) { return now - x.t < LIVE.MSG_MS; }).slice(-LIVE.MAXMSG);
+  },
+  /* el avatar solo puede traer nombres cortos de colores y prendas (nada de texto) */
+  cleanAv: function (av) {
+    var out = {}, ok = function (v) { return typeof v === 'string' && /^[#\w-]{0,24}$/.test(v); };
+    if (!av || typeof av !== 'object') return out;
+    Object.keys(av).slice(0, 40).forEach(function (k) {
+      if (!/^\w{1,16}$/.test(k)) return; var v = av[k];
+      if (ok(v)) out[k] = v; else if (typeof v === 'number' && isFinite(v)) out[k] = v;
+      else if (Array.isArray(v)) out[k] = v.filter(ok).slice(0, 8);
+    });
+    return out;
+  },
+  ping: function (st, u, name, info, now) {
+    var p = st.p[u] || (st.p[u] = {});
+    p.n = String(name || '').slice(0, 30); p.t = now; p.dnd = !!(info && info.dnd);
+    p.w = info && LIVE.PLACES.indexOf(info.w) >= 0 ? info.w : 'inicio';
+    if (info && info.av) p.av = LIVE.cleanAv(info.av);
+  },
+  send: function (st, u, to, k, v, room, now) {
+    var me = st.p[u]; if (!me) LIVE.err('Volvé a entrar a la app.');
+    if (now - (me.ls || 0) < LIVE.GAP_MS) LIVE.err('Esperá un ratito antes de mandar otro.');
+    var t = st.p[to]; if (!t || now - t.t > LIVE.ONLINE_MS) LIVE.err('Ya no está conectado.');
+    if (t.dnd) LIVE.err('Está en «No molestar».');
+    if (k === 'e') { if (LIVE.EMOJIS.indexOf(v) < 0) LIVE.err('Emoji no permitido.'); }
+    else if (k === 'f') { v = Number(v); if (!(v >= 0 && v < LIVE.PHRASES.length)) LIVE.err('Frase no permitida.'); }
+    else if (k === 'i') { room = String(room || '').toUpperCase(); if (!/^[A-Z]{4}$/.test(room)) LIVE.err('Sala inválida.'); v = ''; }
+    else LIVE.err('Mensaje no permitido.');
+    var recent = st.m.filter(function (x) { return x.f === u && x.to === to && now - x.t < 60000; }).length;
+    if (recent >= 8) LIVE.err('Ya le mandaste muchos. Esperá un minuto.');
+    st.seq++; st.m.push({ id: st.seq, f: u, fn: me.n, to: to, k: k, v: v, r: k === 'i' ? room : '', t: now }); me.ls = now;
+  },
+  view: function (st, u, since, now) {
+    var on = [];
+    for (var k in st.p) { var p = st.p[k]; if (k !== u && now - p.t < LIVE.ONLINE_MS) on.push({ u: k, n: p.n, w: p.w, dnd: !!p.dnd, av: p.av || {} }); }
+    on.sort(function (a, b) { return a.n < b.n ? -1 : 1; });
+    return { online: on, inbox: st.m.filter(function (x) { return x.to === u && x.id > (Number(since) || 0); }), seq: st.seq };
+  }
+};
+if (typeof module !== 'undefined') module.exports = LIVE;
 
 /* =====================================================================
    JUEGOS (1): base común, Detective por el mundo, Tiro libre
@@ -3263,24 +3342,44 @@ const SIGNS=[
 const signSVG=(s,sz=64)=>`<svg width="${sz}" height="${sz}" viewBox="0 0 100 100" aria-label="${s.n}">${s.svg}</svg>`;
 function vialPie(box,L,extra){
   const cruce=async el=>{
-    el.innerHTML=`<h3 class="qtext">Tenés que cruzar. ${L>=2?"Primero mirá: izquierda, derecha y otra vez izquierda.":""} Cruzá solo con el muñeco verde.</h3><div id="cv"></div><div class="vialbtns">${L>=2?`<button class="btn" type="button" data-l="i">👀 Izquierda</button><button class="btn" type="button" data-l="d">👀 Derecha</button>`:""}<button class="btn primary big" id="cross" type="button">🚶 Cruzar</button></div>`;
-    const cv=makeCanvas($("cv"),0.5,640),ctx=cv.ctx;let t=0,phase="rojo",ph=0,raf,tP=performance.now(),looks=[],cars=[{x:-0.2,l:0},{x:1.2,l:1}];
-    const cycle=[["rojo",2.8+Math.random()*2],["verde",2.2],["titila",1.2]];let ci=0;
-    const loop=now=>{const dt=Math.max(0,Math.min(.05,(now-tP)/1000));tP=now;t+=dt;ph+=dt;if(ph>cycle[ci][1]){ph=0;ci=(ci+1)%3;phase=cycle[ci][0]}
+    el.innerHTML=`<h3 class="qtext">Tenés que cruzar. ${L>=2?"Primero mirá: <b>izquierda, derecha y otra vez izquierda</b>.":""} Cruzá solo con el muñeco <b>verde</b>.</h3><p class="note">El semáforo tarda: esperá tranquilo. Cuando se ponga verde tenés tiempo de mirar y cruzar.</p><div id="cv"></div><p class="center cruce-st" id="cst"></p><div class="vialbtns">${L>=2?`<button class="btn" type="button" data-l="i">👀 Mirar a la izquierda</button><button class="btn" type="button" data-l="d">👀 Mirar a la derecha</button>`:""}<button class="btn primary big" id="cross" type="button">🚶 Cruzar</button></div>`;
+    const cv=makeCanvas($("cv"),0.5,640),ctx=cv.ctx;let t=0,phase="rojo",ph=0,raf,tP=performance.now(),looks=[],lookDir=0,lookT=0;
+    const KINDS=["car","car","taxi","bus","truck","moto","car"];
+    /* l=1: carril cercano, los autos vienen desde la IZQUIERDA (se circula por la derecha); l=0: carril lejano, vienen desde la derecha */
+    const cars=[{x:-0.1,l:1,k:pick(KINDS)},{x:0.55,l:1,k:pick(KINDS)},{x:1.1,l:0,k:pick(KINDS)},{x:0.3,l:0,k:pick(KINDS)}];
+    const cycle=[["rojo",4+Math.random()*2.5],["verde",8],["titila",2.5]];let ci=0;
+    /* vehículo de costado: siempre con el frente (luz amarilla) hacia donde avanza */
+    const veh=(x,y,dir,k,u)=>{ctx.save();ctx.translate(x,y);ctx.scale(dir,1);const big=k==="bus"||k==="truck";const L2=big?u*2.3:k==="moto"?u*0.9:u*1.5,h=big?u*0.95:u*0.55;
+      const col={car:"#2563eb",taxi:"#facc15",bus:"#f59e0b",truck:"#e5e7eb",moto:"#ef4444"}[k];
+      if(k==="moto"){ctx.fillStyle="#111";[-L2*0.35,L2*0.35].forEach(wx=>{ctx.beginPath();ctx.arc(wx,-u*0.14,u*0.14,0,7);ctx.fill()});ctx.fillStyle=col;ctx.fillRect(-L2*0.35,-u*0.38,L2*0.7,u*0.16);ctx.fillStyle="#1d4ed8";ctx.fillRect(-u*0.12,-u*0.72,u*0.2,u*0.36);ctx.fillStyle="#f87171";ctx.beginPath();ctx.arc(0,-u*0.8,u*0.12,0,7);ctx.fill();ctx.fillStyle="#fde047";ctx.fillRect(L2*0.38,-u*0.36,u*0.08,u*0.08);ctx.restore();return}
+      ctx.fillStyle=col;ctx.beginPath();if(ctx.roundRect)ctx.roundRect(-L2/2,-h-u*0.12,L2,h,u*0.12);else ctx.rect(-L2/2,-h-u*0.12,L2,h);ctx.fill();
+      if(k==="car"||k==="taxi"){ctx.beginPath();ctx.moveTo(-L2*0.3,-h-u*0.12);ctx.lineTo(-L2*0.18,-h-u*0.42);ctx.lineTo(L2*0.18,-h-u*0.42);ctx.lineTo(L2*0.32,-h-u*0.12);ctx.fill();ctx.fillStyle="#bae6fd";ctx.fillRect(-L2*0.14,-h-u*0.36,L2*0.13,u*0.2);ctx.fillRect(L2*0.03,-h-u*0.36,L2*0.13,u*0.2)}
+      else if(k==="bus"){ctx.fillStyle="#bae6fd";for(let i=0;i<5;i++)ctx.fillRect(-L2*0.42+i*L2*0.17,-h+u*0.02,L2*0.12,u*0.3)}
+      else{ctx.fillStyle="#2563eb";ctx.fillRect(L2*0.22,-h-u*0.12,L2*0.28,h);ctx.fillStyle="#bae6fd";ctx.fillRect(L2*0.32,-h-u*0.02,L2*0.14,u*0.28)}
+      ctx.fillStyle="#fde047";ctx.fillRect(L2/2-u*0.08,-u*0.42,u*0.08,u*0.12);ctx.fillStyle="#ef4444";ctx.fillRect(-L2/2,-u*0.42,u*0.07,u*0.12);
+      ctx.fillStyle="#111";[-L2*0.3,L2*0.3].forEach(wx=>{ctx.beginPath();ctx.arc(wx,-u*0.1,u*0.15,0,7);ctx.fill()});ctx.restore()};
+    const loop=now=>{if(!$("cst")){cv.stop();return}const dt=Math.max(0,Math.min(.05,(now-tP)/1000));tP=now;t+=dt;ph+=dt;if(ph>cycle[ci][1]){ph=0;ci=(ci+1)%3;phase=cycle[ci][0]}
       const W=cv.W,H=cv.H;ctx.fillStyle="#cbd5e1";ctx.fillRect(0,0,W,H);ctx.fillStyle="#475569";ctx.fillRect(0,H*0.3,W,H*0.45);
       for(let i=0;i<8;i++){ctx.fillStyle="#fff";ctx.fillRect(W*0.42,H*0.32+i*H*0.055,W*0.16,H*0.03)}
       ctx.fillStyle="#fbbf24";ctx.fillRect(0,H*0.52,W,3);
-      cars.forEach(c=>{const stopped=phase!=="rojo";const sp=stopped&&((c.l===0&&c.x<0.38)||(c.l===1&&c.x>0.62))?0:0.22;c.x+=(c.l?-1:1)*sp*dt;if(c.x>1.3)c.x=-0.3;if(c.x<-0.3)c.x=1.3;
-        ctx.save();ctx.translate(c.x*W,H*(c.l?0.64:0.41));if(c.l)ctx.scale(-1,1);ctx.font=`${H*0.14}px ${EMOJI}`;ctx.textAlign="center";ctx.fillStyle="#000";ctx.fillText("🚗",0,H*0.05);ctx.restore()});
+      cars.forEach(c=>{const stopped=phase!=="rojo";const dir=c.l?1:-1;const sp=stopped&&((dir>0&&c.x<0.36&&c.x>0.2)||(dir<0&&c.x>0.64&&c.x<0.8))?0:0.16;
+        const blocked=cars.some(o=>o!==c&&o.l===c.l&&(o.x-c.x)*dir>0&&(o.x-c.x)*dir<0.2);c.x+=dir*(blocked?0:sp)*dt;if(c.x>1.3){c.x=-0.3;c.k=pick(KINDS)}if(c.x<-0.3){c.x=1.3;c.k=pick(KINDS)}
+        veh(c.x*W,H*(c.l?0.72:0.5),dir,c.k,H*0.2)});
       ctx.fillStyle="#1f2937";ctx.fillRect(W*0.66,H*0.02,W*0.08,H*0.26);const on=phase==="verde"||(phase==="titila"&&Math.floor(t*4)%2);
       ctx.font=`${H*0.1}px ${EMOJI}`;ctx.textAlign="center";ctx.fillStyle="#000";ctx.globalAlpha=phase==="rojo"?1:0.25;ctx.fillText("🔴",W*0.7,H*0.13);ctx.globalAlpha=on?1:0.25;ctx.fillText("🟢",W*0.7,H*0.25);ctx.globalAlpha=1;
-      drawAvatar(ctx,avatarImage(G.P.avatar),W*0.5,H*1.0,H*0.32);
+      /* la jugadora y sus ojos: miran hacia el lado que tocaste */
+      const ah=H*0.32,ax=W*0.5;drawAvatar(ctx,avatarImage(G.P.avatar),ax,H*1.0,ah);
+      if(now>lookT)lookDir=0;const ex=ax,ey=H*0.79;ctx.save();ctx.translate(ex,ey);ctx.scale(0.62,0.62);ctx.translate(-ex,-ey);ctx.fillStyle="#fff";ctx.strokeStyle="#1f2937";ctx.lineWidth=2;
+      ctx.beginPath();ctx.roundRect?ctx.roundRect(ex-34,ey-16,68,32,16):ctx.rect(ex-34,ey-16,68,32);ctx.fillStyle="rgba(255,255,255,.95)";ctx.fill();ctx.stroke();
+      [-15,15].forEach(o=>{ctx.fillStyle="#fff";ctx.beginPath();ctx.ellipse(ex+o,ey,11,12,0,0,7);ctx.fill();ctx.stroke();ctx.fillStyle="#1f2937";ctx.beginPath();ctx.arc(ex+o+lookDir*6,ey+1,5,0,7);ctx.fill()});
+      ctx.restore();if(lookDir){ctx.font="bold 13px system-ui";ctx.fillStyle="#1f2937";ctx.textAlign=lookDir<0?"left":"right";ctx.fillText(lookDir<0?"⬅ mirando a la izquierda":"mirando a la derecha ➡",lookDir<0?8:W-8,H*0.93)}
+      const left=Math.ceil(cycle[ci][1]-ph);$("cst").innerHTML=phase==="rojo"?`🔴 Esperá en la vereda… (${left} s)`:phase==="verde"?`🟢 ¡Ahora podés! Mirá y cruzá · quedan ${left} s`:"🟢 Titila: si no empezaste, esperá";$("cst").className="center cruce-st "+phase;
       raf=requestAnimationFrame(loop)};raf=requestAnimationFrame(loop);
-    el.querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>{looks.push(b.dataset.l);FX.pop();b.classList.add("on")});
+    el.querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>{looks.push(b.dataset.l);lookDir=b.dataset.l==="i"?-1:1;lookT=performance.now()+1400;FX.pop();b.classList.add("on")});
     const ok=await new Promise(r=>$("cross").onclick=()=>{const seq=looks.join("");r({ph:phase,look:L<2||/i.*d.*i/.test(seq)})});
     cancelAnimationFrame(raf);cv.stop();
     const good=ok.ph==="verde"&&ok.look;
-    return feedback(el,good,ok.ph!=="verde"?(ok.ph==="titila"?"El muñeco titilaba: ya no se empieza a cruzar.":"¡Estaba en rojo! Se espera en la vereda."):!ok.look?"Faltó mirar a los dos lados antes de bajar.":"Cruzaste con el muñeco verde y mirando.");
+    return feedback(el,good,ok.ph!=="verde"?(ok.ph==="titila"?"El muñeco titilaba: ya no se empieza a cruzar.":"¡Estaba en rojo! Se espera en la vereda."):!ok.look?"Faltó mirar: izquierda, derecha y otra vez izquierda.":"Cruzaste con el muñeco verde y mirando.");
   };
   const senales=async el=>{
     const set=shuffle(SIGNS).slice(0,L>=2?6:4);let selI=null;const place={};
@@ -3472,6 +3571,7 @@ function drive(box,L,carnet){
   const urban=["speed","light","corner","bici","crosswalk","signq","colectivo","light","speed","tank","corner","ambulance","moto","railway","rain","camion","rotonda"];
   let plan=carnet?shuffle(urban.concat(["control","control","control","tractor","speedRoute"])).slice(0,11):shuffle(urban).slice(0,8);
   if(!plan.includes("tank")&&!carnet)plan[rnd(3,plan.length-1)]="tank";
+  if(window.__vialPlan)plan=window.__vialPlan.slice();   // solo para pruebas
   let z=120;const evs=[];
   plan.forEach(t=>{evs.push({t,z,done:false});if(t==="speed"||t==="speedRoute")evs.push({t:"radar",z:z+130,done:false});z+=rnd(120,170)});
   evs.push({t:"finish",z:z+40,done:false});
@@ -3531,7 +3631,7 @@ function drive(box,L,carnet){
   /* eventos con estado visible antes de llegar */
   evs.forEach(e=>{if(e.t==="light")e.st=pick(carnet?["rojo","amarillo","verde","amarilloInt","rojoInt"]:["rojo","verde","amarillo","rojo","amarilloInt"]);if(e.t==="signq")e.sign=pick(VQ.signs)[0]});
   /* ---------- dibujo en perspectiva ---------- */
-  const CAM=()=>carX,ppm=()=>W*0.16;
+  let rotOff=0;const CAM=()=>carX+rotOff,ppm=()=>W*0.16;
   const VEH=["bici","camion","colectivo","moto","tractor"];
   const VSPD={bici:14,moto:28,colectivo:24,camion:24,tractor:14};   // km/h: van hacia adelante, más despacio que vos
   const P=(x,dz)=>{const s=1/(1+Math.max(0,dz)/18);const hz=H*0.36;return {x:W/2+(x-CAM())*ppm()*s,y:hz+(H*0.98-hz)*s,s}};
@@ -3551,6 +3651,13 @@ function drive(box,L,carnet){
       if(k==="amb"){R(x0+w*0.42,y0+h*0.48,w*0.16,h*0.2,"#dc2626");R(x0+w*0.34,y0+h*0.53,w*0.32,h*0.1,"#dc2626");const on=Math.floor(t*6)%2;R(x0+w*0.15,y0-h*0.06,w*0.3,h*0.06,on?"#ef4444":"#3b82f6");R(x0+w*0.55,y0-h*0.06,w*0.3,h*0.06,on?"#3b82f6":"#ef4444")}}
     R(x0+w*0.06,y1-wh*0.6-h*0.2,w*0.14,h*0.1,"#ef4444",2);R(x0+w*0.8,y1-wh*0.6-h*0.2,w*0.14,h*0.1,"#ef4444",2);R(p.x-w*0.16,y1-wh*0.6-h*0.16,w*0.32,h*0.09,"#f8fafc",1);
   }
+  /* rotonda: un anillo de calle con una isla verde en el medio */
+  function roundabout(dz){const c=dz+16,ring=(R,col)=>{const pts=[];for(let k=0;k<=48;k++){const a=k/48*Math.PI*2,z=c+R*Math.sin(a);if(z<0.5)continue;const p=P(R*Math.cos(a),z);pts.push(p)}
+      if(pts.length<3)return;ctx.fillStyle=col;ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fill()};
+    ring(17,"#86efac");ring(15,"#475569");ring(7.6,"#f8fafc");ring(7,"#4ade80");ring(3,"#22c55e");
+    const t0=P(0,c);ctx.font=`${Math.max(10,1.2*ppm()*t0.s*1.4)}px ${EMOJI}`;ctx.textAlign="center";ctx.textBaseline="bottom";ctx.fillStyle="#000";ctx.fillText("🌳",t0.x,t0.y);ctx.fillText("🌷",P(-3.5,c+1).x,P(-3.5,c+1).y);ctx.fillText("🌼",P(3.5,c-1).x,P(3.5,c-1).y);ctx.textBaseline="alphabetic";
+    /* autos que ya están girando adentro (tienen prioridad) */
+    const a=(performance.now()/1000*0.6)%(Math.PI*2);[0,2.2,4.1].forEach(o=>{const x=11*Math.cos(a+o),z=c+11*Math.sin(a+o);if(z>c-2)return;if(z<1)return;const q=P(x,z);ctx.save();ctx.translate(q.x,q.y);ctx.scale(-1,1);ctx.font=`${Math.max(9,2*ppm()*q.s*1.2)}px ${EMOJI}`;ctx.textBaseline="bottom";ctx.textAlign="center";ctx.fillText(o>2?"🚙":"🚗",0,0);ctx.restore()})}
   function quad(x1,z1,x2,z2,col){const a=P(x1,z1),b=P(x2,z1),c=P(x2,z2),d=P(x1,z2);ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.lineTo(c.x,c.y);ctx.lineTo(d.x,d.y);ctx.fill()}
   const emo=(e,x,dz,sz,flip)=>{const p=P(x,dz);const f=Math.max(8,sz*1.5*ppm()*p.s);ctx.save();ctx.translate(p.x,p.y);if(flip)ctx.scale(-1,1);ctx.font=`${f}px ${EMOJI}`;ctx.textAlign="center";ctx.textBaseline="bottom";ctx.fillStyle="#000";ctx.fillText(e,0,0);ctx.restore()};
   function sign(type,x,dz,v){const p=P(x,dz),m=ppm()*p.s;const top=p.y-3.6*m,r=Math.max(5,1.15*m);ctx.fillStyle="#6b7280";ctx.fillRect(p.x-Math.max(1,m*0.08),top,Math.max(2,m*0.16),3.6*m);
@@ -3587,6 +3694,7 @@ function drive(box,L,carnet){
       else if(carX<0&&!evs.some(e=>VEH.includes(e.t)&&e.z-pos>-10&&e.z-pos<30)&&now>laneMsgT){say("Ya pasaste: volvé a tu carril, a la derecha 👉",2200);laneMsgT=now+2600}
       pos+=spd/3.6*dt*3.4}
     $("dWsvg").style.transform=`rotate(${wheel}deg)`;
+    {const ro=evs.find(e=>e.t==="rotonda"&&e.done&&pos-(e.z+1)>=0&&pos-(e.z+1)<=30);rotOff=ro?8.5*Math.sin(Math.PI*(pos-(ro.z+1))/30):0}
     if(!paused)evs.forEach(e=>{if(!VEH.includes(e.t))return;if(e.done&&!e.slow){e.slow=1;e.v0=Math.min(VSPD[e.t],Math.max(4,spd*0.45))}e.z+=(e.done?e.v0:Math.min(VSPD[e.t],spd*0.6))/3.6*dt*3.4});
 
     if(anim)anim.t+=dt;
@@ -3599,7 +3707,8 @@ function drive(box,L,carnet){
     quad(-9,0,9,300,"#d6d3d1");quad(-5.6,0,5.6,300,"#475569");
     // bocacalles, sendas y vías de los eventos
     evs.forEach(e=>{const dz=e.z-pos;if(dz<-8||dz>300)return;
-      if(["corner","light","rotonda","tank"].includes(e.t)){quad(-30,dz-6,30,dz+6,"#475569");quad(-5.6,dz+6,5.6,dz+8.5,"#f8fafc");for(let k=-5;k<5;k+=1.4)quad(k,dz+6.3,k+.7,dz+8.2,"#475569")}
+      if(e.t==="rotonda")roundabout(dz);
+      if(["corner","light","tank"].includes(e.t)){quad(-30,dz-6,30,dz+6,"#475569");quad(-5.6,dz+6,5.6,dz+8.5,"#f8fafc");for(let k=-5;k<5;k+=1.4)quad(k,dz+6.3,k+.7,dz+8.2,"#475569")}
       if(e.t==="crosswalk"){for(let k=-5;k<5;k+=1.4)quad(k,dz-1.2,k+.7,dz+1.2,"#f8fafc")}
       if(e.t==="railway"){quad(-30,dz-1.5,30,dz+1.5,"#78716c");quad(-30,dz-.8,30,dz-.6,"#9ca3af");quad(-30,dz+.6,30,dz+.8,"#9ca3af")}});
     // líneas
@@ -3608,7 +3717,7 @@ function drive(box,L,carnet){
     quad(5.3,0,5.45,300,"#f8fafc");quad(-5.45,0,-5.3,300,"#f8fafc");
     // árboles y casas que pasan
     const base=Math.floor(pos/14)*14;const deco=["🌳","🏠","🏢","🌳","🏪","🏫","🌳","🏥"];
-    for(let k=20;k>=0;k--){const wz=base+k*14,dz=wz-pos;if(dz<1)continue;const i=Math.abs(Math.round(wz/14))%deco.length;emo(deco[i],-11,dz,4);emo(deco[(i+3)%deco.length],12,dz,4)}
+    for(let k=20;k>=0;k--){const wz=base+k*14,dz=wz-pos;if(dz<1)continue;if(evs.some(e=>e.t==="rotonda"&&Math.abs(wz-(e.z+16))<19))continue;const i=Math.abs(Math.round(wz/14))%deco.length;emo(deco[i],-11,dz,4);emo(deco[(i+3)%deco.length],12,dz,4)}
     // objetos de cada evento (lo lejano primero)
     evs.slice().sort((a,b)=>b.z-a.z).forEach(e=>{const dz=e.z-pos;if(dz<-6||dz>260)return;
       if(e.t==="speed"||e.t==="speedRoute")sign("speed",6.4,dz,e.v||"?");
@@ -4481,7 +4590,8 @@ GAMEFN.memoria=function(box){
     $("mBots").onclick=()=>{UI.modal(`<h2 class="mtitle">¿Contra cuántos robots?</h2><div class="qopts four">${[1,2,3,4,5,6,7].map(n=>`<button class="qopt" data-n="${n}" type="button">🤖 ${n}</button>`).join("")}</div>`);
       document.querySelectorAll("[data-n]").forEach(b=>b.onclick=()=>{UI.close();NET.mode="local";LOCALROOM.start(+b.dataset.n);apply(LOCALROOM.call("state",{}));poll()})};
   }
-  function apply(v){if(!v||leaving)return;if(v.v<lastV)return;   // una respuesta vieja no pisa una nueva
+  function apply(v){if(!v||leaving)return;if(v.v<lastV)return;
+    if(window.MEM_INVITE&&v.code&&NET.mode==="online"){const to=window.MEM_INVITE;window.MEM_INVITE=null;to.forEach(u=>PRES.send(u,"i","",v.code))}   // una respuesta vieja no pisa una nueva
     const changed=v.v!==lastV;if(v.status==="play"&&prevStatus!=="play"){paid=false;espiar=2;qOk=0;qTot=0;localUp.clear()}prevStatus=v.status;view=v;lastV=v.v;
     showEmotes(v);
     if(v.status==="lobby"){if(changed||!$("mLobby"))lobby();return}
@@ -4587,7 +4697,75 @@ GAMEFN.memoria=function(box){
   }
   async function leave(){leaving=true;stop();if(NET.mode==="online"&&NET.code){try{await NET.call("leave")}catch(e){}}leaving=false;lastV=-1;menu()}
   menu();
+  {const a=window.MEM_AUTO;window.MEM_AUTO=null;if(a&&online){if(a.create){window.MEM_INVITE=a.invite||null;$("mCreate").click()}else if(a.join){$("mCode").value=a.join;$("mJoin").click()}}}
   return ()=>{stop();document.querySelectorAll(".emo-pop").forEach(e=>e.remove());if(NET.mode==="online"&&NET.code&&view&&view.status!=="end"){NET.call("leave").catch(()=>{})}};
+};
+
+/* =====================================================================
+   CONECTADOS Y MENSAJES — lado del juego
+   Cada 20 s (cada 5 s con «Amigos» abierto) la app avisa «estoy acá» y
+   recibe quién está conectado y los mensajes nuevos.
+   ===================================================================== */
+const PRES={on:[],since:0,timer:null,busy:false,dnd:false,queue:[],seen:new Set(),local:null,showing:false,inbox:[],
+  start(){this.stop(true);try{this.dnd=localStorage.getItem("aa-dnd-"+MJ.user)==="1"}catch(e){}
+    this.since=Number(SS.get("aa-live-"+MJ.user)||0);this.local=(MJ.demo||!API_OK())?LOCALLIVE.init():null;this.inbox=[];this.tick();this.schedule()},
+  schedule(){clearTimeout(this.timer);const fast=$("v-amigos")&&!$("v-amigos").hidden;this.timer=setTimeout(()=>{this.tick();this.schedule()},fast?5000:20000)},
+  stop(quiet){clearTimeout(this.timer);this.timer=null;if(!quiet&&MJ.cred&&!this.local&&API_OK())this.call("bye").catch(()=>{});this.on=[]},
+  where(){const c=UI.cur&&UI.cur.id;if(c&&LIVE.PLACES.includes(c))return c;const v=[...document.querySelectorAll("#app .view")].find(x=>!x.hidden);const id=v?v.id.replace("v-",""):"inicio";return LIVE.PLACES.includes(id)?id:"inicio"},
+  async call(op,extra){const data=Object.assign({op,w:this.where(),dnd:this.dnd,av:G.P&&G.P.avatar,since:this.since},extra||{});
+    if(this.local)return this.local.call(MJ.user,MJ.name,data);return await api("live",data)},
+  async tick(){if(this.busy||!G.P||!MJ.cred)return;this.busy=true;try{this.apply(await this.call("ping"))}catch(e){}finally{this.busy=false}},
+  apply(j){if(!j)return;if(j.seq<this.since)this.since=0;this.on=j.online||[];
+    (j.inbox||[]).forEach(m=>{if(m.id>this.since)this.since=m.id;if(!this.seen.has(m.id)){this.seen.add(m.id);this.queue.push(m);this.inbox.unshift(m);this.inbox=this.inbox.slice(0,12)}});
+    SS.set("aa-live-"+MJ.user,this.since);this.hud();this.flush();if($("v-amigos")&&!$("v-amigos").hidden)UI.liveBox()},
+  async send(to,k,v,room){try{const j=await this.call("send",{to,k,v,room});if(j.sendError){FX.toast("😕 "+j.sendError);return false}this.apply(j);FX.pop();FX.toast("✉️ ¡Enviado!");return true}catch(e){FX.toast(e.message||"No se pudo enviar");return false}},
+  setDnd(v){this.dnd=v;try{localStorage.setItem("aa-dnd-"+MJ.user,v?"1":"0")}catch(e){}this.tick()},
+  text(m){return m.k==="e"?`<span class="lm-emo">${esc(m.v)}</span>`:m.k==="f"?esc(LIVE.PHRASES[m.v]||""):`🃏 ¡Te invita a jugar <b>Memoria</b>! (sala ${esc(m.r)})`},
+  person(u){return this.on.find(p=>p.u===u)},
+  hud(){const h=$("hud");if(!h||!G.P||!G.P.avatar)return;let b=$("hudLive");if(!b){b=document.createElement("button");b.type="button";b.id="hudLive";b.className="hchip live";b.onclick=()=>UI.show("amigos");h.appendChild(b)}
+    const n=this.on.length;b.innerHTML=`<i class="dot ${n?"on":""}"></i>${n}${this.dnd?" 🔕":""}`;b.setAttribute("aria-label",`${n} conectados ahora`);b.title=`${n} conectados ahora`},
+  /* las burbujas esperan si hay una pregunta abierta */
+  flush(){if(this.showing||!this.queue.length)return;if(!$("modal").hidden){setTimeout(()=>this.flush(),1500);return}
+    const m=this.queue.shift();this.showing=true;const p=this.person(m.f);const av=p&&p.av&&p.av.kind?p.av:defaultAvatar("nena");
+    const d=document.createElement("div");d.className="livemsg";d.setAttribute("role","status");
+    d.innerHTML=`<span class="lm-av">${avatarSVG(av,40)}</span><div class="lm-body"><b>${esc(m.fn)}</b><div>${this.text(m)}</div>
+      <div class="lm-btns">${m.k==="i"?`<button class="btn small primary" data-a="join">🃏 Unirme</button>`:`<button class="btn small" data-a="e">👋</button><button class="btn small" data-a="h">¡Holaaa!</button>`}<button class="btn small" data-a="x">Cerrar</button></div></div>`;
+    document.body.appendChild(d);requestAnimationFrame(()=>d.classList.add("in"));FX.tone(880,.08,"sine",.07);FX.tone(1320,.1,"sine",.06,.1);
+    const close=()=>{d.classList.remove("in");setTimeout(()=>{d.remove();this.showing=false;this.flush()},300)};const t=setTimeout(close,m.k==="i"?15000:8000);
+    d.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{clearTimeout(t);const a=b.dataset.a;
+      if(a==="join"){window.MEM_AUTO={join:m.r};UI.close();UI.play("memoria")}
+      if(a==="e")this.send(m.f,"e","👋");if(a==="h")this.send(m.f,"f",LIVE.PHRASES.indexOf("¡Holaaa!"));close()})},
+  /* elegir qué mandarle a alguien */
+  picker(p){const b=UI.modal(`<div class="lpick"><div class="center">${avatarSVG(p.av&&p.av.kind?p.av:defaultAvatar("nena"),70,"wave")}</div><h2 class="mtitle">Mandale algo a ${esc(p.n)}</h2>
+      <p class="note center">Solo se pueden mandar emojis y frases preparadas: así cuidamos a todos.</p>
+      <div class="lp-emos">${LIVE.EMOJIS.map(e=>`<button type="button" data-e="${e}">${e}</button>`).join("")}</div>
+      <div class="lp-frases">${LIVE.PHRASES.map((f,i)=>`<button type="button" class="btn" data-f="${i}">${esc(f)}</button>`).join("")}</div>
+      <div class="mactions"><button type="button" class="btn primary" id="lpInv">🃏 Invitar a Memoria</button><button type="button" class="btn" id="lpX">Cerrar</button></div></div>`);
+    b.querySelectorAll("[data-e]").forEach(x=>x.onclick=async()=>{if(await this.send(p.u,"e",x.dataset.e))UI.close()});
+    b.querySelectorAll("[data-f]").forEach(x=>x.onclick=async()=>{if(await this.send(p.u,"f",+x.dataset.f))UI.close()});
+    $("lpX").onclick=UI.close;
+    $("lpInv").onclick=()=>{if(this.local){FX.toast("Para invitar de verdad hay que entrar con usuario y código.");return}window.MEM_AUTO={create:true,invite:[p.u]};UI.close();UI.play("memoria")}}
+};
+/* «Probar sin hoja»: amigos robot para ver cómo funciona */
+const LOCALLIVE={st:null,
+  init(){this.st=LIVE.empty();this.t0=Date.now();this.greeted=false;this.bots=[["bot-robotina","Robotina (robot)","robot","nena"],["bot-pixel","Pixel (robot)","memoria","nene"],["bot-chispa","Chispa (robot)","vial","nena"]];return this},
+  botSay(bu,k,v,to){const b=this.bots.find(x=>x[0]===bu);this.st.seq++;this.st.m.push({id:this.st.seq,f:bu,fn:b[1],to,k,v,r:"",t:Date.now()})},
+  call(u,name,d){const now=Date.now();LIVE.clean(this.st,now);
+    this.bots.forEach(([bu,bn,w,kind])=>LIVE.ping(this.st,bu,bn,{w,av:Object.assign(defaultAvatar(kind),{top:"remera"})},now));LIVE.ping(this.st,u,name,d,now);
+    let err="";if(d.op==="send"){try{LIVE.send(this.st,u,String(d.to),String(d.k),d.v,d.room,now);const to=String(d.to);setTimeout(()=>{if(this.st)this.botSay(to,"e",pick(["👍","😀","🎉","👋","💪"]),u);PRES.tick()},1800)}catch(e){err=e.message}}
+    if(!this.greeted&&now-this.t0>6000){this.greeted=true;this.botSay("bot-robotina","f",LIVE.PHRASES.indexOf("¡Holaaa!"),u)}
+    const out=LIVE.view(this.st,u,d.since,now);if(err)out.sendError=err;return out}
+};
+const PLACE_NAME={inicio:"en el inicio",juegos:"eligiendo un juego",premios:"mirando sus premios",avatar:"en el vestidor",amigos:"en Amigos",quiz:"respondiendo preguntas"};
+const placeTxt=w=>{if(PLACE_NAME[w])return PLACE_NAME[w];const g=GAMES.find(x=>x.id===w);return g?`jugando ${g.icon} ${g.name}`:"conectado"};
+/* sección «Conectados ahora» dentro de Amigos */
+UI.liveBox=function(){const box=$("liveBox");if(!box)return;const on=PRES.on;
+  box.innerHTML=`<div class="live-head"><h3>🟢 Conectados ahora <small>(${on.length})</small></h3><label class="dnd"><input type="checkbox" id="dndChk" ${PRES.dnd?"checked":""}> 🔕 No molestar</label></div>
+    ${on.length?`<div class="live-list">${on.map(p=>`<button type="button" class="live-p" data-u="${esc(p.u)}" ${p.dnd?"disabled":""}><span class="lp-av">${avatarSVG(p.av&&p.av.kind?p.av:defaultAvatar("nena"),44)}<i class="dot on"></i></span><b>${esc(p.n)}</b><small>${p.dnd?"🔕 No molestar":esc(placeTxt(p.w))}</small><span class="lp-send">${p.dnd?"":"💬 Mandar"}</span></button>`).join("")}</div>`
+      :`<p class="note">Ahora no hay nadie más conectado. Cuando alguien entre, aparece acá.</p>`}
+    ${PRES.inbox.length?`<details class="live-in"><summary>📬 Lo que te mandaron (${PRES.inbox.length})</summary><ul>${PRES.inbox.map(m=>`<li><b>${esc(m.fn)}:</b> ${PRES.text(m)}</li>`).join("")}</ul></details>`:""}`;
+  box.querySelectorAll(".live-p").forEach(b=>b.onclick=()=>{const p=PRES.person(b.dataset.u);if(p)PRES.picker(p)});
+  $("dndChk").onchange=e=>{PRES.setDnd(e.target.checked);FX.toast(e.target.checked?"🔕 No vas a recibir mensajes":"🔔 Ya podés recibir mensajes");UI.liveBox()};
 };
 
 /* =====================================================================
@@ -4633,10 +4811,10 @@ MJ.next=function(){
   if(MJ.demo&&MJ.taller==="BLOQUEADO")try{localStorage.setItem("mj-demo-taller-"+MJ.user,"BLOQUEADO")}catch(e){}
   if(!G.P.avatar){setOnboarding(true);document.querySelectorAll(".view").forEach(el=>el.hidden=el.id!=="v-avatar");UI.avatar(true);return}
   if(MJ.taller==="ABIERTO"){setOnboarding(true);document.querySelectorAll(".view").forEach(el=>el.hidden=el.id!=="v-taller");UI.taller();return}
-  setOnboarding(false);UI.hud();UI.show("inicio");
+  setOnboarding(false);UI.hud();UI.show("inicio");PRES.start();
 };
 function setOnboarding(on){document.body.classList.toggle("onboarding",on);$("tabs").hidden=on}
-function logout(){if(G.P){MJ.remember();G.flush()}SS.del("mj-cred");MJ.cred=null;UI.cur=null;$("app").hidden=true;$("login").hidden=false;$("lPass").value="";loginFace();$("lUser").focus()}
+function logout(){PRES.stop();if(G.P){MJ.remember();G.flush()}SS.del("mj-cred");MJ.cred=null;UI.cur=null;$("app").hidden=true;$("login").hidden=false;$("lPass").value="";loginFace();$("lUser").focus()}
 
 /* pantalla de ingreso personalizada: muestra el avatar de quien escribe su usuario (guardado en este dispositivo) */
 MJ.faces=()=>{try{return JSON.parse(localStorage.getItem("aa-faces"))||{}}catch(e){return {}}};
