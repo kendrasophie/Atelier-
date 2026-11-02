@@ -815,6 +815,17 @@ body{background:radial-gradient(1200px 600px at 10% -10%,#ddd6fe 0%,transparent 
 .livemsg.in{transform:translate(-50%,0)}
 .lm-body{flex:1;min-width:0}.lm-body>div{margin:2px 0 6px;font-weight:700}.lm-emo{font-size:34px;line-height:1}
 .lm-btns{display:flex;gap:6px;flex-wrap:wrap}
+/* premio pactado */
+.fam-open{font:inherit;color:var(--ink);width:100%;display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:12px;align-items:center;text-align:left;background:linear-gradient(135deg,#fef3c7,#fce7f3);border:3px solid #f59e0b;border-radius:20px;padding:12px 14px;margin-bottom:14px;cursor:pointer;box-shadow:var(--lift)}
+.fam-open span{grid-row:span 2;font-size:34px}.fam-open b{font-family:var(--display);font-size:19px;color:#1f2937}.fam-open small{color:#6b7280}
+.fam-kid{border:2px solid var(--line);border-radius:18px;padding:12px;margin:10px 0;background:var(--bg)}
+.fam-top{display:flex;align-items:center;gap:12px}.fam-top b{font-family:var(--display);font-size:20px}.fam-bal{font-size:22px;font-weight:900;color:#15803d}
+.fam-pend{background:color-mix(in srgb,#f59e0b 14%,var(--surface));border-radius:12px;padding:8px 10px;margin:8px 0;display:flex;flex-direction:column;gap:4px}
+.fam-row{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:700}
+.fam-form{display:flex;flex-direction:column;gap:6px;margin-top:8px}.fam-form label{display:flex;flex-direction:column;gap:3px;font-weight:700;font-size:14px}
+.fam-form input{font:inherit;font-size:17px;padding:9px 10px;border-radius:10px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+.fam-hist summary{cursor:pointer;font-weight:800;margin-top:6px}.fam-hist ul,.fam-log{margin:6px 0 0;padding-left:18px}
+.fam-gift{font-size:64px;line-height:1}.fam-amt{font-size:30px;font-weight:900;color:#b91c1c;margin:4px 0}
 
 </style>
 </head>
@@ -4714,7 +4725,9 @@ const PRES={on:[],since:0,timer:null,busy:false,dnd:false,queue:[],seen:new Set(
   where(){const c=UI.cur&&UI.cur.id;if(c&&LIVE.PLACES.includes(c))return c;const v=[...document.querySelectorAll("#app .view")].find(x=>!x.hidden);const id=v?v.id.replace("v-",""):"inicio";return LIVE.PLACES.includes(id)?id:"inicio"},
   async call(op,extra){const data=Object.assign({op,w:this.where(),dnd:this.dnd,av:G.P&&G.P.avatar,since:this.since},extra||{});
     if(this.local)return this.local.call(MJ.user,MJ.name,data);return await api("live",data)},
-  async tick(){if(this.busy||!G.P||!MJ.cred)return;this.busy=true;try{this.apply(await this.call("ping"))}catch(e){}finally{this.busy=false}},
+  async tick(){if(this.busy||!G.P||!MJ.cred)return;this.busy=true;try{this.apply(await this.call("ping"))}catch(e){}finally{this.busy=false}
+    /* cada ~90 s también pregunta a la hoja si hay un premio pactado para descontar */
+    this.n=(this.n||0)+1;if(!this.local&&this.n%4===0)api("hello").catch(()=>{})},
   apply(j){if(!j)return;if(j.seq<this.since)this.since=0;this.on=j.online||[];
     (j.inbox||[]).forEach(m=>{if(m.id>this.since)this.since=m.id;if(!this.seen.has(m.id)){this.seen.add(m.id);this.queue.push(m);this.inbox.unshift(m);this.inbox=this.inbox.slice(0,12)}});
     SS.set("aa-live-"+MJ.user,this.since);this.hud();this.flush();if($("v-amigos")&&!$("v-amigos").hidden)UI.liveBox()},
@@ -4782,14 +4795,15 @@ async function api(action,extra){
   let r;try{r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(Object.assign({action,user:MJ.cred.user,code:MJ.cred.code},extra||{}))})}catch(e){throw new Error("Sin conexión con la hoja. Revisá internet.")}
   let j;try{j=await r.json()}catch(e){throw new Error("La hoja respondió algo raro. Revisá que la implementación sea para «Cualquier usuario».")}
   if(!j.ok){const e=new Error(j.error||"Error");e.auth=j.auth===false;throw e}
-  if(j.friends)MJ.friends=j.friends;if(j.taller)MJ.taller=j.taller;
+  if(j.friends)MJ.friends=j.friends;if(j.taller)MJ.taller=j.taller;if(j.kids)MJ.kids=j.kids;
+  if(j.charges&&j.charges.length){if(G.P&&G.P.avatar)MJ.applyCharges(j.charges);else MJ.pendingCharges=j.charges}
   return j;
 }
 G.onSync=function(p,beacon){
   if(MJ.demo||!MJ.cred||!API_OK())return;
   const body=JSON.stringify({action:"saveProgress",user:MJ.cred.user,code:MJ.cred.code,progress:p});
   if(beacon&&navigator.sendBeacon){try{navigator.sendBeacon(API_URL,new Blob([body],{type:"text/plain;charset=utf-8"}));return}catch(e){}}
-  fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body}).then(r=>r.json()).then(j=>{if(j.friends)MJ.friends=j.friends}).catch(()=>{});
+  fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body}).then(r=>r.json()).then(j=>{if(j.friends)MJ.friends=j.friends;if(j.kids)MJ.kids=j.kids;if(j.charges)MJ.applyCharges(j.charges)}).catch(()=>{});
 };
 MJ.lockRewards=async function(){if(MJ.demo){MJ.taller="BLOQUEADO";return}await api("lockRewards",{progress:G.P})};
 
@@ -4811,7 +4825,7 @@ MJ.next=function(){
   if(MJ.demo&&MJ.taller==="BLOQUEADO")try{localStorage.setItem("mj-demo-taller-"+MJ.user,"BLOQUEADO")}catch(e){}
   if(!G.P.avatar){setOnboarding(true);document.querySelectorAll(".view").forEach(el=>el.hidden=el.id!=="v-avatar");UI.avatar(true);return}
   if(MJ.taller==="ABIERTO"){setOnboarding(true);document.querySelectorAll(".view").forEach(el=>el.hidden=el.id!=="v-taller");UI.taller();return}
-  setOnboarding(false);UI.hud();UI.show("inicio");PRES.start();
+  setOnboarding(false);UI.hud();UI.show("inicio");PRES.start();if(MJ.pendingCharges){const c=MJ.pendingCharges;MJ.pendingCharges=null;MJ.applyCharges(c)}
 };
 function setOnboarding(on){document.body.classList.toggle("onboarding",on);$("tabs").hidden=on}
 function logout(){PRES.stop();if(G.P){MJ.remember();G.flush()}SS.del("mj-cred");MJ.cred=null;UI.cur=null;$("app").hidden=true;$("login").hidden=false;$("lPass").value="";loginFace();$("lUser").focus()}
@@ -4846,6 +4860,62 @@ document.addEventListener("visibilitychange",()=>{if(document.visibilityState===
   if(!API_OK()){$("lNote").innerHTML="Todavía no está conectada la hoja de Google. Podés <b>probar sin hoja</b>: lo que hagas queda solo en este navegador.";$("demoBtn").hidden=false}
   const s=SS.get("mj-cred");if(s&&s.cred){$("lUser").value=s.cred.user;login(s.cred,s.demo)}
 })();
+
+/* =====================================================================
+   PREMIO PACTADO — los padres cobran un premio acordado de palabra
+   y el monto se descuenta de la billetera del chico.
+   El cobro queda PENDIENTE en la hoja hasta que la app del chico lo
+   aplica (así nunca se pisa con un saldo viejo ni se cobra dos veces).
+   ===================================================================== */
+const FAM={kids:[],shown:new Set(),queue:[]};
+/* lado del chico: aplicar los cobros pendientes que mandó la hoja */
+MJ.applyCharges=function(list){
+  if(!G.P||!Array.isArray(list)||!list.length)return;
+  const p=G.P;p.charged=p.charged||{};p.chargeLog=p.chargeLog||[];let any=false;
+  list.forEach(c=>{if(!c||!c.id||p.charged[c.id])return;const cents=Math.max(0,Math.round(Number(c.monto)||0))*100;const taken=Math.min(G.cash(),cents);
+    p.cash=G.cash()-taken;p.charged[c.id]=Date.now();p.chargeLog.unshift({id:c.id,monto:taken/100,premio:String(c.premio||"Premio pactado").slice(0,60),padre:String(c.padre||""),t:Date.now()});p.chargeLog=p.chargeLog.slice(0,30);
+    FAM.queue.push(c);any=true});
+  if(any){G.save();UI.hud();FAM.flush()}
+};
+FAM.flush=function(){if(!FAM.queue.length)return;if(!$("modal").hidden||!G.P||!G.P.avatar){setTimeout(FAM.flush,1500);return}
+  const c=FAM.queue.shift();
+  UI.modal(`<div class="center fam-got"><div class="fam-gift">🎁</div><h2 class="mtitle">¡Premio pactado!</h2>
+    <p class="msub"><b>${esc(c.padre||"Tu familia")}</b> cobró tu premio: <b>«${esc(c.premio||"Premio pactado")}»</b></p>
+    <p class="fam-amt">−${fmtM(Math.round(c.monto*100))}</p>
+    <p class="note">Lo ganaste jugando y aprendiendo. ¡Bien ahorrado! Te quedan ${fmtM(G.cash())}.</p>
+    <div class="mactions"><button class="btn primary" type="button" id="famOk">¡Gracias! 💜</button></div></div>`);
+  FX.fanfare();FX.confetti(160);$("famOk").onclick=()=>{UI.close();setTimeout(FAM.flush,300)}};
+
+/* lado de los padres */
+FAM.refresh=async function(){try{await api("kids")}catch(e){FX.toast(e.message)}return MJ.kids||[]};
+UI.padres=async function(){
+  const ago=t=>{if(!t)return "todavía no jugó";const m=Math.round((Date.now()-t)/60000);return m<2?"recién":m<60?`hace ${m} min`:m<1440?`hace ${Math.round(m/60)} h`:`hace ${Math.round(m/1440)} días`};
+  const draw=()=>{const ks=MJ.kids||[];
+    UI.modal(`<div class="fam"><h2 class="mtitle">👪 Panel de padres</h2>
+      <p class="note">Cobrá un <b>premio pactado</b> (algo que acordaron de palabra). El monto se descuenta de la billetera la próxima vez que abra la app.</p>
+      ${ks.map((k,i)=>{const pend=k.pending.reduce((a,c)=>a+c.monto,0);const disp=Math.max(0,Math.floor(k.cash/100)-pend);
+        return `<section class="fam-kid"><div class="fam-top">${avatarSVG(k.avatar&&k.avatar.kind?k.avatar:defaultAvatar("nena"),56)}<div><b>${esc(k.name)}</b><div class="fam-bal">${fmtM(k.cash)}</div><small class="note">Último guardado: ${ago(k.updated)}</small></div></div>
+          ${k.pending.length?`<div class="fam-pend"><b>⏳ Pendiente de descontar</b>${k.pending.map(c=>`<div class="fam-row"><span>«${esc(c.premio)}» −${fmtM(c.monto*100)}</span><button class="btn small" type="button" data-cancel="${esc(c.id)}">Anular</button></div>`).join("")}<small class="note">Se descuenta cuando ${esc(k.name)} abra la app.</small></div>`:""}
+          <div class="fam-form"><label>¿Qué premio acordaron?<input type="text" maxlength="60" id="fN${i}" placeholder="Ej.: Salida al cine"></label>
+            <label>Monto pactado (en pesos del juego)<input type="number" inputmode="numeric" min="1" step="1000" id="fA${i}" placeholder="30000"></label>
+            <p class="note">Disponible: <b>${fmtM(disp*100)}</b></p>
+            <button class="btn primary" type="button" data-kid="${i}">🎁 Cobrar premio pactado</button></div>
+          ${k.history.length?`<details class="fam-hist"><summary>Historial</summary><ul>${k.history.map(h=>`<li>${h.estado==="ANULADO"?"❌":"✅"} «${esc(h.premio)}» ${fmtM(h.monto*100)} · ${esc(h.padre)}${h.fecha?" · "+new Date(h.fecha).toLocaleDateString("es-AR"):""}${h.estado==="ANULADO"?" (anulado)":""}</li>`).join("")}</ul></details>`:""}
+        </section>`}).join("")||`<p class="note">No hay chicos asignados. En la hoja, pestaña <b>Familias</b>, escribí tu usuario en «padre» y el de tu hijo o hija en «hijo».</p>`}
+      <div class="mactions"><button class="btn" type="button" id="famRef">🔄 Actualizar</button><button class="btn primary" type="button" id="famX">Cerrar</button></div></div>`,true);
+    $("famX").onclick=UI.close;$("famRef").onclick=async()=>{await FAM.refresh();draw()};
+    document.querySelectorAll("[data-cancel]").forEach(b=>b.onclick=async()=>{b.disabled=true;try{await api("cancelCharge",{id:b.dataset.cancel});FX.toast("Cobro anulado")}catch(e){FX.toast(e.message)}draw()});
+    document.querySelectorAll("[data-kid]").forEach(b=>b.onclick=()=>{const i=+b.dataset.kid,k=ks[i];const amt=Math.round(Number($("fA"+i).value));const note=$("fN"+i).value.trim();
+      if(!(amt>0)){FX.toast("Escribí el monto pactado");return}if(!note){FX.toast("Escribí qué premio acordaron");return}
+      UI.modal(`<div class="center"><div class="fam-gift">🎁</div><h2 class="mtitle">¿Confirmás el cobro?</h2><p class="msub">Se le van a descontar <b>${fmtM(amt*100)}</b> a <b>${esc(k.name)}</b> por <b>«${esc(note)}»</b>.</p>
+        <div class="mactions"><button class="btn" type="button" id="famNo">Volver</button><button class="btn primary" type="button" id="famYes">Sí, cobrar</button></div></div>`);
+      $("famNo").onclick=draw;$("famYes").onclick=async()=>{$("famYes").disabled=true;try{await api("charge",{kid:k.user,amount:amt,note});FX.coin();FX.toast(`✅ Listo: se descuenta cuando ${k.name} abra la app`)}catch(e){FX.toast("😕 "+e.message)}draw()}})};
+  await FAM.refresh();draw();
+};
+/* botón en el inicio para padres y premios canjeados en «Mis premios» */
+{const ini=UI.inicio;UI.inicio=function(){ini();if((MJ.kids||[]).length){$("v-inicio").insertAdjacentHTML("afterbegin",`<button type="button" class="fam-open" id="famOpen"><span>👪</span><b>Panel de padres</b><small>Cobrar un premio pactado · ${MJ.kids.map(k=>esc(k.name)).join(", ")}</small></button>`);$("famOpen").onclick=UI.padres}}}
+{const pre=UI.premios;UI.premios=function(){pre();const l=(G.P&&G.P.chargeLog)||[];if(!l.length)return;
+  $("v-premios").insertAdjacentHTML("beforeend",`<section class="shelf"><h3>🎁 Premios de verdad que canjeaste</h3><ul class="fam-log">${l.map(c=>`<li><b>«${esc(c.premio)}»</b> ${fmtM(Math.round(c.monto*100))}${c.padre?` · cobró ${esc(c.padre)}`:""} · ${new Date(c.t).toLocaleDateString("es-AR")}</li>`).join("")}</ul><div class="plank"></div></section>`)}}
 
 </script>
 </body>
