@@ -826,6 +826,30 @@ body{background:radial-gradient(1200px 600px at 10% -10%,#ddd6fe 0%,transparent 
 .fam-form input{font:inherit;font-size:17px;padding:9px 10px;border-radius:10px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
 .fam-hist summary{cursor:pointer;font-weight:800;margin-top:6px}.fam-hist ul,.fam-log{margin:6px 0 0;padding-left:18px}
 .fam-gift{font-size:64px;line-height:1}.fam-amt{font-size:30px;font-weight:900;color:#b91c1c;margin:4px 0}
+/* tiro libre arcade */
+.arc-head{text-align:center;margin-bottom:10px}
+.arc-title{font-family:"Courier New",ui-monospace,monospace;font-weight:900;font-size:26px;letter-spacing:2px;color:#facc15;background:#111827;border-radius:14px;padding:8px 12px;text-shadow:0 0 8px rgba(250,204,21,.7),2px 2px 0 #b91c1c;display:inline-block}
+.arc-title span{color:#22d3ee;text-shadow:0 0 8px rgba(34,211,238,.7),2px 2px 0 #1e3a8a}
+.arc-map{display:grid;gap:8px;max-width:560px;margin:0 auto;position:relative}
+.arc-st{font:inherit;color:#e5e7eb;background:linear-gradient(90deg,#1e1b4b,#312e81);border:3px solid #6366f1;border-radius:14px;padding:8px 12px;display:grid;grid-template-columns:auto auto 1fr auto;grid-template-rows:auto auto;column-gap:10px;align-items:center;text-align:left;cursor:pointer;box-shadow:0 4px 0 #1e1b4b}
+.arc-st .arc-n{grid-row:span 2;font-family:"Courier New",monospace;font-weight:900;font-size:20px;color:#facc15;width:28px;text-align:center}
+.arc-st .arc-ic{grid-row:span 2;font-size:28px}
+.arc-st b{font-size:16px;color:#fff}.arc-st small{color:#a5b4fc;grid-column:3}
+.arc-st .arc-med{grid-row:1/3;grid-column:4;font-size:26px}
+.arc-st.next{border-color:#facc15;animation:arcBlink 1s steps(2) infinite}
+.arc-st.final{background:linear-gradient(90deg,#4c1d95,#be185d);border-color:#f472b6}
+.arc-st.lock{opacity:.45;cursor:not-allowed;filter:grayscale(.6)}
+@keyframes arcBlink{50%{box-shadow:0 0 0 4px rgba(250,204,21,.45),0 4px 0 #1e1b4b}}
+.arc-foot{text-align:center;margin-top:12px}
+.arc-intro,.arc-over,.arc-win{text-align:center}
+.arc-big{font-family:"Courier New",ui-monospace,monospace;font-weight:900;font-size:24px;letter-spacing:3px;color:#facc15;background:#111827;border-radius:12px;padding:6px 10px;display:inline-block;text-shadow:2px 2px 0 #b91c1c}
+.arc-ic2{font-size:56px;margin:6px 0}
+.arc-intro h3{font-family:var(--display);font-size:24px;margin:0 0 8px}
+.arc-concept{background:color-mix(in srgb,#0ea5e9 10%,var(--surface));border-left:5px solid #0ea5e9;border-radius:10px;padding:8px 12px;margin:8px auto;text-align:left;max-width:520px}
+.arc-goals{list-style:none;padding:0;margin:10px auto;max-width:520px;text-align:left;display:flex;flex-direction:column;gap:6px}
+.arc-goals li{background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:6px 10px}
+.arc-pay{font-size:20px;font-weight:900}
+.arc-win.final .arc-big{background:linear-gradient(90deg,#7c3aed,#db2777);color:#fff}
 
 </style>
 </head>
@@ -2077,7 +2101,7 @@ UI.ask=function(q,opt={}){
     const fin=i=>{if(done)return;done=true;cancelAnimationFrame(raf);const ok=i!=null&&q.opts[i]===q.ans;
       if($("qhelp"))$("qhelp").remove();
       b.querySelectorAll(".qopt").forEach((el,j)=>{el.disabled=true;if(q.opts[j]===q.ans)el.classList.add("right");else if(j===i)el.classList.add("wrong")});
-      const r=G.answer(q,ok);const m=ok?null:UI.miss({what:"Pregunta: "+q.q,ms:i==null?99999:performance.now()-t0,words:(q.q+" "+q.opts.join(" ")).split(/\s+/).length});const heal=ok?UI.hit():"";
+      const r=G.answer(q,ok);const m=ok||opt.noMiss?null:UI.miss({what:"Pregunta: "+q.q,ms:i==null?99999:performance.now()-t0,words:(q.q+" "+q.opts.join(" ")).split(/\s+/).length});const heal=ok?UI.hit():"";
       if(ok){FX.good();const rc=b.querySelector(".qopt.right").getBoundingClientRect();FX.sparkle(rc.left+rc.width/2,rc.top+rc.height/2)}else{FX.bad();FX.shake(b)}
       $("qfeed").innerHTML=`${r.overcame?`<p class="overcome">🦁 ¡Lo superaste! Esta antes te había costado.</p>`:""}<p class="${ok?"okmsg":"badmsg"}">${ok?pick(["¡Bien!","¡Excelente!","¡Eso es!","¡Genial!"]):i==null?"Se terminó el tiempo.":"Esta no era."} ${ok?plus(r.cents)+(q.l===3?` <span class="dtag">🔥 pregunta difícil: paga más</span>`:q.l===1?` <span class="dtag easy">fácil</span>`:""):""}</p><p class="expl">${esc(q.e||"")}</p>${heal}${m?m.html:""}<button class="btn primary" id="qnext" type="button">${m&&m.out?"Salir del juego":"Seguir"}</button>`;
       if(r.overcame){FX.fanfare();FX.confetti(70)}
@@ -2194,7 +2218,7 @@ UI.inicio=function(){
 /* ---------- JUEGOS ---------- */
 const GAMES=[
   {id:"detective",name:"Detective por el mundo",icon:"🕵️",s:"geografia",desc:"Seguí al ladrón de ciudad en ciudad con pistas de idiomas, monedas, monumentos y husos horarios."},
-  {id:"tiro",name:"Tiro libre",icon:"🎯",s:"mate",desc:"Arco, mano, onda, pistola de agua, básquet, tenis, vóley, tanque y cohete. Ángulo, fuerza, viento y gravedad."},
+  {id:"tiro",name:"Tiro libre",icon:"🎯",s:"mate",desc:"Arcade de 12 escenarios: fuerza, ángulo, viento, inercia y velocidad relativa. Del patio a la base naval y la misión espacial."},
   {id:"kiosco",name:"El kiosco",icon:"🏪",s:"economia",desc:"¿Me alcanza?, vuelto con billetes, necesidad o deseo y el pack que conviene."},
   {id:"abaco",name:"Ábaco mágico",icon:"🧮",s:"mate",desc:"Soroban japonés: armá números, sumá con complementos y hacé cálculo mental relámpago."},
   {id:"plato",name:"Plato arcoíris",icon:"🥗",s:"salud",desc:"Armá un plato sano de muchos colores y ordená tu día: higiene, comida y sueño."},
@@ -2907,7 +2931,9 @@ const SHOT_MODES=[
   {id:"voley",name:"Vóley",icon:"🏐",lv:4,g:9.8,v:[6,16],tip:"Pasá la red y que caiga en la cancha rival."},
   {id:"tenis",name:"Tenis",icon:"🎾",lv:4,g:9.8,v:[8,26],tip:"Pasá la red baja y que pique antes de la línea."},
   {id:"tanque",name:"Tanque",icon:"🛡️",lv:5,g:9.8,v:[15,42],tip:"Derribá el fuerte de bloques. Ojo con el viento y la loma."},
-  {id:"cohete",name:"Cohete espacial",icon:"🚀",lv:6,g:9.8,v:[8,30],tip:"Cada planeta tiene otra gravedad: aterrizá en la plataforma."}
+  {id:"cohete",name:"Cohete espacial",icon:"🚀",lv:6,g:9.8,v:[8,30],tip:"Cada planeta tiene otra gravedad: aterrizá en la plataforma."},
+  {id:"drop",name:"Avión de rescate",icon:"✈️",lv:5,g:9.8,v:[0,0],tip:"Soltá el paquete en el momento justo para que caiga en el bote."},
+  {id:"heli",name:"Helicóptero en la base naval",icon:"🚁",lv:6,g:9.8,v:[6,30],tip:"Disparás pintura desde un helicóptero que se mueve: pintá el blanco del barco."}
 ];
 GAMEFN.tiro=function(box,L){
   box.innerHTML=`<p class="note center">Elegí cómo tirar. Con más nivel se abren modos nuevos.</p><div class="modegrid">${SHOT_MODES.map(m=>{const open=L>=m.lv;return `<button class="modeb ${open?"":"locked"}" type="button" data-m="${m.id}" ${open?"":"disabled"}><span>${open?m.icon:"🔒"}</span><b>${m.name}</b><small>${open?m.tip:"Se abre en el nivel "+m.lv}</small></button>`}).join("")}</div>`;
@@ -2915,16 +2941,18 @@ GAMEFN.tiro=function(box,L){
   box.querySelectorAll(".modeb").forEach(b=>b.onclick=()=>{stop=shoot(box,L,SHOT_MODES.find(m=>m.id===b.dataset.m))});
   return ()=>{stop&&stop()};
 };
-function shoot(box,L,M){
-  box.innerHTML="";
+function shoot(box,L,M,S){
+  box.innerHTML="";const ARC=!!(S&&!S.practice),PRAC=!!(S&&S.practice),VEH=M.id==="drop"||M.id==="heli";
   const cv=makeCanvas(box,0.56,820),ctx=cv.ctx;
   const ui=document.createElement("div");ui.className="archui";
-  ui.innerHTML=`<label>Ángulo <b id="angV"></b><input id="ang" type="range" min="5" max="85" value="45"></label><label>Fuerza <b id="powV"></b><input id="pow" type="range" min="${M.v[0]}" max="${M.v[1]}" value="${Math.round((M.v[0]+M.v[1])/2)}"></label>
-    <button class="btn primary big" id="shoot" type="button">${M.icon} ¡Tirar!</button><button class="btn small" id="view" type="button">🎥 Cambiar a primera persona (+50%)</button><button class="btn small help" id="guide" type="button">👁️ Ver guía del próximo tiro (−${fmtM(HELP_COST)})</button><p class="archinfo" id="info"></p><div class="shotbook" id="book"></div>`;
+  ui.innerHTML=`<label ${M.id==="drop"?"hidden":""}>Ángulo <b id="angV"></b><input id="ang" type="range" min="${M.id==="heli"?-70:5}" max="${M.id==="heli"?40:85}" value="${M.id==="heli"?-20:45}"></label><label ${M.id==="drop"?"hidden":""}>Fuerza <b id="powV"></b><input id="pow" type="range" min="${M.v[0]}" max="${M.v[1]}" value="${Math.round((M.v[0]+M.v[1])/2)}"></label>
+    <button class="btn primary big" id="shoot" type="button">${M.id==="drop"?"📦 ¡Soltar!":M.icon+" ¡Tirar!"}</button><button class="btn small" id="view" type="button" ${VEH?"hidden":""}>🎥 Cambiar a primera persona${S?"":" (+50%)"}</button><button class="btn small help" id="guide" type="button">👁️ Ver guía del próximo tiro (−${fmtM(HELP_COST)})</button><p class="archinfo" id="info"></p><div class="shotbook" id="book"></div>`;
   box.appendChild(ui);
-  const SHOTS=8;let sadT=-1,shots=0,hits=0,nears=0,guide=false,book=[],qOk=0,qTot=0,flying=null,trail=[],last=[],msg="",raf,tPrev=performance.now(),t=0,drops=[];
+  let upd=null;const SHOTS=ARC?9999:8;let lives=ARC?S.lives:0,rescues=0,livesLost=0,ended=false;let sadT=-1,shots=0,hits=0,nears=0,guide=false,book=[],qOk=0,qTot=0,flying=null,trail=[],last=[],msg="",raf,tPrev=performance.now(),t=0,drops=[];
   let T={},wind=0,g=M.g,planet=null,ground=0,fort=[],fp=false,lastLand=null;
-  const hasWind=(M.id==="tanque"&&L>=5)||(M.id==="arco"&&L>=3)||(M.id==="onda"&&L>=4);
+  const hasWind=S?!!S.wind:(M.id==="tanque"&&L>=5)||(M.id==="arco"&&L>=3)||(M.id==="onda"&&L>=4);
+  /* vehículo en movimiento (avión de rescate y helicóptero): lo que sale de él lleva su misma velocidad */
+  let veh=M.id==="drop"?{x:-4,y:28,vx:9+Math.min(L,6)}:M.id==="heli"?{x:3,y:18,vx:3+Math.min(L,6)*0.6,dir:1}:null;
   const PLANETS=[["Tierra",9.8,"#7cc576"],["Marte",3.7,"#d9734e"],["Luna",1.6,"#cbd5e1"]];
   function setup(){
     wind=hasWind?Math.round((Math.random()*2-1)*(1+L*0.4)*10)/10:0;
@@ -2938,17 +2966,22 @@ function shoot(box,L,M){
     if(M.id==="voley"){T.x1=T.net+0.5;T.x2=T.net+Math.max(3,8-L*0.5)}
     if(M.id==="tenis"){T.x1=T.net+0.5;T.x2=T.net+Math.max(3.5,6.4-L*0.3)}
     if(M.id==="tanque"){T={x:rnd(35,55+L*4),hill:L>=6?{x:rnd(15,25),h:rnd(4,9)}:null};fort=[];for(let i=0;i<3;i++)for(let j=0;j<3-i;j++)fort.push({x:T.x+j*1.2+i*0.6,y:i*1.2,up:true})}
-    if(M.id==="cohete"){planet=PLANETS[Math.min(PLANETS.length-1,Math.floor(shots/2))];g=planet[1];T={x:rnd(15,28)*(9.8/g)**0.6,w:3}}
+    if(M.id==="cohete"){planet=PLANETS[Math.min(PLANETS.length-1,ARC?hits:Math.floor(shots/2))];g=planet[1];T={x:rnd(15,28)*(9.8/g)**0.6,w:3}}
+    if(M.id==="drop"){T={x:rnd(30,44),w:Math.max(2.4,3.6-L*0.15)};veh.y=rnd(24,32);veh.vx=(8+Math.min(L,6))*(S&&S.fast?1.3:1)}
+    if(M.id==="heli"){T={x:rnd(30,44),w:Math.max(3,4.4-L*0.15),h:1.8};veh.y=rnd(14,22)}
+    /* cada blanco nuevo: los controles vuelven al centro (hay que calcular de nuevo, no repetir) */
+    if(S&&$("ang")&&M.id!=="drop"){$("ang").value=M.id==="heli"?-20:45;$("pow").value=Math.round((M.v[0]+M.v[1])/2+(Math.random()*2-1)*(M.v[1]-M.v[0])*0.15);upd&&upd()}
     /* desde el 4.º tiro (o desde el principio en niveles altos) el blanco se mueve; el tanque tira a aviones de práctica */
-    const moving=shots>=3||L>=M.lv+3;const sp=0.55+0.12*Math.min(L,8);
-    if(moving&&M.id==="tanque"){T.plane={x:far()+4,y:rnd(12,22),vx:-(4+Math.min(L,8)*0.7),e:pick(["✈️","✈️","🚁","🛩️"])}}
+    const moving=S?!!S.moving:(shots>=3||L>=M.lv+3);const sp=0.55+0.12*Math.min(L,8);
+    if(VEH){}
+    else if((S?S.plane:moving)&&M.id==="tanque"){T.plane={x:far()+4,y:rnd(12,22),vx:-(4+Math.min(L,8)*0.7),e:pick(["✈️","✈️","🚁","🛩️"])}}
     else if(moving&&M.id!=="voley"&&M.id!=="tenis"){const ax=({arco:"y",onda:"y",agua:"y"})[M.id]||"x";
       T.bx=T.x;T.by=T.y;T.mv={ax,a:ax==="y"?({arco:0.9,onda:0.55,agua:0.4})[M.id]:({mano:1.4,basquet:0.9,cohete:4})[M.id]+0.12*Math.min(L,8),w:sp,ph:Math.random()*6}}
-    $("info").innerHTML=`${T.plane?"✈️ <b>¡Avión de práctica!</b> Calculá cuándo tirar: se mueve.":M.tip} · <b>Blanco ${T.mv||T.plane?"≈ ":"a "}${String(targetDist()).replace(".",",")} m</b>${T.mv||T.plane?" · 🎯 <b>¡se mueve!</b>":""}${wind?` · Viento: <b>${wind>0?"→":"←"} ${Math.abs(wind)} m/s²</b>`:""}${planet?` · Planeta: <b>${planet[0]}</b>, gravedad ${String(planet[1]).replace(".",",")} m/s²`:""}`;
+    $("info").innerHTML=`${T.plane?"✈️ <b>¡Avión de práctica!</b> Calculá cuándo tirar: se mueve.":M.tip}${veh?` · ${M.id==="drop"?"✈️ El avión va":"🚁 El helicóptero va"} a <b>${String(Math.round(veh.vx*10)/10).replace(".",",")} m/s</b> y vuela a <b>${Math.round(veh.y)} m</b> de altura`:""} · <b>Blanco ${T.mv||T.plane?"≈ ":"a "}${String(targetDist()).replace(".",",")} m</b>${T.mv||T.plane?" · 🎯 <b>¡se mueve!</b>":""}${wind?` · Viento: <b>${wind>0?"→":"←"} ${Math.abs(wind)} m/s²</b>`:""}${planet?` · Planeta: <b>${planet[0]}</b>, gravedad ${String(planet[1]).replace(".",",")} m/s²`:""}`;
   }
-  const far=()=>({mano:12+L,arco:28+L*2,onda:20+L,agua:9,basquet:8,voley:12,tenis:14,tanque:70+L*4,cohete:Math.max(30,(T.bx??T.x)+8)})[M.id]||30;
+  const far=()=>({mano:12+L,arco:28+L*2,onda:20+L,agua:9,basquet:8,voley:12,tenis:14,tanque:70+L*4,cohete:Math.max(30,(T.bx??T.x)+8),drop:50,heli:50})[M.id]||30;
   const sc=()=>cv.W/(far()+4),gy=()=>cv.H*0.86,X=m=>24+m*sc(),Y=m=>gy()-m*sc();
-  const start=()=>({mano:[0.5,1.4],arco:[0.5,1.3],onda:[0.5,1.5],agua:[0.5,1.1],basquet:[0.5,2],voley:[0.5,1.8],tenis:[0.5,1],tanque:[1,0.9],cohete:[0.8,0.6]})[M.id];
+  const start=()=>veh?[veh.x,veh.y]:({mano:[0.5,1.4],arco:[0.5,1.3],onda:[0.5,1.5],agua:[0.5,1.1],basquet:[0.5,2],voley:[0.5,1.8],tenis:[0.5,1],tanque:[1,0.9],cohete:[0.8,0.6]})[M.id];
   function hitTest(f,px,py){
     if(M.id==="arco"&&px<T.x&&f.x>=T.x&&Math.abs(f.y-T.y)<=T.r)return Math.abs(f.y-T.y)<=0.3?"¡Centro!":"¡Le diste!";
     if(M.id==="mano"&&f.vy<0&&f.y<=T.h&&f.y>0&&Math.abs(f.x-T.x)<=T.w/2)return "¡Adentro del balde!";
@@ -2956,6 +2989,8 @@ function shoot(box,L,M){
     if(M.id==="agua"&&Math.hypot(f.x-T.x,f.y-(T.y+0.3))<=T.r)return "¡Fuego apagado!";
     if(M.id==="basquet"&&f.vy<0&&py>=T.y&&f.y<T.y&&Math.abs(f.x-T.x)<=T.w/2-0.05)return "¡Encestaste!";
     if(T.plane){if(Math.hypot(f.x-T.plane.x,f.y-T.plane.y)<=1.7)return "¡Le diste al avión de práctica!";return null}
+    if(M.id==="drop"&&f.y<=0.9&&Math.abs(f.x-T.x)<=T.w/2)return "¡Provisiones entregadas!";
+    if(M.id==="heli"&&f.y<=T.h&&f.y>0&&Math.abs(f.x-T.x)<=T.w/2)return Math.abs(f.x-T.x)<=0.6?"¡Justo en el centro!":"¡Blanco pintado!";
     if(M.id==="tanque"){for(const b of fort)if(b.up&&f.x>=b.x-0.1&&f.x<=b.x+1.1&&f.y>=b.y&&f.y<=b.y+1.1){fort.forEach(o=>{if(Math.abs(o.x-b.x)<2.2)o.up=false});return "¡Fuerte derribado!"}}
     return null;
   }
@@ -2963,15 +2998,19 @@ function shoot(box,L,M){
     const dt=Math.max(0,Math.min(.05,(now-tPrev)/1000));tPrev=now;t+=dt;const W=cv.W,H=cv.H;
     if(T.mv){const v=T.mv.a*Math.sin(t*T.mv.w+T.mv.ph);if(T.mv.ax==="x")T.x=Math.max(2,T.bx+v);else T.y=Math.max(0.2,T.by+v)}
     if(T.plane){T.plane.x+=T.plane.vx*dt*1.4;if(T.plane.x<6)T.plane.x=far()+4}
+    if(veh&&!ended){if(M.id==="drop"){veh.x+=veh.vx*dt*1.4;if(veh.x>far()+6){veh.x=-6;$("shoot").disabled=!!flying}}else{veh.x+=veh.vx*veh.dir*dt*1.4;if(veh.x>16){veh.dir=-1}if(veh.x<1){veh.dir=1}}}
     if(fp){drawFP(dt);raf=requestAnimationFrame(draw);return}
     if(M.id==="cohete"){grad(ctx,W,H,"#0b1026","#312e81");ctx.fillStyle="#fff";for(let i=0;i<40;i++)ctx.fillRect((i*97)%W,(i*53)%(H*0.8),1.5,1.5)}else grad(ctx,W,H,"#c7e9ff","#f5f3ff");
-    ctx.fillStyle=planet?planet[2]:"#86d36f";ctx.fillRect(0,gy(),W,H-gy());
+    if(VEH){ctx.fillStyle="#0ea5e9";ctx.fillRect(0,gy(),W,H-gy());ctx.strokeStyle="rgba(255,255,255,.5)";ctx.lineWidth=1.5;for(let i=0;i<14;i++){const wx=((i*73+t*25)%(W+40))-20;ctx.beginPath();ctx.arc(wx,gy()+8+(i%3)*9,6,Math.PI,0);ctx.stroke()}}
+    else{ctx.fillStyle=planet?planet[2]:"#86d36f";ctx.fillRect(0,gy(),W,H-gy())}
     // escala
     ctx.fillStyle=M.id==="cohete"?"#fff":"#1f2937";ctx.font="10px system-ui";ctx.textAlign="center";const st=far()>40?10:far()>15?5:1;for(let m=0;m<=far();m+=st){ctx.fillRect(X(m),gy()+3,1,5);ctx.fillText(m+"m",X(m),gy()+16)}
     drawTarget();
     // jugadora
     const av=avatarImage(G.P.avatar,"throw",t<sadT?{mood:"dizzy",fx:["sweat"]}:undefined);const ah=Math.max(70,sc()*2.2);
-    if(M.id==="tanque"){ctx.fillStyle="#4d7c0f";ctx.fillRect(X(0),Y(0.9),sc()*2,sc()*0.9);ctx.beginPath();ctx.arc(X(1),Y(0.9),sc()*0.6,Math.PI,0);ctx.fill();const a=+$("ang").value*Math.PI/180;ctx.strokeStyle="#365314";ctx.lineWidth=Math.max(4,sc()*0.25);ctx.beginPath();ctx.moveTo(X(1),Y(1.1));ctx.lineTo(X(1)+Math.cos(a)*sc()*1.8,Y(1.1)-Math.sin(a)*sc()*1.8);ctx.stroke();
+    if(veh){const s2=sc(),flip=M.id==="drop"||veh.dir>0;ctx.save();ctx.translate(X(veh.x),Y(veh.y));if(flip)ctx.scale(-1,1);ctx.font=`${Math.max(30,s2*4)}px ${EMOJI}`;ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillStyle="#000";ctx.fillText(M.id==="drop"?"✈️":"🚁",0,0);ctx.restore();
+      drawAvatar(ctx,av,X(veh.x)+(flip?-1:1)*Math.max(10,s2*0.6),Y(veh.y)+Math.max(10,s2*1.2),Math.max(28,s2*2.2))}
+    else if(M.id==="tanque"){ctx.fillStyle="#4d7c0f";ctx.fillRect(X(0),Y(0.9),sc()*2,sc()*0.9);ctx.beginPath();ctx.arc(X(1),Y(0.9),sc()*0.6,Math.PI,0);ctx.fill();const a=+$("ang").value*Math.PI/180;ctx.strokeStyle="#365314";ctx.lineWidth=Math.max(4,sc()*0.25);ctx.beginPath();ctx.moveTo(X(1),Y(1.1));ctx.lineTo(X(1)+Math.cos(a)*sc()*1.8,Y(1.1)-Math.sin(a)*sc()*1.8);ctx.stroke();
       drawAvatar(ctx,av,X(0.4),Y(0.6),ah*0.7)}
     else if(M.id==="cohete"){ctx.fillStyle="#94a3b8";ctx.fillRect(X(0)-6,gy()-8,sc()*2+12,8);if(!flying){ctx.save();ctx.translate(X(0.8),gy()-8);ctx.rotate(Math.PI/2-(+$("ang").value)*Math.PI/180);ctx.font=`${Math.max(26,sc()*1.6)}px ${EMOJI}`;ctx.textAlign="center";ctx.fillText("🚀",0,0);ctx.restore()}
       drawAvatar(ctx,av,X(0)-ah*0.25,gy(),ah)}
@@ -2979,13 +3018,13 @@ function shoot(box,L,M){
     // mira
     const [sx,sy]=start();if(!flying){const a=+$("ang").value*Math.PI/180;ctx.strokeStyle="rgba(31,41,55,.35)";ctx.setLineDash([4,6]);ctx.beginPath();ctx.moveTo(X(sx),Y(sy));ctx.lineTo(X(sx)+Math.cos(a)*70,Y(sy)-Math.sin(a)*70);ctx.stroke();ctx.setLineDash([])}
     ctx.fillStyle="rgba(124,58,237,.3)";last.forEach(p=>{ctx.beginPath();ctx.arc(X(p[0]),Y(p[1]),1.6,0,7);ctx.fill()});
-    if(guide&&!flying){const a=+$("ang").value*Math.PI/180,v=+$("pow").value;let [x,y]=start(),vx=v*Math.cos(a),vy=v*Math.sin(a),fu=M.id==="cohete"?1.2:0;ctx.fillStyle="rgba(16,185,129,.85)";
+    if(guide&&!flying){const a=+$("ang").value*Math.PI/180,v=+$("pow").value;let [x,y]=start(),vx=M.id==="drop"?veh.vx:v*Math.cos(a)+(M.id==="heli"?veh.vx*veh.dir:0),vy=M.id==="drop"?0:v*Math.sin(a),fu=M.id==="cohete"?1.2:0;ctx.fillStyle="rgba(16,185,129,.85)";
       for(let i=0;i<400;i++){const h=1/120;let ax=wind,ay=-g;if(fu>0){fu-=h;const an=Math.atan2(vy,vx);ax+=Math.cos(an)*4;ay+=Math.sin(an)*4}vx+=ax*h;vy+=ay*h;x+=vx*h;y+=vy*h;if(y<0)break;
         if(i%6===0&&i<400*0.5){ctx.beginPath();ctx.arc(X(x),Y(y),2.6,0,7);ctx.fill()}}}
     if(flying){let s=dt*1.4;while(s>0&&flying){const h=Math.min(s,1/240);step(h);s-=h}}
     if(flying){ctx.fillStyle="rgba(124,58,237,.6)";trail.forEach(p=>{ctx.beginPath();ctx.arc(X(p[0]),Y(p[1]),1.8,0,7);ctx.fill()});drawProjectile(flying)}
     if(M.id==="agua"){drops=drops.filter(d=>d.l>0);drops.forEach(d=>{d.l-=dt;ctx.fillStyle="rgba(59,130,246,.7)";ctx.beginPath();ctx.arc(X(d.x),Y(d.y),3,0,7);ctx.fill()})}
-    ctx.textAlign="left";ctx.fillStyle=M.id==="cohete"?"#fff":"#1f2937";ctx.font="bold 14px system-ui";ctx.fillText(`Tiros: ${SHOTS-shots}   Adentro: ${hits}   Casi: ${nears}`,10,20);
+    ctx.textAlign="left";ctx.fillStyle=M.id==="cohete"?"#fff":"#1f2937";ctx.font="bold 14px system-ui";ctx.fillText(ARC?`${"❤️".repeat(Math.max(0,lives))}${"🖤".repeat(Math.max(0,S.lives-lives))}   🎯 ${hits} de ${S.goal}`:`Tiros: ${SHOTS-shots}   Adentro: ${hits}   Casi: ${nears}`,10,20);
     if(msg){ctx.textAlign="center";ctx.font="bold 16px system-ui";ctx.fillText(msg,W/2,44)}
     if(wind){ctx.textAlign="right";ctx.font="bold 13px system-ui";ctx.fillText(`Viento ${wind>0?"→":"←"} ${Math.abs(wind)}`,W-10,20)}
     raf=requestAnimationFrame(draw);
@@ -3058,13 +3097,17 @@ function shoot(box,L,M){
     if(M.id==="tanque"){if(T.hill){ctx.fillStyle="#65a30d";ctx.beginPath();ctx.moveTo(X(T.hill.x-6),gy());ctx.quadraticCurveTo(X(T.hill.x),Y(T.hill.h*2),X(T.hill.x+6),gy());ctx.fill()}
       fort.forEach(b=>{ctx.fillStyle=b.up?"#a16207":"rgba(161,98,7,.25)";ctx.fillRect(X(b.x),Y(b.y+1.1),1.1*s,1.1*s);ctx.strokeStyle="#713f12";ctx.strokeRect(X(b.x),Y(b.y+1.1),1.1*s,1.1*s)});ctx.font=`${Math.max(14,s*1.3)}px ${EMOJI}`;ctx.fillStyle="#000";ctx.fillText("🚩",X(T.x+1.8),Y(3.9));
       if(T.plane){const P=T.plane;ctx.save();ctx.translate(X(P.x),Y(P.y));ctx.scale(-1,1);ctx.font=`${Math.max(22,s*3)}px ${EMOJI}`;ctx.textBaseline="middle";ctx.fillText(P.e,0,0);ctx.restore();ctx.strokeStyle="rgba(239,68,68,.6)";ctx.setLineDash([3,4]);ctx.beginPath();ctx.arc(X(P.x),Y(P.y),1.7*s,0,7);ctx.stroke();ctx.setLineDash([])}}
+    if(M.id==="drop"){ctx.font=`${Math.max(24,s*3.2)}px ${EMOJI}`;ctx.textAlign="center";ctx.textBaseline="bottom";ctx.fillText("🛟",X(T.x),gy()+4);ctx.fillStyle="rgba(250,204,21,.85)";ctx.fillRect(X(T.x-T.w/2),gy()-3,T.w*s,3);ctx.textBaseline="alphabetic";ctx.fillStyle="#1f2937";ctx.font="bold 11px system-ui";ctx.fillText("BOTE",X(T.x),gy()-Math.max(26,s*3.3))}
+    if(M.id==="heli"){const x0=X(T.x-T.w/2),w=T.w*s;ctx.fillStyle="#64748b";ctx.beginPath();ctx.moveTo(x0-s*0.8,gy());ctx.lineTo(x0+w+s*0.8,gy());ctx.lineTo(x0+w+s*1.4,Y(T.h*0.55));ctx.lineTo(x0-s*1.4,Y(T.h*0.55));ctx.fill();
+      ctx.fillStyle="#f8fafc";ctx.fillRect(x0,Y(T.h),w,T.h*0.45*s);const cx=X(T.x),cy=Y(T.h*0.78);[[0.5,"#ef4444"],[0.33,"#fff"],[0.17,"#ef4444"]].forEach(([r,c])=>{ctx.fillStyle=c;ctx.beginPath();ctx.arc(cx,cy,Math.max(3,r*T.h*s),0,7);ctx.fill()});
+      ctx.fillStyle="#475569";ctx.fillRect(X(far()-3),gy()-s*5,s*4,s*5);ctx.fillStyle="#1f2937";ctx.font="bold 10px system-ui";ctx.textAlign="center";ctx.fillText("BASE NAVAL",Math.min(X(far()-1),cv.W-40),gy()-s*5-4);ctx.font=`${Math.max(14,s*1.6)}px ${EMOJI}`;ctx.fillText("🚩",X(far()-2.4),gy()-s*5)}
     if(M.id==="cohete"){ctx.fillStyle="#facc15";ctx.fillRect(X(T.x-T.w/2),gy()-6,T.w*s,6);ctx.fillStyle="#fff";ctx.font="bold 11px system-ui";ctx.fillText("PLATAFORMA",X(T.x),gy()-10)}
   }
   function drawProjectile(f){
     const s=sc();ctx.save();ctx.translate(X(f.x),Y(f.y));
     if(M.id==="arco"){ctx.rotate(-Math.atan2(f.vy,f.vx));ctx.strokeStyle="#1f2937";ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(-16,0);ctx.lineTo(10,0);ctx.stroke();ctx.fillStyle="#ef4444";ctx.beginPath();ctx.moveTo(14,0);ctx.lineTo(8,-4);ctx.lineTo(8,4);ctx.fill()}
     else if(M.id==="cohete"){ctx.rotate(Math.PI/2-Math.atan2(f.vy,f.vx));ctx.font=`${Math.max(22,s*1.4)}px ${EMOJI}`;ctx.textAlign="center";ctx.fillStyle="#000";ctx.fillText("🚀",0,8);ctx.font=`${Math.max(12,s*0.8)}px ${EMOJI}`;if(f.fuel>0)ctx.fillText("🔥",0,24)}
-    else{const e={mano:"⚽",onda:"🪨",agua:"💧",basquet:"🏀",voley:"🏐",tenis:"🎾",tanque:"⚫"}[M.id];ctx.rotate(t*6);ctx.font=`${Math.max(14,s*(M.id==="tanque"?0.8:0.55))}px ${EMOJI}`;ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillStyle="#000";ctx.fillText(e,0,0)}
+    else{const e={mano:"⚽",onda:"🪨",agua:"💧",basquet:"🏀",voley:"🏐",tenis:"🎾",tanque:"⚫",drop:"📦",heli:"🟣"}[M.id];ctx.rotate(t*6);ctx.font=`${Math.max(14,s*(M.id==="tanque"?0.8:0.55))}px ${EMOJI}`;ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillStyle="#000";ctx.fillText(e,0,0)}
     ctx.restore();
   }
   function step(dt){
@@ -3091,32 +3134,152 @@ function shoot(box,L,M){
     book.unshift({n:shots,a,v,dist,res:h?"✅ "+h:near?"🟡 "+why+" · ¡casi! (medio punto)":"❌ "+why});
     if(h){const sb=G.P.stats.shotBook||(G.P.stats.shotBook={});const l=sb[M.id]||(sb[M.id]=[]);l.unshift({dist,a,v,w:wind||0,pl:planet?planet[0]:""});sb[M.id]=l.slice(0,8);G.save()}
     drawBook();
-    if(h){hits++;const bon=(f&&f.fp?0.5:0)+(f&&f.mov?0.5:0);const w=G.earn(Math.round(roundPay()*(1+bon)/500)*500);G.save();msg=h+" +"+fmtM(w)+(f&&f.fp?" 🎥":"")+(f&&f.mov?" 🎯":"");FX.good();{const [hx,hy]=tc();FX.sparkle(...cv.screen(...scr(hx,hy)),"#facc15",26)}FX.shake(box);if(/Centro|perfecto|Encestaste/.test(h))FX.confetti(60)}else if(near){const w=G.earn(Math.round(roundPay()/1000)*500);G.save();msg=why+" · ¡Casi! +"+fmtM(w);FX.tone(520,.12,"triangle",.08)}else{msg=why;FX.bad();sadT=t+1.4}
+    if(h){hits++;const bon=(f&&f.fp?0.5:0)+(f&&f.mov?0.5:0);const w=PRAC?0:G.earn(ARC?S.hitPay:Math.round(roundPay()*(1+bon)/500)*500);if(w)G.save();msg=h+" +"+fmtM(w)+(f&&f.fp?" 🎥":"")+(f&&f.mov?" 🎯":"");FX.good();{const [hx,hy]=tc();FX.sparkle(...cv.screen(...scr(hx,hy)),"#facc15",26)}FX.shake(box);if(/Centro|perfecto|Encestaste/.test(h))FX.confetti(60)}else if(near){const w=PRAC||ARC?0:G.earn(Math.round(roundPay()/1000)*500);if(w)G.save();msg=why+" · ¡Casi!"+(w?" +"+fmtM(w):ARC?" No perdés vida.":"");FX.tone(520,.12,"triangle",.08)}else{msg=why;FX.bad();sadT=t+1.4}
+    if(ARC){
+      if(h&&hits>=S.goal){ended=true;setTimeout(()=>finishArc(true),1100);return}
+      if(!h&&!near){lives--;livesLost++;FX.tone(200,.2,"sawtooth",.06)}
+      if(lives<=0){await new Promise(r=>setTimeout(r,900));
+        if(rescues<2){const ok=await S.rescue(rescues+1);rescues++;if(ok){lives=1;msg="❤️ ¡Salvaste una vida! Seguí.";FX.good()}else{ended=true;finishArc(false);return}}
+        else{ended=true;finishArc(false);return}}
+    }
+    else{
     if(shots>=SHOTS){setTimeout(finish,900);return}
-    if(shots%3===0){await new Promise(r=>setTimeout(r,800));const ok=await askQ(null);qTot++;if(ok)qOk++}
-    if(h||M.id==="cohete"||shots===3){setup();if(shots===3)FX.toast(T.plane?"✈️ ¡Ahora tirale al avión de práctica!":"🎯 ¡Ahora el blanco se mueve!")}
+    if(!PRAC&&shots%3===0){await new Promise(r=>setTimeout(r,800));const ok=await askQ(null);qTot++;if(ok)qOk++}}
+    if(h||M.id==="cohete"||(!S&&shots===3)){setup();if(!S&&shots===3)FX.toast(T.plane?"✈️ ¡Ahora tirale al avión de práctica!":"🎯 ¡Ahora el blanco se mueve!")}
     $("shoot").disabled=false;
   }
-  function finish(){cancelAnimationFrame(raf);ui.remove();
+  function finishArc(win){cancelAnimationFrame(raf);ui.remove();S.done({win,hits,livesLost,rescues})}
+  function finish(){cancelAnimationFrame(raf);ui.remove();if(PRAC){S.done({hits,shots});return}
     // puntaje en medios puntos: tiro adentro = 1, casi = ½, pregunta bien = 1. Oro desde el 80%.
     UI.gameEnd("tiro",hits*2+nears+qOk*2,SHOTS*2+qTot*2,[`Modo ${M.name}: ${hits} adentro y ${nears} casi, de ${SHOTS} tiros${qTot?`; ${qOk} de ${qTot} preguntas`:""}.`],{th:{gold:.8,silver:.6,bronze:.4},down:.25})}
   /* centro del blanco y distancia para "casi" */
-  function tc(){if(T.plane)return [T.plane.x,T.plane.y];return ({mano:[T.x,T.h/2],arco:[T.x,T.y],onda:[T.x,T.y+T.h/2],agua:[T.x,T.y+.3],basquet:[T.x,T.y],voley:[(T.x1+T.x2)/2,0],tenis:[(T.x1+T.x2)/2,0],tanque:[T.x+1.2,1],cohete:[T.x,0]})[M.id]||[T.x||0,0]}
-  function nearTol(){return ({mano:.9,arco:1.4,onda:.9,agua:.9,basquet:.6,voley:(T.x2-T.x1)/2+.8,tenis:(T.x2-T.x1)/2+.8,tanque:2.6,cohete:T.w/2+2})[M.id]||1}
+  function tc(){if(T.plane)return [T.plane.x,T.plane.y];return ({drop:[T.x,0.4],heli:[T.x,T.h/2],mano:[T.x,T.h/2],arco:[T.x,T.y],onda:[T.x,T.y+T.h/2],agua:[T.x,T.y+.3],basquet:[T.x,T.y],voley:[(T.x1+T.x2)/2,0],tenis:[(T.x1+T.x2)/2,0],tanque:[T.x+1.2,1],cohete:[T.x,0]})[M.id]||[T.x||0,0]}
+  function nearTol(){return ({drop:T.w/2+2,heli:T.w/2+1.8,mano:.9,arco:1.4,onda:.9,agua:.9,basquet:.6,voley:(T.x2-T.x1)/2+.8,tenis:(T.x2-T.x1)/2+.8,tanque:2.6,cohete:T.w/2+2})[M.id]||1}
   function targetDist(){if(T.plane)return Math.round(T.plane.x*10)/10;return Math.round((M.id==="voley"||M.id==="tenis"?T.net:T.x||0)*10)/10}
   function drawBook(){
     const sb=((G.P.stats.shotBook||{})[M.id]||[]).slice(0,4);const nf=n=>String(n).replace(".",",");
     $("book").innerHTML=`<h4>📒 Cuaderno de tiros</h4>${book.length?`<ol>${book.slice(0,5).map(b=>`<li><b>#${b.n}</b> ${b.a}° · ${b.v} m/s · blanco a ${nf(b.dist)} m → ${esc(b.res)}</li>`).join("")}</ol>`:`<p class="note">Anotá mentalmente: si te faltó, subí la fuerza; si te pasaste, bajala. El ángulo de 45° es el que llega más lejos.</p>`}
-      ${sb.length?`<p class="note"><b>Te funcionó antes:</b> ${sb.map(x=>`blanco a ${nf(x.dist)} m → ${x.a}° y ${x.v} m/s${x.w?` (viento ${nf(x.w)})`:""}${x.pl?` en ${x.pl}`:""}`).join(" · ")}</p>`:""}`}
-  const upd=()=>{$("angV").textContent=$("ang").value+"°";$("powV").textContent=$("pow").value+" m/s"};
+`}
+  upd=()=>{$("angV").textContent=$("ang").value+"°";$("powV").textContent=$("pow").value+" m/s"};
   $("ang").oninput=upd;$("pow").oninput=upd;upd();
-  $("shoot").onclick=()=>{if(flying||shots>=SHOTS)return;const a=+$("ang").value*Math.PI/180,v=+$("pow").value;const [sx,sy]=start();flying={x:sx,y:sy,vx:v*Math.cos(a),vy:v*Math.sin(a),fuel:M.id==="cohete"?1.2:0,fp,mov:!!(T.mv||T.plane)};msg="";$("shoot").disabled=true;FX.tone(300,.08,"triangle",.1)};
-  $("view").onclick=()=>{if(flying)return;fp=!fp;$("view").textContent=fp?"🎥 Cambiar a vista de costado":"🎥 Cambiar a primera persona (+50%)";FX.pop()};
+  $("shoot").onclick=()=>{if(flying||shots>=SHOTS)return;const a=+$("ang").value*Math.PI/180,v=+$("pow").value;const [sx,sy]=start();flying=M.id==="drop"?{x:veh.x,y:veh.y-1,vx:veh.vx,vy:0,fuel:0,fp:false,mov:false}:{x:sx,y:sy,vx:v*Math.cos(a)+(M.id==="heli"?veh.vx*veh.dir:0),vy:v*Math.sin(a),fuel:M.id==="cohete"?1.2:0,fp,mov:!!(T.mv||T.plane)};msg="";$("shoot").disabled=true;FX.tone(300,.08,"triangle",.1)};
+  $("view").onclick=()=>{if(flying)return;fp=!fp;$("view").textContent=fp?"🎥 Cambiar a vista de costado":"🎥 Cambiar a primera persona"+(S?"":" (+50%)");FX.pop()};
   $("guide").onclick=()=>{if(guide||flying)return;if(UI.useHelpCash()){guide=true;FX.toast("👁️ Vas a ver el comienzo del tiro antes de tirar")}};
+  /* solo para las pruebas automáticas: simula un tiro sin dibujarlo */
+  if(window.TIRO_TEST)window.__tiro={get T(){return T},get veh(){return veh},get g(){return g},get lives(){return lives},M,
+    sim(a,v){const ups=fort.map(b=>b.up);const [sx,sy]=start();a=a*Math.PI/180;
+      const f=M.id==="drop"?{x:veh.x,y:veh.y-1,vx:veh.vx,vy:0,fuel:0}:{x:sx,y:sy,vx:v*Math.cos(a)+(M.id==="heli"?veh.vx*veh.dir:0),vy:v*Math.sin(a),fuel:M.id==="cohete"?1.2:0};let res=false;
+      for(let i=0;i<20000;i++){const h=1/240;let ax=wind,ay=-g;if(M.id==="cohete"&&f.fuel>0){f.fuel-=h;const an=Math.atan2(f.vy,f.vx);ax+=Math.cos(an)*4;ay+=Math.sin(an)*4}
+        f.vx+=ax*h;f.vy+=ay*h;const px=f.x,py=f.y;f.x+=f.vx*h;f.y+=f.vy*h;
+        if((M.id==="voley"||M.id==="tenis")&&px<T.net&&f.x>=T.net&&f.y<=T.nh)break;
+        if(M.id==="tanque"&&T.hill){const hx=f.x-T.hill.x;if(Math.abs(hx)<6&&f.y<=T.hill.h*(1-(hx/6)**2))break}
+        if(hitTest(f,px,py)){res=true;break}if(M.id==="basquet"&&f.x>T.x+1.2)break;
+        if(f.y<=0){if((M.id==="voley"||M.id==="tenis")&&f.x>=T.x1&&f.x<=T.x2)res=true;if(M.id==="cohete"&&Math.abs(f.x-T.x)<=T.w/2)res=true;break}
+        if(f.x>far()+6||f.x<-2)break}
+      fort.forEach((b,i)=>b.up=ups[i]);return res},
+    set(a,v){$("ang").value=a;$("pow").value=v;upd()}};
   setup();drawBook();raf=requestAnimationFrame(draw);
   const key=e=>{if(e.code==="Space"){e.preventDefault();$("shoot").click()}};addEventListener("keydown",key);
   return ()=>{cancelAnimationFrame(raf);cv.stop();removeEventListener("keydown",key)};
 }
+
+/* =====================================================================
+   TIRO LIBRE ARCADE — 12 escenarios, como los arcade de los 80
+   Se empieza por el más fácil y cada escenario abre el siguiente.
+   3 vidas por escenario; si se terminan, una pregunta puede salvar una
+   vida (hasta 2 veces). Cada escenario enseña un concepto de física.
+   Paga bien la PRIMERA vez que se supera un escenario; repetir paga poco.
+   ===================================================================== */
+const TSTAGES=[
+ {mode:"mano",name:"El patio",icon:"🏫",L:1,concept:"Fuerza",txt:"Con más <b>fuerza</b> la pelota sale más rápido y llega más lejos. Si te faltó, subí la fuerza; si te pasaste, bajala.",
+  q:[["Tiraste la pelota y te faltó un metro para llegar al balde. ¿Qué cambiás?","Subo un poco la fuerza",["Bajo la fuerza","Tiro con los ojos cerrados","Cambio de balde"],"Más fuerza = más velocidad al salir = llega más lejos."],
+     ["¿Qué hace que una pelota caiga de nuevo al piso?","La gravedad, que la atrae hacia la Tierra",["El viento","La pelota se cansa","El aire la empuja para abajo siempre"],"La gravedad tira todo hacia el centro de la Tierra."]]},
+ {mode:"arco",name:"El campo de arquería",icon:"🏹",L:1,concept:"Ángulo",txt:"El <b>ángulo</b> también cambia la distancia. Con la misma fuerza, <b>45°</b> es el ángulo que llega más lejos.",
+  q:[["Con la misma fuerza, ¿qué ángulo llega más lejos?","45°",["10°","80°","90°"],"A 45° la velocidad se reparte igual entre ir hacia adelante y subir."],
+     ["Si tirás a 90° (derecho para arriba), ¿dónde cae?","Cerca de donde la tiraste",["Muy lejos","No cae nunca","A 45 metros"],"Toda la velocidad va hacia arriba: no avanza hacia adelante."]]},
+ {mode:"onda",name:"La feria",icon:"🎪",L:2,concept:"Tiro parabólico",txt:"Lo que tirás dibuja una curva llamada <b>parábola</b>: sube, frena arriba de todo y baja. Para pegarle a algo alto, tiene que pasar justo por ahí.",
+  q:[["¿Qué forma dibuja una piedra que tirás hacia adelante y arriba?","Una curva (parábola)",["Una línea recta","Un círculo","Un zigzag"],"La gravedad la va curvando hacia abajo todo el tiempo."],
+     ["En el punto más alto de la curva, la piedra…","deja de subir y empieza a bajar",["se queda quieta para siempre","va más rápido que nunca","desaparece"],"Arriba de todo la velocidad hacia arriba llega a cero."]]},
+ {mode:"agua",name:"El incendio",icon:"🔥",L:2,concept:"Gravedad",txt:"El chorro de agua también cae por la <b>gravedad</b>. Cuanto más lejos está el fuego, más hay que apuntar hacia arriba o apretar más fuerte.",
+  q:[["¿Por qué el chorro de una manguera se curva hacia abajo?","Por la gravedad",["Porque el agua está fría","Por el sol","Porque la manguera es larga"],"La gravedad tira cada gota hacia abajo mientras avanza."],
+     ["Si el fuego está más lejos, ¿qué conviene?","Apuntar un poco más arriba o con más fuerza",["Apuntar al piso","Cerrar la canilla","Tirar más despacio"],"Así el chorro tiene más tiempo en el aire para llegar."]]},
+ {mode:"basquet",name:"La cancha",icon:"🏀",L:3,concept:"Tiro alto",txt:"Para encestar, la pelota tiene que <b>entrar bajando</b>. Un ángulo alto (60° a 70°) hace que caiga desde arriba y entre mejor en el aro.",
+  q:[["¿Por qué los basquetbolistas tiran la pelota bien alta?","Para que entre en el aro bajando, desde arriba",["Para que no la vea nadie","Porque pesa poco","Para que rebote en el techo"],"Si llega bajando, el aro le queda más «abierto»."],
+     ["Si la pelota llega muy horizontal al aro…","choca contra el aro y no entra",["entra siempre","se frena sola","sube"],"Llegando de costado el aro le queda chiquito."]]},
+ {mode:"voley",name:"El club",icon:"🏐",L:3,concept:"Dos condiciones",txt:"Acá hay que cumplir <b>dos cosas a la vez</b>: pasar por arriba de la red y caer adentro de la cancha. Ni muy bajo ni muy largo.",
+  q:[["En vóley, ¿qué tiene que pasar para que sea punto?","Pasar la red y caer dentro de la cancha rival",["Solo pasar la red","Solo tirar fuerte","Pegarle a la red"],"Son dos condiciones juntas: si falta una, no es punto."],
+     ["La pelota pasó la red pero cayó afuera. ¿Qué cambiás?","Un poco menos de fuerza",["Más fuerza","Tiro más bajo","Nada"],"Pasó bien la red: solo le sobró distancia."]]},
+ {mode:"arco",name:"Día de viento",icon:"🌬️",L:4,wind:true,concept:"Viento",txt:"El <b>viento</b> empuja lo que vuela. Viento a favor (→) lo lleva más lejos; viento en contra (←) lo frena. Hay que corregir.",
+  q:[["Hay viento a favor (empuja hacia el blanco). ¿Qué hacés?","Tiro con un poco menos de fuerza",["Tiro con más fuerza","Apunto al revés","No cambio nada"],"El viento ya te ayuda a llegar más lejos."],
+     ["Con viento en contra, la flecha…","llega más corta",["llega más lejos","va más rápido","sube más"],"El viento la frena mientras vuela."]]},
+ {mode:"mano",name:"La feria en movimiento",icon:"🎠",L:4,moving:true,concept:"Anticipar el movimiento",txt:"Si el blanco se mueve, no apuntes adonde <b>está</b>: apuntá adonde <b>va a estar</b> cuando llegue tu tiro. Mirá su ritmo antes de tirar.",
+  q:[["Un balde se mueve de lado a lado. ¿Cuándo conviene tirar?","Antes de que llegue al lugar, para que se encuentren",["Cuando ya pasó","Con los ojos cerrados","Nunca"],"Tu tiro tarda en llegar: hay que adelantarse."],
+     ["¿Por qué los arqueros de fútbol se tiran antes del remate?","Porque la pelota tarda y quieren estar donde va a llegar",["Porque les gusta tirarse","Para ensuciarse","Por el viento"],"Anticipar es calcular dónde va a estar algo."]]},
+ {mode:"drop",name:"Avión de rescate",icon:"✈️",L:4,concept:"Inercia",txt:"Un paquete que se suelta desde un avión <b>sigue avanzando</b> con la velocidad del avión mientras cae (eso es la <b>inercia</b>). Por eso hay que soltarlo <b>antes</b> de pasar por encima del bote.",
+  q:[["Si soltás un paquete justo arriba del bote desde un avión que avanza, ¿dónde cae?","Más adelante del bote",["Justo en el bote","Atrás del bote","Vuelve al avión"],"El paquete conserva la velocidad del avión: sigue avanzando mientras cae."],
+     ["¿Qué es la inercia?","Las cosas siguen moviéndose como venían si nada las frena",["Que todo se cae","Una fuerza del viento","Un tipo de avión"],"Por eso en el colectivo, cuando frena, tu cuerpo sigue hacia adelante."]]},
+ {mode:"tanque",name:"Maniobras",icon:"🛡️",L:5,plane:true,concept:"Blancos en el aire",txt:"Ahora el blanco vuela. Tu tiro sube y el avión de práctica avanza: los dos tienen que <b>encontrarse en el mismo lugar al mismo tiempo</b>.",
+  q:[["Para pegarle a algo que vuela, tu tiro y el blanco tienen que…","estar en el mismo lugar al mismo tiempo",["salir juntos","ir para el mismo lado","ser del mismo color"],"Es un encuentro: importa el lugar y también el momento."],
+     ["Un avión viene hacia vos. ¿Conviene tirar cuando está lejos o encima tuyo?","Un poco antes, calculando cuánto tarda el tiro en subir",["Cuando ya pasó","Nunca","Siempre cuando está encima"],"Tu tiro tarda en llegar: hay que adelantarse."]]},
+ {mode:"heli",name:"Base naval",icon:"🚁",L:5,concept:"Velocidad relativa",txt:"Disparás <b>desde un helicóptero que se mueve</b>. Tu disparo suma tu velocidad más la del helicóptero: si va hacia el barco, el tiro llega más lejos; si se aleja, más corto.",
+  q:[["Si el helicóptero va hacia el blanco, tu disparo…","llega más lejos, porque suma la velocidad del helicóptero",["llega más corto","no cambia","sale para atrás"],"Las velocidades se suman: eso es la velocidad relativa."],
+     ["Caminás hacia adelante en un tren que va a 50 km/h. Para alguien en el andén vas…","un poco más rápido que el tren",["más lento que el tren","quieto","a 0 km/h"],"Tu velocidad se suma a la del tren."]]},
+ {mode:"cohete",name:"FINAL: Misión espacial",icon:"🚀",L:6,final:true,concept:"Gravedad en otros planetas",txt:"Escenario final: aterrizá en la Tierra, en Marte y en la Luna. Cada planeta tiene <b>distinta gravedad</b>: en la Luna (1,6) todo cae mucho más despacio que en la Tierra (9,8).",
+  q:[["¿En qué lugar un salto te llevaría más alto?","En la Luna",["En la Tierra","En Júpiter","Da igual"],"La Luna tiene mucha menos gravedad: te atrae menos."],
+     ["Si en la Luna la gravedad es menor, con la misma fuerza el cohete…","llega más lejos",["llega más cerca","no despega","cae enseguida"],"Con menos gravedad tarda más en caer, y avanza más."]]}
+];
+const TP=()=>{const p=G.P;if(!p.tiroArc)p.tiroArc={best:{},clears:{}};return p.tiroArc};
+const tStageOpen=i=>i===0||TP().best[i-1]!=null;
+const T_MED={gold:3,silver:2,bronze:1},T_MED_ICON={gold:"🥇",silver:"🥈",bronze:"🥉"};
+
+GAMEFN.tiro=function(box,L){
+  let stop=null;
+  const map=()=>{stop&&stop();stop=null;const P=TP();const next=TSTAGES.findIndex((_,i)=>tStageOpen(i)&&P.best[i]==null);
+    box.innerHTML=`<div class="arc-head"><div class="arc-title">🎯 TIRO LIBRE <span>ARCADE</span></div><p class="note">Superá los escenarios en orden. Cada uno enseña algo nuevo de física. Tenés 3 ❤️ por escenario y, si las perdés, una pregunta te puede salvar.</p></div>
+      <div class="arc-map">${TSTAGES.map((st,i)=>{const open=tStageOpen(i),b=P.best[i];
+        return `<button type="button" class="arc-st ${open?"":"lock"} ${i===next?"next":""} ${st.final?"final":""}" data-i="${i}" ${open?"":"disabled"}><span class="arc-n">${i+1}</span><span class="arc-ic">${open?st.icon:"🔒"}</span><b>${esc(st.name)}</b><small>${open?esc(st.concept):"Superá el escenario anterior"}</small><span class="arc-med">${b?T_MED_ICON[b]:open?"▶":""}</span></button>`}).join("")}</div>
+      <div class="arc-foot"><button class="btn" type="button" id="tPrac">🎯 Práctica libre <small>(no paga)</small></button></div>`;
+    box.querySelectorAll(".arc-st").forEach(b=>b.onclick=()=>intro(+b.dataset.i));$("tPrac").onclick=practice;
+    const nb=box.querySelector(".arc-st.next");if(nb)setTimeout(()=>nb.scrollIntoView({block:"center",behavior:"smooth"}),150)};
+  const intro=i=>{const st=TSTAGES[i],M=SHOT_MODES.find(m=>m.id===st.mode),P=TP(),first=P.best[i]==null;
+    box.innerHTML=`<div class="arc-intro ${st.final?"final":""}"><div class="arc-big">ESCENARIO ${i+1}</div><div class="arc-ic2">${st.icon}</div><h3>${esc(st.name)}</h3>
+      <div class="arc-concept"><b>📘 ${esc(st.concept)}</b><p>${st.txt}</p></div>
+      <ul class="arc-goals"><li>🎯 Objetivo: <b>acertá 3 tiros</b> (${esc(M.tip)})</li><li>❤️❤️❤️ Tenés <b>3 vidas</b>: cada tiro errado cuesta una. Un «casi» no cuenta.</li><li>❓ Sin vidas, respondé una pregunta para salvar una (hasta 2 veces).</li>
+      <li>💰 ${first?`Primera vez: <b>${fmtM(tClearPay(i))}</b> al superarlo y ${fmtM(tHitPay(i,true))} por acierto.`:`Ya lo superaste: repetirlo paga poco (${fmtM(Math.round(tClearPay(i)*0.1))}). Te conviene avanzar.`}</li></ul>
+      <div class="mactions"><button class="btn" type="button" id="tMap">🗺️ Mapa</button><button class="btn primary big" type="button" id="tGo">¡A jugar! ▶</button></div></div>`;
+    $("tMap").onclick=map;$("tGo").onclick=()=>play(i)};
+  const play=i=>{const st=TSTAGES[i],M=SHOT_MODES.find(m=>m.id===st.mode),P=TP(),first=P.best[i]==null;let used=[];
+    UI.cur.diff=st.L;
+    stop=shoot(box,st.L,M,{goal:3,lives:3,wind:!!st.wind,moving:!!st.moving,plane:!!st.plane,hitPay:tHitPay(i,first),
+      rescue:async n=>{const pool=st.q.filter(q=>!used.includes(q));const Q=pool.length?pick(pool):null;let q;
+        if(Q){used.push(Q);q={q:Q[0],opts:shuffle([Q[1],...Q[2]]),ans:Q[1],e:Q[3],s:"mate",l:2}}else q=G.pickQ("mate");
+        const r=await UI.ask(q,{progress:`❤️ Pregunta para salvar una vida (${n} de 2)`,noMiss:true});return r.ok},
+      done:res=>end(i,res,first)})};
+  const end=(i,res,first)=>{stop&&stop();stop=null;const st=TSTAGES[i],P=TP();
+    if(!res.win){FX.bad();UI.modal(`<div class="arc-over"><div class="arc-big">GAME OVER</div><p>Llegaste a <b>${res.hits} de 3</b> aciertos en «${esc(st.name)}».</p><div class="arc-concept"><b>📘 Para la próxima: ${esc(st.concept)}</b><p>${st.txt}</p></div>
+      <div class="mactions"><button class="btn" type="button" id="oMap">🗺️ Mapa</button><button class="btn primary" type="button" id="oAgain">🔁 Reintentar</button></div></div>`);
+      $("oMap").onclick=()=>{UI.close();map()};$("oAgain").onclick=()=>{UI.close();intro(i)};return}
+    const medal=res.livesLost===0&&!res.rescues?"gold":res.rescues?"bronze":"silver";const prev=P.best[i];
+    let pay=0;if(first)pay+=G.earn(tClearPay(i));else pay+=G.earn(Math.round(tClearPay(i)*0.1/500)*500);
+    let medTxt="";if(!prev||T_MED[medal]>T_MED[prev]){P.best[i]=medal;const g=G.P.games.tiro||(G.P.games.tiro={plays:0,best:0,lvl:1,medals:{bronze:0,silver:0,gold:0}});g.medals[medal]++;G.P.medals[medal]++;medTxt=`${T_MED_ICON[medal]} ¡Medalla de ${({gold:"oro",silver:"plata",bronze:"bronce"})[medal]} en este escenario!`}
+    P.clears[i]=(P.clears[i]||0)+1;const g=G.P.games.tiro;g.plays=(g.plays||0)+1;g.lvl=Math.max(g.lvl||1,Math.min(10,1+Object.keys(P.best).length));
+    G.addXP(first?10+i*2:2,0);G.save();FX.fanfare();FX.confetti(st.final&&first?260:120);
+    const fin=st.final&&first;
+    UI.modal(`<div class="arc-win ${fin?"final":""}"><div class="arc-big">${fin?"🏆 ¡GANASTE EL ARCADE!":"¡ESCENARIO SUPERADO!"}</div><div class="arc-ic2">${st.icon}</div>
+      <p>${medTxt||`Medalla: ${T_MED_ICON[medal]}`}</p><p class="arc-pay">${plus(pay)} ${first?"por superarlo":"(repetir paga poco)"}</p>
+      ${medal!=="gold"?`<p class="note">${medal==="silver"?"🥇 Oro: superalo sin perder ninguna vida.":"🥈 Plata: superalo sin necesitar preguntas."}</p>`:""}
+      ${fin?`<p>¡Completaste los 12 escenarios! Ahora sabés de fuerza, ángulo, gravedad, viento, inercia y velocidad relativa.</p>`:""}
+      <div class="mactions"><button class="btn" type="button" id="wMap">🗺️ Mapa</button>${i<TSTAGES.length-1?`<button class="btn primary" type="button" id="wNext">Escenario ${i+2} ▶</button>`:""}</div></div>`);
+    $("wMap").onclick=()=>{UI.close();map()};if($("wNext"))$("wNext").onclick=()=>{UI.close();intro(i+1)}};
+  const practice=()=>{const P=TP();const ok=SHOT_MODES.filter(m=>TSTAGES.some((st,i)=>st.mode===m.id&&tStageOpen(i)));
+    box.innerHTML=`<p class="note center">Práctica libre: probá los modos que ya abriste. <b>No paga</b>: sirve para entrenar.</p><div class="modegrid">${ok.map(m=>`<button class="modeb" type="button" data-m="${m.id}"><span>${m.icon}</span><b>${m.name}</b><small>${esc(m.tip)}</small></button>`).join("")}</div><div class="mactions"><button class="btn" type="button" id="pBack">🗺️ Mapa</button></div>`;
+    $("pBack").onclick=map;
+    box.querySelectorAll(".modeb").forEach(b=>b.onclick=()=>{stop=shoot(box,Math.max(1,L),SHOT_MODES.find(m=>m.id===b.dataset.m),{practice:true,done:r=>{stop&&stop();stop=null;FX.toast(`Práctica: ${r.hits} de ${r.shots} adentro`);practice()}})})};
+  map();
+  return ()=>{stop&&stop()};
+};
+const tClearPay=i=>30000+20000*i+(TSTAGES[i].final?100000:0);     // $300 en el 1 … $2.500 (+$1.000 el final)
+const tHitPay=(i,first)=>first?2500+Math.round(i*500/500)*500:500;  // $25 a $80 por acierto la primera vez; $5 al repetir
 
 /* =====================================================================
    JUEGOS (2): Kiosco, Ábaco, Plato arcoíris, Ciudad vial, Robot
