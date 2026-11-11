@@ -850,6 +850,46 @@ body{background:radial-gradient(1200px 600px at 10% -10%,#ddd6fe 0%,transparent 
 .arc-goals li{background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:6px 10px}
 .arc-pay{font-size:20px;font-weight:900}
 .arc-win.final .arc-big{background:linear-gradient(90deg,#7c3aed,#db2777);color:#fff}
+/* palabras encadenadas */
+.wp-title{font-family:var(--display);font-size:26px;text-align:center;margin:4px 0 6px}
+.wp-ex{text-align:center;font-size:18px;font-weight:700;color:#6d28d9}.wp-ex b{color:#db2777;font-size:22px}
+.wp-lang{display:flex;gap:8px;justify-content:center;margin:10px 0}
+.wp-lang button{font:inherit;font-weight:800;font-size:16px;border:3px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:8px 16px;cursor:pointer}
+.wp-lang button.on{border-color:#7c3aed;background:color-mix(in srgb,#7c3aed 14%,var(--surface))}
+.wp-code{font-family:"Courier New",monospace;font-size:22px;letter-spacing:3px;background:#111827;color:#facc15;border-radius:8px;padding:2px 8px}
+.wp-plist{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:10px 0}.wp-pl{display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:8px 10px}
+.wp-ring{position:relative;width:min(94vw,540px);aspect-ratio:1;margin:0 auto;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,#7c3aed 10%,var(--surface)) 0 55%,transparent 56%),repeating-conic-gradient(color-mix(in srgb,#facc15 18%,transparent) 0 10deg,transparent 10deg 20deg)}
+.wp-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:4px;width:46%;text-align:center}
+.wp-watch{position:relative;width:min(30vw,150px);aspect-ratio:1;display:grid;place-items:center}
+.wp-watch svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.wp-watch circle{fill:none;stroke-width:10}.wp-watch .bg{stroke:#e5e7eb;fill:#fff}.wp-watch .fg{stroke:#22c55e;stroke-dasharray:327;stroke-linecap:round;transition:stroke-dashoffset .1s linear}
+.wp-watch .fg.hurry{stroke:#ef4444}
+.wp-watch b{position:relative;font-family:"Courier New",monospace;font-size:min(10vw,48px);font-weight:900;color:#1f2937}
+.wp-watch.hurry b{color:#dc2626;animation:wpPulse .25s ease-in-out infinite alternate}
+.wp-watch .wp-btn{position:absolute;top:-9px;left:50%;width:22px;height:12px;margin-left:-11px;background:#64748b;border-radius:4px 4px 0 0;z-index:1}
+@keyframes wpPulse{to{transform:scale(1.15)}}
+.wp-need{font-weight:800;font-size:14px}.wp-need b{display:inline-grid;place-items:center;min-width:34px;height:34px;border-radius:10px;background:#7c3aed;color:#fff;font-size:22px;margin-left:4px}
+.wp-last{font-size:16px;font-weight:700;word-break:break-word}.wp-last b{color:#db2777;font-size:20px}.wp-last small{color:var(--muted);font-weight:600}
+.wp-seat,.wp-seat-c{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:0;text-align:center;transition:transform .3s,opacity .3s;max-width:22%}
+.wp-seat b,.wp-seat-c b{font-size:12px;line-height:1.1;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.wp-seat small{font-size:11px;font-weight:800;color:var(--muted)}
+.wp-seat.turn .wp-av{filter:drop-shadow(0 0 8px #facc15) drop-shadow(0 0 4px #facc15);transform:scale(1.12)}
+.wp-seat.me b{color:#7c3aed}
+.wp-seat.out{opacity:.35;filter:grayscale(1)}
+.wp-pen{position:absolute;top:-6px;right:-4px;font-size:20px;animation:wpPulse .5s ease-in-out infinite alternate}
+.wp-mummy{position:absolute;transform:translate(-50%,-50%) translate(140px,-40px) scale(.6);opacity:0;transition:transform .8s ease-out,opacity .5s;z-index:3;pointer-events:none}
+.wp-mummy.in{transform:translate(-50%,-50%) translate(26px,0) scale(1);opacity:1}
+.wp-mummy.away,.wp-taken.away{transform:translate(-50%,-50%) translate(260px,40px) scale(.5) rotate(15deg);opacity:0;transition:transform 1.5s ease-in,opacity 1.5s ease-in}
+.wp-taken{z-index:2}
+.wp-me{margin:12px auto;max-width:520px;text-align:center}
+.wp-input{display:flex;gap:8px}.wp-input input{flex:1;font:inherit;font-size:22px;font-weight:800;padding:10px 12px;border-radius:14px;border:3px solid #7c3aed;background:var(--surface);color:var(--ink);text-transform:lowercase}
+.wp-input input.shake{animation:wpShake .3s}@keyframes wpShake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.wp-fb{font-weight:700;margin:6px 0 0}.wp-fb.bad{color:#dc2626}
+.wp-wait,.wp-spec{font-weight:800;font-size:16px}.wp-spec{background:color-mix(in srgb,#0ea5e9 12%,var(--surface));border-radius:12px;padding:8px 12px}
+.wp-emos{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}.wp-emos button{font-size:22px;background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:4px 8px;cursor:pointer}
+.wp-hist{text-align:center;color:var(--muted);font-weight:700;margin:10px auto;max-width:560px;line-height:1.6}.wp-hist span{color:var(--ink)}
+.wp-win{text-align:center}.wp-winav{animation:wpJump .6s ease-in-out infinite alternate}@keyframes wpJump{to{transform:translateY(-14px)}}
+.wp-seat,.wp-seat-c{pointer-events:none}.wp-ring{margin:34px auto 60px}.wp-me{position:relative;z-index:4}
+.wp-mummy svg{filter:drop-shadow(0 0 2px #44403c) drop-shadow(0 4px 6px rgba(0,0,0,.45))}
 
 </style>
 </head>
@@ -2226,6 +2266,7 @@ const GAMES=[
   {id:"robot",name:"Robot programador",icon:"🤖",s:"ia",desc:"Aprendé a programar en 7 mundos: algoritmos, bugs, bucles, sensores, robots autónomos y tus propios bloques."},
   {id:"ingles",name:"Viaje en inglés",icon:"✈️",s:"ingles",desc:"Escuchá, elegí la frase correcta y seguí indicaciones en un mapa: turn left, go straight."},
   {id:"tiempo",name:"Línea de tiempo",icon:"⏳",s:"historia",desc:"Ordená hechos de la historia del mundo y de Argentina, del más antiguo al más nuevo."},
+  {id:"palabras",name:"Palabras encadenadas",icon:"🔤",s:"ingles",desc:"¡Online! Por turnos y con 12 segundos: una palabra que empiece con la última letra de la anterior. En español o en inglés. ¡Cuidado con la momia!"},
   {id:"memoria",name:"Memoria en equipo",icon:"🃏",s:"geografia",desc:"¡Online! Cada uno desde su casa, por turnos: da vuelta cartas y encontrá parejas de países, inglés, historia y tablas. También con robots."},
   {id:"poleas",name:"Poleas y palancas",icon:"🏗️",s:"mate",desc:"Física con las manos: poleas, palancas, rampas, engranajes, rozamiento, flotación, caída libre y energía. Cada nivel suma conceptos."}
 ];
@@ -2700,7 +2741,7 @@ var LIVE = {
   ONLINE_MS: 75000, MSG_MS: 6 * 3600 * 1000, MAXMSG: 300, GAP_MS: 2500,
   EMOJIS: ['👋', '😀', '😂', '🥳', '👏', '💪', '⭐', '❤️', '🔥', '😮', '👍', '🎉'],
   PHRASES: ['Sí', 'No', '¿Estás juntando dinero para mejorar tu avatar?', '¿Jugamos Memoria?', '¡Holaaa!', '¡Te vi!'],
-  PLACES: ['inicio', 'juegos', 'premios', 'avatar', 'amigos', 'detective', 'tiro', 'kiosco', 'abaco', 'plato', 'vial', 'robot', 'ingles', 'tiempo', 'memoria', 'poleas', 'quiz'],
+  PLACES: ['inicio', 'juegos', 'premios', 'avatar', 'amigos', 'detective', 'tiro', 'kiosco', 'abaco', 'plato', 'vial', 'robot', 'ingles', 'tiempo', 'memoria', 'palabras', 'poleas', 'quiz'],
   err: function (m) { var e = new Error(m); e.live = true; throw e; },
   empty: function () { return { p: {}, m: [], seq: 0 }; },
   clean: function (st, now) {
@@ -2745,6 +2786,120 @@ var LIVE = {
   }
 };
 if (typeof module !== 'undefined') module.exports = LIVE;
+
+/* =====================================================================
+   PALABRAS ENCADENADAS — reglas compartidas
+   El mismo código corre en la hoja de Google (Codigo.gs) y en el juego
+   (para practicar con robots). Cada uno tiene 12 segundos para escribir
+   una palabra que empiece con la última letra de la anterior. Si no
+   llega, sale de la ronda (y puede seguir mirando). Gana el último.
+   El diccionario completo lo revisa la app; acá se controlan la cadena,
+   las repetidas y las malas palabras.
+   ===================================================================== */
+var WROOM = {
+  MAXP: 8, TURN_MS: 12000, GRACE_MS: 2600, AWAY_MS: 40000, MIN: 3, MAX: 16, LETTERS: 'ABCDEFGHJKLMNPQRSTUVWXYZ',
+  START: { es: 'abcdefgilmnprstv', en: 'abcdefghlmnprstw' },
+  BAD: {"es": ["asesinato", "asno", "bastarda", "bastardo", "bollera", "boluda", "boludas", "boludez", "boludo", "boludos", "cabron", "caca", "cagada", "cagadas", "cagar", "cago", "cagon", "cagona", "carajo", "chota", "choto", "chupada", "chupapollas", "chupeton", "coger", "cogida", "cogio", "concha", "conchuda", "conchudo", "coprofagia", "coño", "cretina", "cretino", "culiada", "culiado", "culo", "culos", "drogas", "esperma", "estupida", "estupidas", "estupido", "estupidos", "follador", "follar", "forra", "forras", "forro", "forros", "garca", "garcas", "gil", "gila", "giles", "gilipichis", "gilipollas", "hdp", "heroina", "hijaputa", "hijoputa", "idiota", "idiotas", "imbecil", "imbeciles", "infierno", "jilipollas", "kapullo", "lameculos", "maciza", "macizorra", "maldito", "mamada", "marica", "maricon", "maricona", "mariconazo", "martillo", "mierda", "mierdas", "mogolica", "mogolico", "nazi", "orina", "ortiva", "orto", "pedo", "pelotuda", "pelotudas", "pelotudez", "pelotudo", "pelotudos", "pendeja", "pendejo", "perra", "perras", "pervertido", "pezon", "pija", "pijas", "pinche", "pis", "prostituta", "puta", "putas", "putazo", "puteada", "putear", "putita", "putito", "puto", "puton", "putona", "putos", "racista", "ramera", "sadico", "semen", "sexo", "soplagaitas", "soplapollas", "tarada", "taradas", "tarado", "tarados", "travesti", "trio", "trola", "trolo", "verga", "vergas", "vulva", "zorra", "zorras"], "en": ["acrotomophilia", "anal", "anilingus", "anus", "apeshit", "arsehole", "ass", "asshole", "assmunch", "autoerotic", "babeland", "bangbros", "bangbus", "bareback", "barenaked", "bastard", "bastardo", "bastinado", "bbw", "bdsm", "beaner", "beaners", "beastiality", "bestiality", "bimbos", "birdlock", "bitch", "bitches", "blowjob", "blumpkin", "bollocks", "bondage", "boner", "boob", "boobs", "bukkake", "bulldyke", "bullshit", "bunghole", "busty", "butt", "buttcheeks", "butthole", "camgirl", "camslut", "camwhore", "carpetmuncher", "cialis", "circlejerk", "clit", "clitoris", "clusterfuck", "cock", "cocks", "coon", "coons", "coprolagnia", "coprophilia", "cornhole", "creampie", "cum", "cumming", "cumshot", "cumshots", "cunnilingus", "cunt", "darkie", "daterape", "deepthroat", "dendrophilia", "dick", "dildo", "dingleberries", "dingleberry", "doggiestyle", "doggystyle", "dolcett", "domination", "dominatrix", "dommes", "dumb", "dumbass", "dvda", "ecchi", "ejaculation", "erotic", "erotism", "escort", "eunuch", "fag", "faggot", "fecal", "felch", "fellatio", "feltch", "femdom", "figging", "fingerbang", "fingering", "fisting", "footjob", "frotting", "fuck", "fuckin", "fucking", "fucktards", "fudgepacker", "futanari", "gangbang", "genitals", "goatcx", "goatse", "gokkun", "goodpoop", "goregasm", "grope", "guro", "handjob", "hardcore", "hentai", "homoerotic", "honkey", "hooker", "horny", "humping", "idiot", "idiots", "incest", "intercourse", "jailbait", "jigaboo", "jiggaboo", "jiggerboo", "jizz", "juggs", "kike", "kinbaku", "kinkster", "kinky", "knobbing", "livesex", "lolita", "loser", "losers", "lovemaking", "masturbate", "masturbating", "masturbation", "milf", "mong", "moron", "morons", "motherfucker", "muffdiving", "nambla", "nawashi", "negro", "neonazi", "nigga", "nigger", "nimphomania", "nipple", "nipples", "nsfw", "nude", "nudity", "nutten", "nympho", "nymphomania", "octopussy", "omorashi", "orgasm", "orgy", "paedophile", "paki", "panties", "panty", "pedobear", "pedophile", "pegging", "penis", "pikey", "pissing", "pisspig", "playboy", "ponyplay", "poof", "poon", "poontang", "poopchute", "porn", "porno", "pornography", "pthc", "pubes", "punany", "pussy", "queaf", "queef", "quim", "raghead", "rape", "raping", "rapist", "rectum", "retard", "retarded", "rimjob", "rimming", "sadism", "santorum", "scat", "schlong", "scissoring", "semen", "sex", "sexcam", "sexo", "sexual", "sexuality", "sexually", "sexy", "shemale", "shibari", "shit", "shitblimp", "shitty", "shota", "shrimping", "skeet", "slanteye", "slut", "smut", "snatch", "snowballing", "sodomize", "sodomy", "spastic", "spic", "splooge", "spooge", "spunk", "strapon", "strappado", "stupid", "suck", "sucks", "swastika", "swinger", "threesome", "throating", "thumbzilla", "tit", "tits", "titties", "titty", "topless", "tosser", "towelhead", "tranny", "tribadism", "tubgirl", "tushy", "twat", "twink", "twinkie", "undressing", "upskirt", "urophilia", "vagina", "viagra", "vibrator", "vorarephilia", "voyeur", "voyeurweb", "voyuer", "vulva", "wank", "wetback", "whore", "worldsex", "xx", "xxx", "yaoi", "yiffy", "zoophilia"], "res": ["puta", "puto", "mierd", "pelotud", "bolud", "conchud", "cagon", "pija", "verga", "culiad", "mogolic"], "ren": ["fuck", "shit", "cunt", "nigg", "bitch", "whore", "slut", "dick", "cock", "pussy", "penis", "vagina", "porn", "sex", "rape", "fag", "bastard", "asshole", "damn", "crap", "piss", "twat", "wank", "boob", "tits", "anal", "cum", "nazi", "kill"]},
+  err: function (m) { var e = new Error(m); e.room = true; throw e; },
+  newCode: function () { var s = ''; for (var i = 0; i < 4; i++) s += WROOM.LETTERS[Math.floor(Math.random() * WROOM.LETTERS.length)]; return s; },
+  norm: function (w) {
+    w = String(w || '').toLowerCase().trim().replace(/ñ/g, '\u0001');
+    w = w.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\u0001/g, 'ñ');
+    return w;
+  },
+  isBad: function (w, lang) {
+    var b = WROOM.BAD; if ((lang === 'en' ? b.en : b.es).indexOf(w) >= 0) return true;
+    var r = lang === 'en' ? b.ren : b.res; for (var i = 0; i < r.length; i++) if (w.indexOf(r[i]) >= 0) return true;
+    return false;
+  },
+  create: function (code, u, name, av, lang, now) {
+    return { code: code, v: 1, host: u, lang: lang === 'en' ? 'en' : 'es', status: 'lobby', players: [{ u: u, name: name, av: av, last: now, alive: true, score: 0, words: 0, outAt: 0 }],
+      turn: 0, turnAt: now, need: '', words: [], used: {}, elim: null, winner: null, created: now, emo: [] };
+  },
+  player: function (st, u) { for (var i = 0; i < st.players.length; i++) if (st.players[i].u === u) return st.players[i]; return null; },
+  touch: function (st, u, now) { var p = WROOM.player(st, u); if (p) p.last = now; },
+  join: function (st, u, name, av, now) {
+    var p = WROOM.player(st, u);
+    if (p) { p.last = now; p.av = av || p.av; p.left = false; st.v++; return st; }
+    if (st.status !== 'lobby') WROOM.err('La partida ya empezó. Esperá a que termine o pedí una sala nueva.');
+    if (st.players.length >= WROOM.MAXP) WROOM.err('La sala está llena (máximo ' + WROOM.MAXP + ').');
+    st.players.push({ u: u, name: name, av: av, last: now, alive: true, score: 0, words: 0, outAt: 0 }); st.v++; return st;
+  },
+  alive: function (st) { return st.players.filter(function (p) { return p.alive; }); },
+  start: function (st, u, now) {
+    if (u !== st.host) WROOM.err('Solo quien creó la sala puede empezar.');
+    if (st.status !== 'lobby') WROOM.err('La partida ya empezó.');
+    if (st.players.length < 2) WROOM.err('Hacen falta al menos 2 jugadores.');
+    st.status = 'play'; st.words = []; st.used = {}; st.elim = null; st.winner = null;
+    st.players.forEach(function (p) { p.alive = true; p.score = 0; p.words = 0; p.outAt = 0; });
+    var L = WROOM.START[st.lang]; st.need = L[Math.floor(Math.random() * L.length)];
+    st.turn = Math.floor(Math.random() * st.players.length); st.turnAt = now + 1500; st.v++; return st;
+  },
+  next: function (st) {
+    var n = st.players.length;
+    for (var k = 1; k <= n; k++) { var j = (st.turn + k) % n; if (st.players[j].alive) return j; }
+    return st.turn;
+  },
+  out: function (st, i, why, now) {
+    var p = st.players[i]; if (!p || !p.alive) return;
+    p.alive = false; p.outAt = now; st.elim = { name: p.name, u: p.u, why: why, t: now, id: st.v + 1 };
+    var al = WROOM.alive(st);
+    if (al.length <= 1) { st.status = 'end'; st.winner = al[0] ? { u: al[0].u, name: al[0].name, av: al[0].av, score: al[0].score, words: al[0].words } : null; st.ends = now; }
+    else { st.turn = WROOM.next(st); st.turnAt = now + WROOM.GRACE_MS; }
+    st.v++;
+  },
+  tick: function (st, now) {
+    if (st.status !== 'play') return st;
+    if (now - st.turnAt > WROOM.TURN_MS) WROOM.out(st, st.turn, 'tiempo', now);
+    return st;
+  },
+  word: function (st, u, w, now) {
+    WROOM.tick(st, now);
+    if (st.status !== 'play') WROOM.err('La partida no está en juego.');
+    var cur = st.players[st.turn];
+    if (!cur || cur.u !== u) WROOM.err('Esperá tu turno.');
+    if (now < st.turnAt) WROOM.err('Esperá: todavía no empezó tu turno.');
+    w = WROOM.norm(w);
+    var re = st.lang === 'en' ? /^[a-z]+$/ : /^[a-zñ]+$/;
+    if (!re.test(w) || w.length < WROOM.MIN || w.length > WROOM.MAX) WROOM.err('Escribí una sola palabra, de ' + WROOM.MIN + ' a ' + WROOM.MAX + ' letras.');
+    if (w.charAt(0) !== st.need) WROOM.err('Tiene que empezar con la letra ' + st.need.toUpperCase() + '.');
+    if (st.used[w]) WROOM.err('«' + w + '» ya se usó en esta partida.');
+    if (WROOM.isBad(w, st.lang)) WROOM.err('Esa palabra no vale en este juego.');
+    st.used[w] = 1; st.words.push({ w: w, u: u, name: cur.name, t: now }); if (st.words.length > 40) st.words.shift();
+    cur.score += w.length; cur.words++;
+    st.need = w.charAt(w.length - 1); st.turn = WROOM.next(st); st.turnAt = now; st.v++;
+    return st;
+  },
+  leave: function (st, u, now) {
+    var i = -1; for (var k = 0; k < st.players.length; k++) if (st.players[k].u === u) i = k;
+    if (i < 0) return st;
+    if (st.status === 'lobby') { st.players.splice(i, 1); if (st.host === u && st.players.length) st.host = st.players[0].u; st.v++; }
+    else { st.players[i].left = true; if (st.status === 'play' && st.players[i].alive) WROOM.out(st, i, 'se fue', now); else st.v++; }
+    return st;
+  },
+  again: function (st, u, now) {
+    if (u !== st.host) WROOM.err('Solo quien creó la sala puede armar otra partida.');
+    st.status = 'lobby'; st.words = []; st.used = {}; st.elim = null; st.winner = null; st.need = '';
+    st.players = st.players.filter(function (p) { return !p.left; }); st.players.forEach(function (p) { p.alive = true; });
+    st.v++; return st;
+  },
+  emote: function (st, u, e, now) {
+    var p = WROOM.player(st, u); if (!p) return st;
+    if (typeof LIVE !== 'undefined' && LIVE.EMOJIS.indexOf(e) < 0) return st;
+    st.emo.push({ id: now + '' + Math.floor(Math.random() * 1000), name: p.name, e: String(e).slice(0, 8), t: now }); if (st.emo.length > 12) st.emo.shift(); st.v++; return st;
+  },
+  view: function (st, u, now) {
+    var me = -1; for (var k = 0; k < st.players.length; k++) if (st.players[k].u === u) me = k;
+    return {
+      code: st.code, v: st.v, status: st.status, host: st.host === u, lang: st.lang, me: me, turn: st.turn, need: st.need,
+      turnLeft: st.status !== 'play' ? 0 : Math.max(0, Math.min(WROOM.TURN_MS, WROOM.TURN_MS - (now - st.turnAt))), wait: st.status === 'play' && now < st.turnAt ? st.turnAt - now : 0,
+      players: st.players.map(function (p) { return { name: p.name, av: p.av, alive: p.alive, score: p.score, words: p.words, left: !!p.left, away: now - p.last > WROOM.AWAY_MS }; }),
+      words: st.words.slice(-12), count: Object.keys(st.used).length, elim: st.elim, winner: st.winner,
+      emo: st.emo.filter(function (x) { return now - x.t < 8000; })
+    };
+  }
+};
+if (typeof module !== 'undefined') module.exports = WROOM;
 
 /* =====================================================================
    JUEGOS (1): base común, Detective por el mundo, Tiro libre
@@ -4874,6 +5029,150 @@ GAMEFN.memoria=function(box){
   {const a=window.MEM_AUTO;window.MEM_AUTO=null;if(a&&online){if(a.create){window.MEM_INVITE=a.invite||null;$("mCreate").click()}else if(a.join){$("mCode").value=a.join;$("mJoin").click()}}}
   return ()=>{stop();document.querySelectorAll(".emo-pop").forEach(e=>e.remove());if(NET.mode==="online"&&NET.code&&view&&view.status!=="end"){NET.call("leave").catch(()=>{})}};
 };
+
+/* =====================================================================
+   PALABRAS ENCADENADAS — online por turnos (o con robots)
+   Los diccionarios (palabras-es.txt / palabras-en.txt) se suben al
+   repositorio al lado del index.html y se descargan solo al entrar.
+   Se guardan como un único texto ordenado + índice: ocupa poca memoria
+   y se busca rápido (búsqueda binaria).
+   ===================================================================== */
+const DICT={es:null,en:null,loading:{},
+  async load(lang){if(this[lang])return this[lang];if(this.loading[lang])return this.loading[lang];
+    this.loading[lang]=(async()=>{const r=await fetch(`palabras-${lang}.txt`,{cache:"force-cache"});if(!r.ok)throw new Error("Falta el archivo palabras-"+lang+".txt en el repositorio.");
+      const txt=await r.text();const off=[0];for(let i=0;i<txt.length;i++)if(txt.charCodeAt(i)===10)off.push(i+1);
+      const d={txt,off:Uint32Array.from(off),n:off.length,
+        at(i){const a=this.off[i],b=i+1<this.n?this.off[i+1]-1:this.txt.length;return this.txt.slice(a,b)},
+        lower(w){let lo=0,hi=this.n;while(lo<hi){const m=(lo+hi)>>1;if(this.at(m)<w)lo=m+1;else hi=m}return lo},
+        has(w){const i=this.lower(w);return i<this.n&&this.at(i)===w},
+        /* una palabra al azar que empiece con «p» y no esté usada (para los robots) */
+        pick(p,used,maxLen=9){const a=this.lower(p),b=this.lower(p+"￿");if(b<=a)return null;
+          for(let k=0;k<40;k++){const w=this.at(a+Math.floor(Math.random()*(b-a)));if(w.length>=3&&w.length<=maxLen&&!used.has(w)&&!WROOM.isBad(w,"es")&&!WROOM.isBad(w,"en"))return w}return null}};
+      this[lang]=d;return d})();
+    try{return await this.loading[lang]}catch(e){this.loading[lang]=null;throw e}}
+};
+const WNET={mode:"online",code:"",
+  async call(op,data={}){if(this.mode==="local")return LOCALW.call(op,data);
+    const j=await api("wroom",Object.assign({op,room:this.code,avatar:G.P.avatar},data));if(j.room&&j.room.code)this.code=j.room.code;return j.room}};
+const LOCALW={st:null,used:new Set(),
+  start(n,lang){const now=Date.now();this.st=WROOM.create("ROBO","yo",MJ.name,G.P.avatar,lang,now);this.used=new Set();
+    for(let i=0;i<n;i++){const av=Object.assign(defaultAvatar(i%2?"nene":"nena"),{top:pick(["remera","buzo","campera"]),topColor:pick(AV.colors),hair:pick(AV.hair),hairColor:pick(AV.hairColor),alt:false});WROOM.join(this.st,"bot"+i,"🤖 "+BOT_NAMES[i],av,now)}},
+  call(op,data){const now=Date.now(),st=this.st;
+    if(op==="start")WROOM.start(st,"yo",now);
+    if(op==="word"){WROOM.word(st,"yo",data.w,now);this.used.add(WROOM.norm(data.w))}
+    if(op==="emote")WROOM.emote(st,"yo",data.e,now);
+    if(op==="again"){WROOM.again(st,"yo",now);this.used=new Set()}
+    st.players.forEach(p=>p.last=now);WROOM.tick(st,now);this.bot(now);return WROOM.view(st,"yo",now)},
+  bot(now){const st=this.st;if(st.status!=="play")return;const cur=st.players[st.turn];if(!cur||cur.u==="yo"||now<st.turnAt)return;
+    if(!cur.think){const n=st.words.length;cur.think=now+rnd(2500,7000);cur.fail=Math.random()<Math.min(0.5,0.08+n*0.012)}
+    if(now<cur.think||cur.fail)return;
+    const d=DICT[st.lang];const w=d&&d.pick(st.need,this.used,rnd(4,9));cur.think=0;if(!w){cur.fail=true;return}
+    this.used.add(w);WROOM.word(st,cur.u,w,now);st.players.forEach(p=>{if(p!==cur)p.think=0})}
+};
+
+GAMEFN.palabras=function(box){
+  let poll=null,raf=null,leaving=false,view=null,lastV=-1,lang="es",dict=null,turnEnd=0,waitEnd=0,lastTick=0,tickOn=0,seenElim=null,paidFor=null,myOut=false,busy=false,turnKey="";
+  const online=API_OK()&&!MJ.demo&&!!MJ.cred;
+  const stop=()=>{clearInterval(poll);cancelAnimationFrame(raf);poll=null};
+  const menu=()=>{stop();WNET.code="";view=null;lastV=-1;
+    box.innerHTML=`<div class="wp-menu"><div class="wp-title">🔤 Palabras encadenadas</div>
+      <p class="note center">Por turnos, cada uno escribe una palabra que <b>empiece con la última letra</b> de la anterior. Tenés <b>12 segundos</b>. Si no llegás, ¡viene la momia y te saca de la ronda! Gana el último que queda.</p>
+      <p class="wp-ex">casa → <b>a</b>rbol → <b>l</b>una → <b>a</b>vión…</p>
+      <div class="wp-lang"><button type="button" class="on" data-l="es">🇦🇷 Español</button><button type="button" data-l="en">🇬🇧 English</button></div>
+      <div class="mem-actions">${online?`<button class="btn primary big" type="button" id="wCreate">🏠 Crear sala</button>
+        <div class="mem-join"><input id="wCode" maxlength="4" placeholder="CÓDIGO" autocomplete="off" autocapitalize="characters"><button class="btn" type="button" id="wJoin">Unirme</button></div>`:`<p class="note center">Para jugar online con amigos hay que entrar con usuario y código. Mientras, practicá con robots.</p>`}
+        <div class="mem-bots"><span>🤖 Practicar con robots:</span>${[1,2,3,4].map(n=>`<button class="btn small" type="button" data-n="${n}">${n}</button>`).join("")}</div></div>
+      <p class="note center" id="wSt"></p></div>`;
+    box.querySelectorAll(".wp-lang button").forEach(b=>b.onclick=()=>{lang=b.dataset.l;box.querySelectorAll(".wp-lang button").forEach(x=>x.classList.toggle("on",x===b));FX.pop()});
+    if($("wCreate"))$("wCreate").onclick=()=>go(async()=>{WNET.mode="online";return WNET.call("create",{lang})});
+    if($("wJoin"))$("wJoin").onclick=()=>{const c=$("wCode").value.toUpperCase().replace(/[^A-Z]/g,"");if(c.length!==4){FX.toast("El código tiene 4 letras");return}go(async()=>{WNET.mode="online";WNET.code=c;return WNET.call("join")})};
+    box.querySelectorAll(".mem-bots [data-n]").forEach(b=>b.onclick=()=>go(async()=>{WNET.mode="local";LOCALW.start(+b.dataset.n,lang);return LOCALW.call("state",{})}));
+    {const a=window.WP_AUTO;window.WP_AUTO=null;if(a&&online&&a.join){$("wCode").value=a.join;$("wJoin").click()}}};
+  const go=async fn=>{if(busy)return;busy=true;const st=$("wSt");try{if(st)st.textContent="Cargando el diccionario…";
+      const v0=await fn();if(!v0)throw new Error("No se pudo entrar a la sala");
+      dict=await DICT.load(v0.lang);if(st)st.textContent="";apply(v0);poll=setInterval(tick,WNET.mode==="local"?400:1000);loop()}
+    catch(e){FX.toast("😕 "+(e.message||e));if(st)st.textContent=e.message||""}finally{busy=false}};
+  const tick=async()=>{if(leaving)return;try{const v=await WNET.call("state");apply(v)}catch(e){}};
+  const showWord=w=>dict&&dict.has(w)&&!WROOM.isBad(w,view?view.lang:"es")?w:"••••";
+  function apply(v){if(!v||leaving)return;if(v.v<lastV&&v.status===view?.status)return;lastV=v.v;const prev=view;view=v;
+    const k=v.status+"|"+v.turn+"|"+(v.words.length?v.words[v.words.length-1].t:0);
+    if(v.status==="play"){turnEnd=performance.now()+v.turnLeft+v.wait;waitEnd=performance.now()+v.wait}
+    if(v.status==="lobby")return lobby();
+    if(!box.querySelector(".wp-game"))gameShell();
+    render(prev,k!==turnKey);turnKey=k;
+    if(v.elim&&(!seenElim||seenElim!==v.elim.id)){if(seenElim!==null||prev)mummy(v.elim);seenElim=v.elim.id}
+    if(v.status==="end")setTimeout(()=>winner(),2600)}
+  const lobby=()=>{const v=view;box.innerHTML=`<div class="wp-lobby"><div class="wp-title">🔤 Sala ${esc(v.code)}</div>
+      <p class="note center">${WNET.mode==="local"?"Práctica con robots.":`Pasales el código <b class="wp-code">${esc(v.code)}</b> a tus amigos para que entren.`} Idioma: <b>${v.lang==="en"?"🇬🇧 English":"🇦🇷 Español"}</b></p>
+      <div class="wp-plist">${v.players.map(p=>`<div class="wp-pl">${avatarSVG(p.av&&p.av.kind?p.av:defaultAvatar("nena"),60,"wave")}<b>${esc(p.name)}</b></div>`).join("")}</div>
+      <div class="mactions">${v.host?`<button class="btn primary big" type="button" id="wStart" ${v.players.length<2?"disabled":""}>▶ Empezar (${v.players.length} jugadores)</button>`:`<p class="note">Esperando que ${esc(v.players[0]?v.players[0].name:"")} empiece…</p>`}<button class="btn" type="button" id="wLeave">Salir</button></div></div>`;
+    if($("wStart"))$("wStart").onclick=async()=>{try{apply(await WNET.call("start"))}catch(e){FX.toast(e.message)}};$("wLeave").onclick=leave};
+  const leave=async()=>{leaving=true;stop();try{if(WNET.mode==="online")await WNET.call("leave")}catch(e){}leaving=false;menu()};
+  function gameShell(){box.innerHTML=`<div class="wp-game"><div class="wp-ring" id="wRing"><div class="wp-center"><div class="wp-watch" id="wWatch"><span class="wp-btn"></span><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="bg"/><circle cx="60" cy="60" r="52" class="fg" id="wArc"/></svg><b id="wSec">12</b></div>
+      <div class="wp-need">Empieza con <b id="wNeed">?</b></div><div class="wp-last" id="wLast"></div></div></div>
+      <div class="wp-me" id="wMe"></div><div class="wp-emos">${LIVE.EMOJIS.slice(0,8).map(e=>`<button type="button" data-e="${e}">${e}</button>`).join("")}</div>
+      <div class="wp-hist" id="wHist"></div><div class="mactions"><button class="btn small" type="button" id="wQuit">Salir de la sala</button></div><div id="wFloat" class="mem-float"></div></div>`;
+    box.querySelectorAll(".wp-emos [data-e]").forEach(b=>b.onclick=async()=>{try{apply(await WNET.call("emote",{e:b.dataset.e}))}catch(e){}});$("wQuit").onclick=leave;myOut=false}
+  function seatPos(i,n){const a=-Math.PI/2+i*2*Math.PI/n;return [50+42*Math.cos(a),50+43*Math.sin(a)]}
+  function render(prev,newTurn){const v=view,n=v.players.length;const ring=$("wRing");
+    ring.querySelectorAll(".wp-seat").forEach(e=>e.remove());
+    v.players.forEach((p,i)=>{const [x,y]=seatPos(i,n);const d=document.createElement("div");d.className=`wp-seat ${p.alive?"":"out"} ${i===v.turn&&v.status==="play"?"turn":""} ${i===v.me?"me":""}`;d.dataset.i=i;d.style.left=x+"%";d.style.top=y+"%";
+      d.innerHTML=`${i===v.turn&&v.status==="play"?`<span class="wp-pen">✍️</span>`:""}<div class="wp-av">${avatarSVG(p.av&&p.av.kind?p.av:defaultAvatar("nena"),n>5?40:48,i===v.turn?"wave":"stand",{mood:p.alive?"happy":"sad"})}</div><b>${esc(p.name)}</b><small>${p.alive?`⭐ ${p.score}`:"👻 afuera"}</small>`;ring.appendChild(d)});
+    $("wNeed").textContent=(v.need||"?").toUpperCase();
+    const lw=v.words[v.words.length-1];$("wLast").innerHTML=lw?(()=>{const s=showWord(lw.w);return s==="••••"?s:`${esc(s.slice(0,-1))}<b>${esc(s.slice(-1).toUpperCase())}</b> <small>(${esc(lw.name)})</small>`})():"¡Primera palabra!";
+    $("wHist").innerHTML=v.words.slice(-10).map(w=>`<span>${esc(showWord(w.w))}</span>`).join(" → ");
+    const me=v.players[v.me];const mine=v.status==="play"&&v.turn===v.me&&me&&me.alive;
+    if(me&&!me.alive&&!myOut){myOut=true}
+    const mebox=$("wMe");
+    if(v.status!=="play")mebox.innerHTML="";
+    else if(mine){if(!mebox.querySelector("#wIn")||newTurn){mebox.innerHTML=`<div class="wp-input ${v.wait?"wait":""}"><input id="wIn" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="16" placeholder="Palabra con ${esc(v.need.toUpperCase())}…"><button class="btn primary" type="button" id="wSend">Enviar</button></div><p class="wp-fb" id="wFb">¡Te toca! Escribí una palabra que empiece con <b>${esc(v.need.toUpperCase())}</b>.</p>`;
+        const inp=$("wIn");inp.value=v.need;inp.focus();inp.onkeydown=e=>{if(e.key==="Enter")send()};$("wSend").onclick=send;FX.tone(880,.1,"sine",.08)}}
+    else if(me&&!me.alive)mebox.innerHTML=`<p class="wp-spec">👀 Estás afuera, pero podés seguir mirando la partida hasta que alguien gane.</p>`;
+    else{const c=v.players[v.turn];mebox.innerHTML=`<p class="wp-wait">Le toca a <b>${esc(c?c.name:"")}</b>…</p>`}
+    (v.emo||[]).forEach(e=>{if(box.querySelector(`[data-emo="${e.id}"]`))return;const s=document.createElement("span");s.className="mem-emo";s.dataset.emo=e.id;s.textContent=e.e;s.title=e.name;s.style.left=(15+Math.random()*70)+"%";$("wFloat").appendChild(s);setTimeout(()=>s.remove(),3000)})}
+  async function send(){const inp=$("wIn");if(!inp||busy)return;const v=view;const w=WROOM.norm(inp.value);const fb=$("wFb");
+    const no=t=>{fb.innerHTML="❌ "+t;fb.className="wp-fb bad";FX.bad();inp.classList.remove("shake");void inp.offsetWidth;inp.classList.add("shake");inp.select()};
+    if(performance.now()<waitEnd)return no("Esperá un segundo que arranque tu turno.");
+    if(w.length<3)return no("Tiene que tener al menos 3 letras.");
+    if(w[0]!==v.need)return no(`Tiene que empezar con la ${v.need.toUpperCase()}.`);
+    if(WROOM.isBad(w,v.lang))return no("Esa palabra no vale en este juego.");
+    if(!dict.has(w))return no(`«${esc(w)}» no está en el diccionario ${v.lang==="en"?"de inglés":"de español"}. ¡Probá otra!`);
+    busy=true;try{const nv=await WNET.call("word",{w});FX.good();apply(nv)}catch(e){no(esc(e.message||"No se pudo enviar"))}finally{busy=false}}
+  /* reloj + tic-tac */
+  function loop(){raf=requestAnimationFrame(loop);if(!view||view.status!=="play"||!$("wSec"))return;const now=performance.now();
+    const waiting=now<waitEnd;const left=Math.max(0,turnEnd-now)/1000;const frac=waiting?1:Math.min(1,left/12);
+    $("wSec").textContent=waiting?"…":Math.ceil(left);const arc=$("wArc");arc.style.strokeDashoffset=String(327*(1-frac));arc.classList.toggle("hurry",!waiting&&left<=4);$("wWatch").classList.toggle("hurry",!waiting&&left<=4);
+    if(!waiting&&left>0){const gap=left<=4?250:500;if(now-lastTick>=gap){lastTick=now;tickOn^=1;FX.tone(tickOn?1500:1100,.03,"square",left<=4?.05:.03)}}}
+  /* la momia viene a buscar al que se quedó sin tiempo */
+  function mummy(el){const seat=[...box.querySelectorAll(".wp-seat")].find(s=>view.players[+s.dataset.i]&&view.players[+s.dataset.i].name===el.name);const ring=$("wRing");if(!seat||!ring)return;
+    const m=document.createElement("div");m.className="wp-mummy";m.innerHTML=MUMMY_SVG;m.style.left=seat.style.left;m.style.top=seat.style.top;ring.appendChild(m);
+    const ghost=seat.cloneNode(true);ghost.className="wp-seat-c wp-taken";ring.appendChild(ghost);seat.style.visibility="hidden";
+    FX.tone(140,.5,"sawtooth",.06);FX.tone(110,.6,"sawtooth",.05,.35);
+    const why=el.why==="tiempo"?"¡Se le acabó el tiempo":"Se fue";FX.toast(`🧟 ${why} a ${el.name}! La momia se lo lleva.`);
+    requestAnimationFrame(()=>{m.classList.add("in");setTimeout(()=>{m.classList.add("away");ghost.classList.add("away")},900);setTimeout(()=>{m.remove();ghost.remove();seat.style.visibility=""},2500)});
+    if(view.players[view.me]&&view.players[view.me].name===el.name&&WNET.mode!=="local"||(WNET.mode==="local"&&el.name===MJ.name))setTimeout(()=>FX.toast("👀 Te sacaron de la ronda, pero podés seguir mirando."),2600)}
+  function winner(){const v=view;if(!v||v.status!=="end"||!$("wRing"))return;const id=v.code+"|"+(v.winner?v.winner.name:"")+"|"+v.count;if(paidFor===id)return;paidFor=id;stop();
+    const w=v.winner;const me=v.players[v.me];const iWon=w&&me&&w.name===me.name;const loc=WNET.mode==="local";
+    let pay=0;if(me){pay+=G.earn((loc?500:1000)*me.words);if(iWon)pay+=G.earn(loc?10000:50000)}if(pay)G.save();
+    FX.fanfare();FX.confetti(iWon?320:180);
+    UI.modal(`<div class="wp-win"><div class="arc-big">🏆 ¡GANÓ ${esc(w?w.name:"…")}!</div><div class="wp-winav">${w?avatarSVG(w.av&&w.av.kind?w.av:defaultAvatar("nena"),130,"jump",{mood:"happy"}):""}</div>
+      <p>${w?`${w.words} palabras · ⭐ ${w.score} puntos`:""}</p><p>Entre todos escribieron <b>${v.count}</b> palabras.</p>
+      ${pay?`<p class="arc-pay">${plus(pay)} ${iWon?"¡por ganar y por tus palabras!":"por tus palabras"}</p>`:""}
+      <div class="mactions">${v.host?`<button class="btn primary" type="button" id="wAgain">🔁 Otra partida</button>`:`<p class="note">Si quien creó la sala arma otra, te quedás adentro.</p>`}<button class="btn" type="button" id="wOut">Salir</button></div></div>`);
+    if($("wAgain"))$("wAgain").onclick=async()=>{UI.close();try{const nv=await WNET.call("again");seenElim=null;turnKey="";apply(nv);poll=setInterval(tick,WNET.mode==="local"?400:1000);loop()}catch(e){FX.toast(e.message)}};
+    $("wOut").onclick=()=>{UI.close();leave()};
+    if(!v.host){poll=setInterval(async()=>{try{const nv=await WNET.call("state");if(nv&&nv.status==="lobby"){UI.close();seenElim=null;turnKey="";clearInterval(poll);apply(nv);poll=setInterval(tick,1000);loop()}}catch(e){}},2000)}}
+  menu();
+  return ()=>{leaving=true;stop();if(WNET.mode==="online"&&WNET.code)WNET.call("leave").catch(()=>{})};
+};
+/* una momia simpática (dibujo propio) */
+const MUMMY_SVG=`<svg viewBox="0 0 80 110" width="96" height="132" aria-hidden="true"><g stroke="#a8a29e" stroke-width="1.2">
+  <rect x="22" y="40" width="36" height="52" rx="12" fill="#f5f5f4"/><rect x="14" y="44" width="12" height="34" rx="6" fill="#f5f5f4" transform="rotate(-25 20 46)"/><rect x="54" y="44" width="12" height="34" rx="6" fill="#f5f5f4" transform="rotate(25 60 46)"/>
+  <rect x="25" y="88" width="12" height="20" rx="5" fill="#f5f5f4"/><rect x="43" y="88" width="12" height="20" rx="5" fill="#f5f5f4"/>
+  <circle cx="40" cy="24" r="20" fill="#f5f5f4"/></g>
+  <path d="M22 18h36M21 27h38M24 50h32M23 62h34M24 74h32M23 84h34" stroke="#d6d3d1" stroke-width="3"/>
+  <rect x="25" y="19" width="30" height="9" rx="4" fill="#1c1917"/><circle cx="33" cy="23.5" r="3" fill="#facc15"/><circle cx="47" cy="23.5" r="3" fill="#facc15"/>
+  <path d="M34 34q6 4 12 0" stroke="#78716c" stroke-width="2" fill="none"/><path d="M58 92q8 6 4 14" stroke="#e7e5e4" stroke-width="3" fill="none"/></svg>`;
 
 /* =====================================================================
    CONECTADOS Y MENSAJES — lado del juego
