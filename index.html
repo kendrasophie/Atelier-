@@ -3087,6 +3087,7 @@ const SHOT_MODES=[
   {id:"tenis",name:"Tenis",icon:"🎾",lv:4,g:9.8,v:[8,26],tip:"Pasá la red baja y que pique antes de la línea."},
   {id:"tanque",name:"Tanque",icon:"🛡️",lv:5,g:9.8,v:[15,42],tip:"Derribá el fuerte de bloques. Ojo con el viento y la loma."},
   {id:"cohete",name:"Cohete espacial",icon:"🚀",lv:6,g:9.8,v:[8,30],tip:"Cada planeta tiene otra gravedad: aterrizá en la plataforma."},
+  {id:"futbol",name:"Fútbol: patear al arco",icon:"⚽",lv:3,g:9.8,v:[8,30],tip:"Hacé el gol: por debajo del travesaño y donde el arquero no llegue."},
   {id:"drop",name:"Avión de rescate",icon:"✈️",lv:5,g:9.8,v:[0,0],tip:"Soltá el paquete en el momento justo para que caiga en el bote."},
   {id:"heli",name:"Helicóptero en la base naval",icon:"🚁",lv:6,g:9.8,v:[6,30],tip:"Disparás pintura desde un helicóptero que se mueve: pintá el blanco del barco."}
 ];
@@ -3122,6 +3123,7 @@ function shoot(box,L,M,S){
     if(M.id==="tenis"){T.x1=T.net+0.5;T.x2=T.net+Math.max(3.5,6.4-L*0.3)}
     if(M.id==="tanque"){T={x:rnd(35,55+L*4),hill:L>=6?{x:rnd(15,25),h:rnd(4,9)}:null};fort=[];for(let i=0;i<3;i++)for(let j=0;j<3-i;j++)fort.push({x:T.x+j*1.2+i*0.6,y:i*1.2,up:true})}
     if(M.id==="cohete"){planet=PLANETS[Math.min(PLANETS.length-1,ARC?hits:Math.floor(shots/2))];g=planet[1];T={x:rnd(15,28)*(9.8/g)**0.6,w:3}}
+    if(M.id==="futbol"){const fk=S&&S.wall;T={x:fk?rnd(18,24):11,gh:2.44,kw:0.75+0.12*Math.min(L,6),kph:Math.random()*6,kj:fk?0.45:0.7};if(fk)T.wall={x:9.15,h:1.85}}
     if(M.id==="drop"){T={x:rnd(30,44),w:Math.max(2.4,3.6-L*0.15)};veh.y=rnd(24,32);veh.vx=(8+Math.min(L,6))*(S&&S.fast?1.3:1)}
     if(M.id==="heli"){T={x:rnd(30,44),w:Math.max(3,4.4-L*0.15),h:1.8};veh.y=rnd(14,22)}
     /* cada blanco nuevo: los controles vuelven al centro (hay que calcular de nuevo, no repetir) */
@@ -3134,9 +3136,9 @@ function shoot(box,L,M,S){
       T.bx=T.x;T.by=T.y;T.mv={ax,a:ax==="y"?({arco:0.9,onda:0.55,agua:0.4})[M.id]:({mano:1.4,basquet:0.9,cohete:4})[M.id]+0.12*Math.min(L,8),w:sp,ph:Math.random()*6}}
     $("info").innerHTML=`${T.plane?"✈️ <b>¡Avión de práctica!</b> Calculá cuándo tirar: se mueve.":M.tip}${veh?` · ${M.id==="drop"?"✈️ El avión va":"🚁 El helicóptero va"} a <b>${String(Math.round(veh.vx*10)/10).replace(".",",")} m/s</b> y vuela a <b>${Math.round(veh.y)} m</b> de altura`:""} · <b>Blanco ${T.mv||T.plane?"≈ ":"a "}${String(targetDist()).replace(".",",")} m</b>${T.mv||T.plane?" · 🎯 <b>¡se mueve!</b>":""}${wind?` · Viento: <b>${wind>0?"→":"←"} ${Math.abs(wind)} m/s²</b>`:""}${planet?` · Planeta: <b>${planet[0]}</b>, gravedad ${String(planet[1]).replace(".",",")} m/s²`:""}`;
   }
-  const far=()=>({mano:12+L,arco:28+L*2,onda:20+L,agua:9,basquet:8,voley:12,tenis:14,tanque:70+L*4,cohete:Math.max(30,(T.bx??T.x)+8),drop:50,heli:50})[M.id]||30;
+  const far=()=>({mano:12+L,arco:28+L*2,onda:20+L,agua:9,basquet:8,voley:12,tenis:14,tanque:70+L*4,cohete:Math.max(30,(T.bx??T.x)+8),drop:50,heli:50,futbol:Math.max(14,(T.x||11)+4)})[M.id]||30;
   const sc=()=>cv.W/(far()+4),gy=()=>cv.H*0.86,X=m=>24+m*sc(),Y=m=>gy()-m*sc();
-  const start=()=>veh?[veh.x,veh.y]:({mano:[0.5,1.4],arco:[0.5,1.3],onda:[0.5,1.5],agua:[0.5,1.1],basquet:[0.5,2],voley:[0.5,1.8],tenis:[0.5,1],tanque:[1,0.9],cohete:[0.8,0.6]})[M.id];
+  const start=()=>veh?[veh.x,veh.y]:({futbol:[0.6,0.11],mano:[0.5,1.4],arco:[0.5,1.3],onda:[0.5,1.5],agua:[0.5,1.1],basquet:[0.5,2],voley:[0.5,1.8],tenis:[0.5,1],tanque:[1,0.9],cohete:[0.8,0.6]})[M.id];
   function hitTest(f,px,py){
     if(M.id==="arco"&&px<T.x&&f.x>=T.x&&Math.abs(f.y-T.y)<=T.r)return Math.abs(f.y-T.y)<=0.3?"¡Centro!":"¡Le diste!";
     if(M.id==="mano"&&f.vy<0&&f.y<=T.h&&f.y>0&&Math.abs(f.x-T.x)<=T.w/2)return "¡Adentro del balde!";
@@ -3159,7 +3161,7 @@ function shoot(box,L,M,S){
     if(VEH){ctx.fillStyle="#0ea5e9";ctx.fillRect(0,gy(),W,H-gy());ctx.strokeStyle="rgba(255,255,255,.5)";ctx.lineWidth=1.5;for(let i=0;i<14;i++){const wx=((i*73+t*25)%(W+40))-20;ctx.beginPath();ctx.arc(wx,gy()+8+(i%3)*9,6,Math.PI,0);ctx.stroke()}}
     else{ctx.fillStyle=planet?planet[2]:"#86d36f";ctx.fillRect(0,gy(),W,H-gy())}
     // escala
-    ctx.fillStyle=M.id==="cohete"?"#fff":"#1f2937";ctx.font="10px system-ui";ctx.textAlign="center";const st=far()>40?10:far()>15?5:1;for(let m=0;m<=far();m+=st){ctx.fillRect(X(m),gy()+3,1,5);ctx.fillText(m+"m",X(m),gy()+16)}
+    ctx.fillStyle=M.id==="cohete"?"#fff":"#1f2937";ctx.font="10px system-ui";ctx.textAlign="center";const st=far()>40?10:far()>12?5:1;for(let m=0;m<=far();m+=st){ctx.fillRect(X(m),gy()+3,1,5);ctx.fillText(m+"m",X(m),gy()+16)}
     drawTarget();
     // jugadora
     const av=avatarImage(G.P.avatar,"throw",t<sadT?{mood:"dizzy",fx:["sweat"]}:undefined);const ah=Math.max(70,sc()*2.2);
@@ -3170,6 +3172,7 @@ function shoot(box,L,M,S){
     else if(M.id==="cohete"){ctx.fillStyle="#94a3b8";ctx.fillRect(X(0)-6,gy()-8,sc()*2+12,8);if(!flying){ctx.save();ctx.translate(X(0.8),gy()-8);ctx.rotate(Math.PI/2-(+$("ang").value)*Math.PI/180);ctx.font=`${Math.max(26,sc()*1.6)}px ${EMOJI}`;ctx.textAlign="center";ctx.fillText("🚀",0,0);ctx.restore()}
       drawAvatar(ctx,av,X(0)-ah*0.25,gy(),ah)}
     else drawAvatar(ctx,av,X(0),gy(),ah);
+    if(M.id==="futbol"&&!flying){ctx.font=`${Math.max(14,sc()*0.55)}px ${EMOJI}`;ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillStyle="#000";ctx.fillText("⚽",X(0.6),Y(0.15));ctx.textBaseline="alphabetic"}
     // mira
     const [sx,sy]=start();if(!flying){const a=+$("ang").value*Math.PI/180;ctx.strokeStyle="rgba(31,41,55,.35)";ctx.setLineDash([4,6]);ctx.beginPath();ctx.moveTo(X(sx),Y(sy));ctx.lineTo(X(sx)+Math.cos(a)*70,Y(sy)-Math.sin(a)*70);ctx.stroke();ctx.setLineDash([])}
     ctx.fillStyle="rgba(124,58,237,.3)";last.forEach(p=>{ctx.beginPath();ctx.arc(X(p[0]),Y(p[1]),1.6,0,7);ctx.fill()});
@@ -3234,6 +3237,8 @@ function shoot(box,L,M,S){
     if(M.id==="onda"){box3(T.x,0,0.15,T.y,"#8b5a2b");box3(T.x,T.y,T.w,T.h,"#ef4444");box3(T.x,T.y+T.h*0.55,T.w,T.h*0.15,"#fff")}
     if(M.id==="agua")em("🔥",T.x,T.y+0.3,1.2);
     if(M.id==="basquet"){box3(T.x+0.6,0,0.12,4,"#475569");box3(T.x+0.45,2.9,1.8,1.1,"#fff");const p=PP(T.x,T.y);ctx.strokeStyle="#ea580c";ctx.lineWidth=Math.max(2,p.s*0.05);ctx.beginPath();ctx.ellipse(p.x,p.y,T.w/2*p.s,T.w/6*p.s,0,0,7);ctx.stroke()}
+    if(M.id==="futbol"){box3(T.x,0,0.12,T.gh,"#f8fafc",-3.66);box3(T.x,0,0.12,T.gh,"#f8fafc",3.66);box3(T.x,T.gh-0.12,7.44,0.12,"#f8fafc");box3(T.x+0.3,0,7.32,T.gh,"rgba(255,255,255,.25)");
+      if(T.wall)box3(T.wall.x,0,3,T.wall.h,"#ef4444",-0.5);box3(T.x,keeperY(t),0.9,1.9,"#22c55e");em("🧤",T.x,keeperY(t)+1.9,0.6)}
     if(M.id==="voley"||M.id==="tenis"){const a=PP(T.x1,0,-4),b=PP(T.x2,0,-4),c=PP(T.x2,0,4),d=PP(T.x1,0,4);ctx.fillStyle="rgba(124,58,237,.25)";ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.lineTo(c.x,c.y);ctx.lineTo(d.x,d.y);ctx.fill();
       box3(T.net,0,9,T.nh,"rgba(31,41,55,.35)");box3(T.net,T.nh-0.08,9,0.08,"#f8fafc")}
     if(M.id==="tanque"){if(T.hill){const p=PP(T.hill.x,0),q=PP(T.hill.x,T.hill.h);ctx.fillStyle="rgba(101,163,13,.72)";ctx.beginPath();ctx.ellipse(p.x,p.y,6*p.s,p.y-q.y,0,Math.PI,0);ctx.fill()}
@@ -3241,7 +3246,16 @@ function shoot(box,L,M,S){
       if(T.plane){em(T.plane.e,T.plane.x,T.plane.y,3);const p=PP(T.plane.x,T.plane.y);ctx.strokeStyle="rgba(239,68,68,.6)";ctx.setLineDash([3,4]);ctx.beginPath();ctx.arc(p.x,p.y,1.7*p.s,0,7);ctx.stroke();ctx.setLineDash([])}}
     if(M.id==="cohete"){const a=PP(T.x-T.w/2,0,-2),b=PP(T.x+T.w/2,0,-2),c=PP(T.x+T.w/2,0,2),d=PP(T.x-T.w/2,0,2);ctx.fillStyle="#facc15";ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.lineTo(c.x,c.y);ctx.lineTo(d.x,d.y);ctx.fill()}
   }
-  function drawTarget(){
+  const KEEPER_AV=Object.assign(defaultAvatar("nene"),{top:"remera",topColor:"#22c55e",hair:"corto",hairColor:"#3b2314",alt:false});
+  const DEF_AV=Object.assign(defaultAvatar("nene"),{top:"remera",topColor:"#ef4444",alt:false});
+  function drawFutbol(){const s=sc(),gx=X(T.x),gt=Y(T.gh);
+    ctx.strokeStyle="rgba(255,255,255,.75)";ctx.lineWidth=1;for(let i=1;i<=6;i++){ctx.beginPath();ctx.moveTo(gx+i*s*0.33,gt);ctx.lineTo(gx+i*s*0.33,gy());ctx.stroke()}for(let j=1;j<6;j++){ctx.beginPath();ctx.moveTo(gx,gt+j*(gy()-gt)/6);ctx.lineTo(gx+2*s,gt+j*(gy()-gt)/6);ctx.stroke()}
+    ctx.fillStyle="#f8fafc";ctx.fillRect(gx-Math.max(3,s*0.12),gt,Math.max(3,s*0.12),gy()-gt);ctx.fillRect(gx-Math.max(3,s*0.12),gt-Math.max(3,s*0.12),2*s+Math.max(3,s*0.12),Math.max(3,s*0.12));
+    if(T.wall)for(let i=0;i<3;i++)drawAvatar(ctx,avatarImage(DEF_AV,"stand"),X(T.wall.x)+i*Math.max(2,s*0.18),gy(),T.wall.h*s*1.05);
+    const ky=keeperY(t);drawAvatar(ctx,avatarImage(KEEPER_AV,ky>0.15?"jump":"stand"),gx-s*0.35,Y(ky),1.9*s*1.05);
+    ctx.fillStyle="#1f2937";ctx.font="bold 10px system-ui";ctx.textAlign="center";ctx.fillText(T.wall?"BARRERA":"",X(T.wall?T.wall.x:0),Y((T.wall?T.wall.h:0)+0.6));
+    ctx.fillStyle="#fff";ctx.fillRect(X(0)-2,gy()-1,4,3)}
+  function drawTarget(){if(M.id==="futbol")return drawFutbol();
     const s=sc();ctx.textAlign="center";
     if(M.id==="mano"){ctx.fillStyle="#64748b";ctx.fillRect(X(T.x-T.w/2),Y(T.h),T.w*s,T.h*s);ctx.fillStyle="#334155";ctx.fillRect(X(T.x-T.w/2)-3,Y(T.h)-3,T.w*s+6,4)}
     if(M.id==="arco"){ctx.fillStyle="#8b5a2b";ctx.fillRect(X(T.x)-3,Y(T.y),6,T.y*s);[1.1,0.75,0.45,0.25].forEach((r,i)=>{ctx.fillStyle=["#fff","#3b82f6","#ef4444","#facc15"][i];ctx.beginPath();ctx.ellipse(X(T.x),Y(T.y),Math.max(4,r*s*0.3),r*s,0,0,7);ctx.fill();ctx.strokeStyle="#1f2937";ctx.lineWidth=1;ctx.stroke()})}
@@ -3262,9 +3276,19 @@ function shoot(box,L,M,S){
     const s=sc();ctx.save();ctx.translate(X(f.x),Y(f.y));
     if(M.id==="arco"){ctx.rotate(-Math.atan2(f.vy,f.vx));ctx.strokeStyle="#1f2937";ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(-16,0);ctx.lineTo(10,0);ctx.stroke();ctx.fillStyle="#ef4444";ctx.beginPath();ctx.moveTo(14,0);ctx.lineTo(8,-4);ctx.lineTo(8,4);ctx.fill()}
     else if(M.id==="cohete"){ctx.rotate(Math.PI/2-Math.atan2(f.vy,f.vx));ctx.font=`${Math.max(22,s*1.4)}px ${EMOJI}`;ctx.textAlign="center";ctx.fillStyle="#000";ctx.fillText("🚀",0,8);ctx.font=`${Math.max(12,s*0.8)}px ${EMOJI}`;if(f.fuel>0)ctx.fillText("🔥",0,24)}
-    else{const e={mano:"⚽",onda:"🪨",agua:"💧",basquet:"🏀",voley:"🏐",tenis:"🎾",tanque:"⚫",drop:"📦",heli:"🟣"}[M.id];ctx.rotate(t*6);ctx.font=`${Math.max(14,s*(M.id==="tanque"?0.8:0.55))}px ${EMOJI}`;ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillStyle="#000";ctx.fillText(e,0,0)}
+    else{const e={futbol:"⚽",mano:"⚽",onda:"🪨",agua:"💧",basquet:"🏀",voley:"🏐",tenis:"🎾",tanque:"⚫",drop:"📦",heli:"🟣"}[M.id];ctx.rotate(t*6);ctx.font=`${Math.max(14,s*(M.id==="tanque"?0.8:0.55))}px ${EMOJI}`;ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillStyle="#000";ctx.fillText(e,0,0)}
     ctx.restore();
   }
+  /* arquero: parado cubre del piso a 1,9 m; cuando salta, deja libre abajo */
+  const keeperY=tt=>Math.max(0,Math.sin(tt*T.kw+T.kph))*T.kj;
+  /* fútbol: barrera, travesaño, arquero, pique y pelota que rueda. Devuelve [gol, motivo] o null si sigue */
+  function futStep(f,px,dt,tt){
+    if(T.wall&&px<T.wall.x&&f.x>=T.wall.x&&f.y<=T.wall.h)return [null,"Pegó en la barrera"];
+    if(px<T.x&&f.x>=T.x){if(f.y>T.gh)return [null,"Se fue por arriba del travesaño"];const k=keeperY(tt);if(f.y>=k-0.12&&f.y<=k+1.9)return [null,"¡Atajó el arquero!"];return ["¡GOOOL!",""]}
+    if(!f.roll&&f.y<=0&&f.vy<0){if(Math.abs(f.vy)>2.5){f.y=0;f.vy=-f.vy*0.45;f.vx*=0.85}else{f.roll=true}}
+    if(f.roll){f.y=0;f.vy=0;f.vx-=1.6*dt;if(f.vx<0.4)return [null,"Se frenó antes del arco: faltó fuerza"]}
+    if(f.x>T.x+3)return [null,"Se fue afuera"];
+    return false}
   function step(dt){
     const f=flying;let ax=wind,ay=-g;
     if(M.id==="cohete"&&f.fuel>0){f.fuel-=dt;const a=Math.atan2(f.vy,f.vx);ax+=Math.cos(a)*4;ay+=Math.sin(a)*4}
@@ -3272,6 +3296,7 @@ function shoot(box,L,M,S){
     const [tx,ty]=tc();f.md=Math.min(f.md??99,Math.hypot(f.x-tx,f.y-ty));
     if(M.id==="agua"&&Math.random()<0.6)drops.push({x:f.x,y:f.y,l:0.5});
     if(!trail.length||Math.abs(f.x-trail[trail.length-1][0])>Math.max(0.15,far()/150))trail.push([f.x,f.y]);
+    if(M.id==="futbol"){const r=futStep(f,px,dt,t);if(r){if(r[0])FX.tone(660,.3,"triangle",.08);return land(r[0],r[1])}return}
     if((M.id==="voley"||M.id==="tenis")&&px<T.net&&f.x>=T.net&&f.y<=T.nh)return land(null,"Pegó en la red");
     if(M.id==="tanque"&&T.hill){const hx=f.x-T.hill.x;if(Math.abs(hx)<6){const hh=T.hill.h*(1-(hx/6)**2);if(f.y<=hh)return land(null,"Pegó en la loma")}}
     const h=hitTest(f,px,py);if(h)return land(h);
@@ -3308,8 +3333,8 @@ function shoot(box,L,M,S){
     // puntaje en medios puntos: tiro adentro = 1, casi = ½, pregunta bien = 1. Oro desde el 80%.
     UI.gameEnd("tiro",hits*2+nears+qOk*2,SHOTS*2+qTot*2,[`Modo ${M.name}: ${hits} adentro y ${nears} casi, de ${SHOTS} tiros${qTot?`; ${qOk} de ${qTot} preguntas`:""}.`],{th:{gold:.8,silver:.6,bronze:.4},down:.25})}
   /* centro del blanco y distancia para "casi" */
-  function tc(){if(T.plane)return [T.plane.x,T.plane.y];return ({drop:[T.x,0.4],heli:[T.x,T.h/2],mano:[T.x,T.h/2],arco:[T.x,T.y],onda:[T.x,T.y+T.h/2],agua:[T.x,T.y+.3],basquet:[T.x,T.y],voley:[(T.x1+T.x2)/2,0],tenis:[(T.x1+T.x2)/2,0],tanque:[T.x+1.2,1],cohete:[T.x,0]})[M.id]||[T.x||0,0]}
-  function nearTol(){return ({drop:T.w/2+2,heli:T.w/2+1.8,mano:.9,arco:1.4,onda:.9,agua:.9,basquet:.6,voley:(T.x2-T.x1)/2+.8,tenis:(T.x2-T.x1)/2+.8,tanque:2.6,cohete:T.w/2+2})[M.id]||1}
+  function tc(){if(T.plane)return [T.plane.x,T.plane.y];return ({futbol:[T.x,1.2],drop:[T.x,0.4],heli:[T.x,T.h/2],mano:[T.x,T.h/2],arco:[T.x,T.y],onda:[T.x,T.y+T.h/2],agua:[T.x,T.y+.3],basquet:[T.x,T.y],voley:[(T.x1+T.x2)/2,0],tenis:[(T.x1+T.x2)/2,0],tanque:[T.x+1.2,1],cohete:[T.x,0]})[M.id]||[T.x||0,0]}
+  function nearTol(){return ({futbol:1.6,drop:T.w/2+2,heli:T.w/2+1.8,mano:.9,arco:1.4,onda:.9,agua:.9,basquet:.6,voley:(T.x2-T.x1)/2+.8,tenis:(T.x2-T.x1)/2+.8,tanque:2.6,cohete:T.w/2+2})[M.id]||1}
   function targetDist(){if(T.plane)return Math.round(T.plane.x*10)/10;return Math.round((M.id==="voley"||M.id==="tenis"?T.net:T.x||0)*10)/10}
   function drawBook(){
     const sb=((G.P.stats.shotBook||{})[M.id]||[]).slice(0,4);const nf=n=>String(n).replace(".",",");
@@ -3326,6 +3351,7 @@ function shoot(box,L,M,S){
       const f=M.id==="drop"?{x:veh.x,y:veh.y-1,vx:veh.vx,vy:0,fuel:0}:{x:sx,y:sy,vx:v*Math.cos(a)+(M.id==="heli"?veh.vx*veh.dir:0),vy:v*Math.sin(a),fuel:M.id==="cohete"?1.2:0};let res=false;
       for(let i=0;i<20000;i++){const h=1/240;let ax=wind,ay=-g;if(M.id==="cohete"&&f.fuel>0){f.fuel-=h;const an=Math.atan2(f.vy,f.vx);ax+=Math.cos(an)*4;ay+=Math.sin(an)*4}
         f.vx+=ax*h;f.vy+=ay*h;const px=f.x,py=f.y;f.x+=f.vx*h;f.y+=f.vy*h;
+        if(M.id==="futbol"){const r=futStep(f,px,h,t+i*h/1.4);if(r){res=!!r[0];break}continue}
         if((M.id==="voley"||M.id==="tenis")&&px<T.net&&f.x>=T.net&&f.y<=T.nh)break;
         if(M.id==="tanque"&&T.hill){const hx=f.x-T.hill.x;if(Math.abs(hx)<6&&f.y<=T.hill.h*(1-(hx/6)**2))break}
         if(hitTest(f,px,py)){res=true;break}if(M.id==="basquet"&&f.x>T.x+1.2)break;
@@ -3346,66 +3372,78 @@ function shoot(box,L,M,S){
    Paga bien la PRIMERA vez que se supera un escenario; repetir paga poco.
    ===================================================================== */
 const TSTAGES=[
- {mode:"mano",name:"El patio",icon:"🏫",L:1,concept:"Fuerza",txt:"Con más <b>fuerza</b> la pelota sale más rápido y llega más lejos. Si te faltó, subí la fuerza; si te pasaste, bajala.",
+ {mode:"mano",id:"patio",name:"El patio",icon:"🏫",L:1,concept:"Fuerza",txt:"Con más <b>fuerza</b> la pelota sale más rápido y llega más lejos. Si te faltó, subí la fuerza; si te pasaste, bajala.",
   q:[["Tiraste la pelota y te faltó un metro para llegar al balde. ¿Qué cambiás?","Subo un poco la fuerza",["Bajo la fuerza","Tiro con los ojos cerrados","Cambio de balde"],"Más fuerza = más velocidad al salir = llega más lejos."],
      ["¿Qué hace que una pelota caiga de nuevo al piso?","La gravedad, que la atrae hacia la Tierra",["El viento","La pelota se cansa","El aire la empuja para abajo siempre"],"La gravedad tira todo hacia el centro de la Tierra."]]},
- {mode:"arco",name:"El campo de arquería",icon:"🏹",L:1,concept:"Ángulo",txt:"El <b>ángulo</b> también cambia la distancia. Con la misma fuerza, <b>45°</b> es el ángulo que llega más lejos.",
+ {mode:"arco",id:"arqueria",name:"El campo de arquería",icon:"🏹",L:1,concept:"Ángulo",txt:"El <b>ángulo</b> también cambia la distancia. Con la misma fuerza, <b>45°</b> es el ángulo que llega más lejos.",
   q:[["Con la misma fuerza, ¿qué ángulo llega más lejos?","45°",["10°","80°","90°"],"A 45° la velocidad se reparte igual entre ir hacia adelante y subir."],
      ["Si tirás a 90° (derecho para arriba), ¿dónde cae?","Cerca de donde la tiraste",["Muy lejos","No cae nunca","A 45 metros"],"Toda la velocidad va hacia arriba: no avanza hacia adelante."]]},
- {mode:"onda",name:"La feria",icon:"🎪",L:2,concept:"Tiro parabólico",txt:"Lo que tirás dibuja una curva llamada <b>parábola</b>: sube, frena arriba de todo y baja. Para pegarle a algo alto, tiene que pasar justo por ahí.",
+ {mode:"onda",id:"feria",name:"La feria",icon:"🎪",L:2,concept:"Tiro parabólico",txt:"Lo que tirás dibuja una curva llamada <b>parábola</b>: sube, frena arriba de todo y baja. Para pegarle a algo alto, tiene que pasar justo por ahí.",
   q:[["¿Qué forma dibuja una piedra que tirás hacia adelante y arriba?","Una curva (parábola)",["Una línea recta","Un círculo","Un zigzag"],"La gravedad la va curvando hacia abajo todo el tiempo."],
      ["En el punto más alto de la curva, la piedra…","deja de subir y empieza a bajar",["se queda quieta para siempre","va más rápido que nunca","desaparece"],"Arriba de todo la velocidad hacia arriba llega a cero."]]},
- {mode:"agua",name:"El incendio",icon:"🔥",L:2,concept:"Gravedad",txt:"El chorro de agua también cae por la <b>gravedad</b>. Cuanto más lejos está el fuego, más hay que apuntar hacia arriba o apretar más fuerte.",
+ {mode:"agua",id:"incendio",name:"El incendio",icon:"🔥",L:2,concept:"Gravedad",txt:"El chorro de agua también cae por la <b>gravedad</b>. Cuanto más lejos está el fuego, más hay que apuntar hacia arriba o apretar más fuerte.",
   q:[["¿Por qué el chorro de una manguera se curva hacia abajo?","Por la gravedad",["Porque el agua está fría","Por el sol","Porque la manguera es larga"],"La gravedad tira cada gota hacia abajo mientras avanza."],
      ["Si el fuego está más lejos, ¿qué conviene?","Apuntar un poco más arriba o con más fuerza",["Apuntar al piso","Cerrar la canilla","Tirar más despacio"],"Así el chorro tiene más tiempo en el aire para llegar."]]},
- {mode:"basquet",name:"La cancha",icon:"🏀",L:3,concept:"Tiro alto",txt:"Para encestar, la pelota tiene que <b>entrar bajando</b>. Un ángulo alto (60° a 70°) hace que caiga desde arriba y entre mejor en el aro.",
+ {mode:"basquet",id:"cancha",name:"La cancha",icon:"🏀",L:3,concept:"Tiro alto",txt:"Para encestar, la pelota tiene que <b>entrar bajando</b>. Un ángulo alto (60° a 70°) hace que caiga desde arriba y entre mejor en el aro.",
   q:[["¿Por qué los basquetbolistas tiran la pelota bien alta?","Para que entre en el aro bajando, desde arriba",["Para que no la vea nadie","Porque pesa poco","Para que rebote en el techo"],"Si llega bajando, el aro le queda más «abierto»."],
      ["Si la pelota llega muy horizontal al aro…","choca contra el aro y no entra",["entra siempre","se frena sola","sube"],"Llegando de costado el aro le queda chiquito."]]},
- {mode:"voley",name:"El club",icon:"🏐",L:3,concept:"Dos condiciones",txt:"Acá hay que cumplir <b>dos cosas a la vez</b>: pasar por arriba de la red y caer adentro de la cancha. Ni muy bajo ni muy largo.",
+ {mode:"voley",id:"club",name:"El club",icon:"🏐",L:3,concept:"Dos condiciones",txt:"Acá hay que cumplir <b>dos cosas a la vez</b>: pasar por arriba de la red y caer adentro de la cancha. Ni muy bajo ni muy largo.",
   q:[["En vóley, ¿qué tiene que pasar para que sea punto?","Pasar la red y caer dentro de la cancha rival",["Solo pasar la red","Solo tirar fuerte","Pegarle a la red"],"Son dos condiciones juntas: si falta una, no es punto."],
      ["La pelota pasó la red pero cayó afuera. ¿Qué cambiás?","Un poco menos de fuerza",["Más fuerza","Tiro más bajo","Nada"],"Pasó bien la red: solo le sobró distancia."]]},
- {mode:"arco",name:"Día de viento",icon:"🌬️",L:4,wind:true,concept:"Viento",txt:"El <b>viento</b> empuja lo que vuela. Viento a favor (→) lo lleva más lejos; viento en contra (←) lo frena. Hay que corregir.",
+ {mode:"futbol",id:"penal",name:"El penal",icon:"🥅",L:3,concept:"Elegir la altura del remate",txt:"El penal se patea a <b>11 metros</b>. El arquero mide casi 2 m y salta: si le pegás <b>bajo y rasante</b> cuando salta, o <b>alto, al ángulo</b> (entre su mano y el travesaño de 2,44 m), es gol. Con poco ángulo la pelota va rasante; con más ángulo, sube.",
+  q:[["¿A qué altura está el travesaño de un arco de fútbol?","2,44 metros",["1 metro","5 metros","10 metros"],"El arco mide 7,32 m de ancho y 2,44 m de alto."],
+     ["Si pateás con muy poco ángulo, la pelota…","sale baja, casi rasante",["sube altísimo","vuelve para atrás","se frena en el aire"],"Con ángulo bajo casi toda la fuerza va hacia adelante."],
+     ["El arquero saltó. ¿Dónde conviene patear?","Abajo, por donde ya no está",["Justo a sus manos","Al medio de su cuerpo","Afuera del arco"],"Mirar al arquero y patear donde no llega es pensar antes de actuar."]]},
+ {mode:"arco",id:"viento",name:"Día de viento",icon:"🌬️",L:4,wind:true,concept:"Viento",txt:"El <b>viento</b> empuja lo que vuela. Viento a favor (→) lo lleva más lejos; viento en contra (←) lo frena. Hay que corregir.",
   q:[["Hay viento a favor (empuja hacia el blanco). ¿Qué hacés?","Tiro con un poco menos de fuerza",["Tiro con más fuerza","Apunto al revés","No cambio nada"],"El viento ya te ayuda a llegar más lejos."],
      ["Con viento en contra, la flecha…","llega más corta",["llega más lejos","va más rápido","sube más"],"El viento la frena mientras vuela."]]},
- {mode:"mano",name:"La feria en movimiento",icon:"🎠",L:4,moving:true,concept:"Anticipar el movimiento",txt:"Si el blanco se mueve, no apuntes adonde <b>está</b>: apuntá adonde <b>va a estar</b> cuando llegue tu tiro. Mirá su ritmo antes de tirar.",
+ {mode:"mano",id:"feriamov",name:"La feria en movimiento",icon:"🎠",L:4,moving:true,concept:"Anticipar el movimiento",txt:"Si el blanco se mueve, no apuntes adonde <b>está</b>: apuntá adonde <b>va a estar</b> cuando llegue tu tiro. Mirá su ritmo antes de tirar.",
   q:[["Un balde se mueve de lado a lado. ¿Cuándo conviene tirar?","Antes de que llegue al lugar, para que se encuentren",["Cuando ya pasó","Con los ojos cerrados","Nunca"],"Tu tiro tarda en llegar: hay que adelantarse."],
      ["¿Por qué los arqueros de fútbol se tiran antes del remate?","Porque la pelota tarda y quieren estar donde va a llegar",["Porque les gusta tirarse","Para ensuciarse","Por el viento"],"Anticipar es calcular dónde va a estar algo."]]},
- {mode:"drop",name:"Avión de rescate",icon:"✈️",L:4,concept:"Inercia",txt:"Un paquete que se suelta desde un avión <b>sigue avanzando</b> con la velocidad del avión mientras cae (eso es la <b>inercia</b>). Por eso hay que soltarlo <b>antes</b> de pasar por encima del bote.",
+ {mode:"futbol",id:"barrera",name:"Tiro libre con barrera",icon:"🧱",L:4,wall:true,concept:"La comba: subir y bajar",txt:"La barrera está a <b>9,15 m</b> y mide casi 2 m. La pelota tiene que <b>subir</b> para pasarla y <b>bajar</b> antes del travesaño. Es la misma parábola del básquet: hay que encontrar el ángulo y la fuerza justos.",
+  q:[["¿A qué distancia de la pelota se pone la barrera en fútbol?","9,15 metros",["1 metro","30 metros","2,44 metros"],"Es la distancia del reglamento: 10 yardas, que son 9,15 m."],
+     ["Para pasar la barrera y que entre al arco, la pelota tiene que…","subir por encima y bajar antes del travesaño",["ir siempre rasante","pegarle a la barrera","subir y no bajar nunca"],"Es una parábola: sube, llega arriba de todo y baja."],
+     ["Si la pelota pasó la barrera pero se fue por arriba del travesaño, ¿qué cambiás?","Un poco menos de fuerza o de ángulo",["Más fuerza","Más ángulo","Nada"],"Le sobró altura: hay que bajarla un poco."]]},
+ {mode:"drop",id:"rescate",name:"Avión de rescate",icon:"✈️",L:4,concept:"Inercia",txt:"Un paquete que se suelta desde un avión <b>sigue avanzando</b> con la velocidad del avión mientras cae (eso es la <b>inercia</b>). Por eso hay que soltarlo <b>antes</b> de pasar por encima del bote.",
   q:[["Si soltás un paquete justo arriba del bote desde un avión que avanza, ¿dónde cae?","Más adelante del bote",["Justo en el bote","Atrás del bote","Vuelve al avión"],"El paquete conserva la velocidad del avión: sigue avanzando mientras cae."],
      ["¿Qué es la inercia?","Las cosas siguen moviéndose como venían si nada las frena",["Que todo se cae","Una fuerza del viento","Un tipo de avión"],"Por eso en el colectivo, cuando frena, tu cuerpo sigue hacia adelante."]]},
- {mode:"tanque",name:"Maniobras",icon:"🛡️",L:5,plane:true,concept:"Blancos en el aire",txt:"Ahora el blanco vuela. Tu tiro sube y el avión de práctica avanza: los dos tienen que <b>encontrarse en el mismo lugar al mismo tiempo</b>.",
+ {mode:"tanque",id:"maniobras",name:"Maniobras",icon:"🛡️",L:5,plane:true,concept:"Blancos en el aire",txt:"Ahora el blanco vuela. Tu tiro sube y el avión de práctica avanza: los dos tienen que <b>encontrarse en el mismo lugar al mismo tiempo</b>.",
   q:[["Para pegarle a algo que vuela, tu tiro y el blanco tienen que…","estar en el mismo lugar al mismo tiempo",["salir juntos","ir para el mismo lado","ser del mismo color"],"Es un encuentro: importa el lugar y también el momento."],
      ["Un avión viene hacia vos. ¿Conviene tirar cuando está lejos o encima tuyo?","Un poco antes, calculando cuánto tarda el tiro en subir",["Cuando ya pasó","Nunca","Siempre cuando está encima"],"Tu tiro tarda en llegar: hay que adelantarse."]]},
- {mode:"heli",name:"Base naval",icon:"🚁",L:5,concept:"Velocidad relativa",txt:"Disparás <b>desde un helicóptero que se mueve</b>. Tu disparo suma tu velocidad más la del helicóptero: si va hacia el barco, el tiro llega más lejos; si se aleja, más corto.",
+ {mode:"heli",id:"naval",name:"Base naval",icon:"🚁",L:5,concept:"Velocidad relativa",txt:"Disparás <b>desde un helicóptero que se mueve</b>. Tu disparo suma tu velocidad más la del helicóptero: si va hacia el barco, el tiro llega más lejos; si se aleja, más corto.",
   q:[["Si el helicóptero va hacia el blanco, tu disparo…","llega más lejos, porque suma la velocidad del helicóptero",["llega más corto","no cambia","sale para atrás"],"Las velocidades se suman: eso es la velocidad relativa."],
      ["Caminás hacia adelante en un tren que va a 50 km/h. Para alguien en el andén vas…","un poco más rápido que el tren",["más lento que el tren","quieto","a 0 km/h"],"Tu velocidad se suma a la del tren."]]},
- {mode:"cohete",name:"FINAL: Misión espacial",icon:"🚀",L:6,final:true,concept:"Gravedad en otros planetas",txt:"Escenario final: aterrizá en la Tierra, en Marte y en la Luna. Cada planeta tiene <b>distinta gravedad</b>: en la Luna (1,6) todo cae mucho más despacio que en la Tierra (9,8).",
+ {mode:"cohete",id:"final",name:"FINAL: Misión espacial",icon:"🚀",L:6,final:true,concept:"Gravedad en otros planetas",txt:"Escenario final: aterrizá en la Tierra, en Marte y en la Luna. Cada planeta tiene <b>distinta gravedad</b>: en la Luna (1,6) todo cae mucho más despacio que en la Tierra (9,8).",
   q:[["¿En qué lugar un salto te llevaría más alto?","En la Luna",["En la Tierra","En Júpiter","Da igual"],"La Luna tiene mucha menos gravedad: te atrae menos."],
      ["Si en la Luna la gravedad es menor, con la misma fuerza el cohete…","llega más lejos",["llega más cerca","no despega","cae enseguida"],"Con menos gravedad tarda más en caer, y avanza más."]]}
 ];
-const TP=()=>{const p=G.P;if(!p.tiroArc)p.tiroArc={best:{},clears:{}};return p.tiroArc};
-const tStageOpen=i=>i===0||TP().best[i-1]!=null;
+const T_OLD_ORDER=["patio","arqueria","feria","incendio","cancha","club","viento","feriamov","rescate","maniobras","naval","final"];
+const TP=()=>{const p=G.P;if(!p.tiroArc)p.tiroArc={best:{},clears:{},v:2};const a=p.tiroArc;
+  if(a.v!==2){const nb={},nc={};Object.keys(a.best||{}).forEach(k=>{const id=T_OLD_ORDER[+k];if(id)nb[id]=a.best[k]});Object.keys(a.clears||{}).forEach(k=>{const id=T_OLD_ORDER[+k];if(id)nc[id]=a.clears[k]});a.best=nb;a.clears=nc;a.v=2;
+    /* los escenarios nuevos que quedaron "atrás" de lo ya superado se abren igual (no se pierde el avance) */}
+  return a};
+const tStageOpen=i=>{if(i===0)return true;const B=TP().best;return B[TSTAGES[i-1].id]!=null||TSTAGES.slice(i).some(st=>B[st.id]!=null)};   // también queda abierto si ya superó uno posterior (progreso anterior)
 const T_MED={gold:3,silver:2,bronze:1},T_MED_ICON={gold:"🥇",silver:"🥈",bronze:"🥉"};
 
 GAMEFN.tiro=function(box,L){
   let stop=null;
-  const map=()=>{stop&&stop();stop=null;const P=TP();const next=TSTAGES.findIndex((_,i)=>tStageOpen(i)&&P.best[i]==null);
+  const map=()=>{stop&&stop();stop=null;const P=TP();const next=TSTAGES.findIndex((st,i)=>tStageOpen(i)&&P.best[st.id]==null);
     box.innerHTML=`<div class="arc-head"><div class="arc-title">🎯 TIRO LIBRE <span>ARCADE</span></div><p class="note">Superá los escenarios en orden. Cada uno enseña algo nuevo de física. Tenés 3 ❤️ por escenario y, si las perdés, una pregunta te puede salvar.</p></div>
-      <div class="arc-map">${TSTAGES.map((st,i)=>{const open=tStageOpen(i),b=P.best[i];
+      <div class="arc-map">${TSTAGES.map((st,i)=>{const open=tStageOpen(i),b=P.best[st.id];
         return `<button type="button" class="arc-st ${open?"":"lock"} ${i===next?"next":""} ${st.final?"final":""}" data-i="${i}" ${open?"":"disabled"}><span class="arc-n">${i+1}</span><span class="arc-ic">${open?st.icon:"🔒"}</span><b>${esc(st.name)}</b><small>${open?esc(st.concept):"Superá el escenario anterior"}</small><span class="arc-med">${b?T_MED_ICON[b]:open?"▶":""}</span></button>`}).join("")}</div>
       <div class="arc-foot"><button class="btn" type="button" id="tPrac">🎯 Práctica libre <small>(no paga)</small></button></div>`;
     box.querySelectorAll(".arc-st").forEach(b=>b.onclick=()=>intro(+b.dataset.i));$("tPrac").onclick=practice;
     const nb=box.querySelector(".arc-st.next");if(nb)setTimeout(()=>nb.scrollIntoView({block:"center",behavior:"smooth"}),150)};
-  const intro=i=>{const st=TSTAGES[i],M=SHOT_MODES.find(m=>m.id===st.mode),P=TP(),first=P.best[i]==null;
+  const intro=i=>{const st=TSTAGES[i],M=SHOT_MODES.find(m=>m.id===st.mode),P=TP(),first=P.best[st.id]==null;
     box.innerHTML=`<div class="arc-intro ${st.final?"final":""}"><div class="arc-big">ESCENARIO ${i+1}</div><div class="arc-ic2">${st.icon}</div><h3>${esc(st.name)}</h3>
       <div class="arc-concept"><b>📘 ${esc(st.concept)}</b><p>${st.txt}</p></div>
       <ul class="arc-goals"><li>🎯 Objetivo: <b>acertá 3 tiros</b> (${esc(M.tip)})</li><li>❤️❤️❤️ Tenés <b>3 vidas</b>: cada tiro errado cuesta una. Un «casi» no cuenta.</li><li>❓ Sin vidas, respondé una pregunta para salvar una (hasta 2 veces).</li>
       <li>💰 ${first?`Primera vez: <b>${fmtM(tClearPay(i))}</b> al superarlo y ${fmtM(tHitPay(i,true))} por acierto.`:`Ya lo superaste: repetirlo paga poco (${fmtM(Math.round(tClearPay(i)*0.1))}). Te conviene avanzar.`}</li></ul>
       <div class="mactions"><button class="btn" type="button" id="tMap">🗺️ Mapa</button><button class="btn primary big" type="button" id="tGo">¡A jugar! ▶</button></div></div>`;
     $("tMap").onclick=map;$("tGo").onclick=()=>play(i)};
-  const play=i=>{const st=TSTAGES[i],M=SHOT_MODES.find(m=>m.id===st.mode),P=TP(),first=P.best[i]==null;let used=[];
+  const play=i=>{const st=TSTAGES[i],M=SHOT_MODES.find(m=>m.id===st.mode),P=TP(),first=P.best[st.id]==null;let used=[];
     UI.cur.diff=st.L;
-    stop=shoot(box,st.L,M,{goal:3,lives:3,wind:!!st.wind,moving:!!st.moving,plane:!!st.plane,hitPay:tHitPay(i,first),
+    stop=shoot(box,st.L,M,{goal:3,lives:3,wall:!!st.wall,wind:!!st.wind,moving:!!st.moving,plane:!!st.plane,hitPay:tHitPay(i,first),
       rescue:async n=>{const pool=st.q.filter(q=>!used.includes(q));const Q=pool.length?pick(pool):null;let q;
         if(Q){used.push(Q);q={q:Q[0],opts:shuffle([Q[1],...Q[2]]),ans:Q[1],e:Q[3],s:"mate",l:2}}else q=G.pickQ("mate");
         const r=await UI.ask(q,{progress:`❤️ Pregunta para salvar una vida (${n} de 2)`,noMiss:true});return r.ok},
@@ -3414,16 +3452,16 @@ GAMEFN.tiro=function(box,L){
     if(!res.win){FX.bad();UI.modal(`<div class="arc-over"><div class="arc-big">GAME OVER</div><p>Llegaste a <b>${res.hits} de 3</b> aciertos en «${esc(st.name)}».</p><div class="arc-concept"><b>📘 Para la próxima: ${esc(st.concept)}</b><p>${st.txt}</p></div>
       <div class="mactions"><button class="btn" type="button" id="oMap">🗺️ Mapa</button><button class="btn primary" type="button" id="oAgain">🔁 Reintentar</button></div></div>`);
       $("oMap").onclick=()=>{UI.close();map()};$("oAgain").onclick=()=>{UI.close();intro(i)};return}
-    const medal=res.livesLost===0&&!res.rescues?"gold":res.rescues?"bronze":"silver";const prev=P.best[i];
+    const medal=res.livesLost===0&&!res.rescues?"gold":res.rescues?"bronze":"silver";const prev=P.best[st.id];
     let pay=0;if(first)pay+=G.earn(tClearPay(i));else pay+=G.earn(Math.round(tClearPay(i)*0.1/500)*500);
-    let medTxt="";if(!prev||T_MED[medal]>T_MED[prev]){P.best[i]=medal;const g=G.P.games.tiro||(G.P.games.tiro={plays:0,best:0,lvl:1,medals:{bronze:0,silver:0,gold:0}});g.medals[medal]++;G.P.medals[medal]++;medTxt=`${T_MED_ICON[medal]} ¡Medalla de ${({gold:"oro",silver:"plata",bronze:"bronce"})[medal]} en este escenario!`}
-    P.clears[i]=(P.clears[i]||0)+1;const g=G.P.games.tiro;g.plays=(g.plays||0)+1;g.lvl=Math.max(g.lvl||1,Math.min(10,1+Object.keys(P.best).length));
+    let medTxt="";if(!prev||T_MED[medal]>T_MED[prev]){P.best[st.id]=medal;const g=G.P.games.tiro||(G.P.games.tiro={plays:0,best:0,lvl:1,medals:{bronze:0,silver:0,gold:0}});g.medals[medal]++;G.P.medals[medal]++;medTxt=`${T_MED_ICON[medal]} ¡Medalla de ${({gold:"oro",silver:"plata",bronze:"bronce"})[medal]} en este escenario!`}
+    P.clears[st.id]=(P.clears[st.id]||0)+1;const g=G.P.games.tiro;g.plays=(g.plays||0)+1;g.lvl=Math.max(g.lvl||1,Math.min(10,1+Object.keys(P.best).length));
     G.addXP(first?10+i*2:2,0);G.save();FX.fanfare();FX.confetti(st.final&&first?260:120);
     const fin=st.final&&first;
     UI.modal(`<div class="arc-win ${fin?"final":""}"><div class="arc-big">${fin?"🏆 ¡GANASTE EL ARCADE!":"¡ESCENARIO SUPERADO!"}</div><div class="arc-ic2">${st.icon}</div>
       <p>${medTxt||`Medalla: ${T_MED_ICON[medal]}`}</p><p class="arc-pay">${plus(pay)} ${first?"por superarlo":"(repetir paga poco)"}</p>
       ${medal!=="gold"?`<p class="note">${medal==="silver"?"🥇 Oro: superalo sin perder ninguna vida.":"🥈 Plata: superalo sin necesitar preguntas."}</p>`:""}
-      ${fin?`<p>¡Completaste los 12 escenarios! Ahora sabés de fuerza, ángulo, gravedad, viento, inercia y velocidad relativa.</p>`:""}
+      ${fin?`<p>¡Completaste los ${TSTAGES.length} escenarios! Ahora sabés de fuerza, ángulo, gravedad, viento, inercia y velocidad relativa.</p>`:""}
       <div class="mactions"><button class="btn" type="button" id="wMap">🗺️ Mapa</button>${i<TSTAGES.length-1?`<button class="btn primary" type="button" id="wNext">Escenario ${i+2} ▶</button>`:""}</div></div>`);
     $("wMap").onclick=()=>{UI.close();map()};if($("wNext"))$("wNext").onclick=()=>{UI.close();intro(i+1)}};
   const practice=()=>{const P=TP();const ok=SHOT_MODES.filter(m=>TSTAGES.some((st,i)=>st.mode===m.id&&tStageOpen(i)));
